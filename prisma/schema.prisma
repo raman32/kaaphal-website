@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+   previewFeatures = ["orderByRelation","selectRelationCount"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String          @id     @default(uuid())
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  email                 String          @unique
+  firstName             String
+  middleName            String?
+  lastName              String?
+  status                UserStatus      @default(value: active)
+  image                 File?
+  comments              Comment[]       @relation(name: "UserOnComment")
+  posts                 Post[]          @relation(name: "UserOnPost")
+  votes                 Vote[]          @relation(name: "UserOnVotes")
+  role                  UserRole        @default(value: user)
+  moderatorFlag         Flag[]          @relation(name: "ModeratorOnFlag")
+  flag                  Flag[]          @relation(name: "UserOnFlag")
+  session               Session[]       @relation(name: "UserOnSessions")
+}
+
+model Session {
+  id                    String          @id     @default(uuid())
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  type                  SessionType
+  token                 String?         @unique
+  authToken             String?
+  refreshToken          String?
+  expires               DateTime?
+  invalidate            Boolean         @default(false)
+  user                  User?           @relation(name: "UserOnSessions", fields: [userId], references: [id])
+  userId                String?
+  googleToken           String?
+  githubToken           String?
+}
+
+model Post {
+  id                    String          @id @default(cuid())
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  slug                  String
+  body                  String?
+  url                   String?
+  title                 String
+  user                  User?           @relation(name: "UserOnPost", fields: [userId], references: [id])
+  userId                String?
+  deleted               Boolean         @default(false)
+  status                PostStatus      @default(value: draft)
+  comments              Comment[]       @relation(name: "PostOnComment")
+  image                 File?
+  tags                  Tag[]           @relation(name: "PostOnTags")
+  votes                 Vote[]          @relation(name: "PostOnVotes")
+  type                  PostType        @default(value: link)
+  flag                  Flag[]          @relation(name: "PostOnFlag")
+}
+
+model Flag {
+  id                    String          @id @default(cuid())
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  moderator             User?           @relation(name: "ModeratorOnFlag", fields: [moderatorId], references: [id])
+  moderatorId           String?
+  user                  User?           @relation(name: "UserOnFlag", fields: [userId], references: [id])
+  userId                String?
+  post                  Post?           @relation(name: "PostOnFlag", fields: [postId], references: [id])
+  postId                String?
+}
+
+model Vote {
+  id                    String          @id @default(cuid())
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  type                  VoteType
+  post                  Post?           @relation(name: "PostOnVotes", fields: [postId], references: [id])
+  postId                String?
+  user                  User?           @relation(name: "UserOnVotes", fields: [userId], references: [id])
+  userId                String?
+}
+
+model Comment {
+  id                    String          @id @default(cuid())
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  body                  String
+  children              Comment[]       @relation(name: "CommentOnComment")
+  parent                Comment?        @relation(name: "CommentOnComment", fields: [parentId], references: [id])
+  parentId              String?
+  user                  User?           @relation(name: "UserOnComment", fields: [userId], references: [id])
+  userId                String?
+  post                  Post?           @relation(name: "PostOnComment", fields: [postId], references: [id])
+  postId                String?
+}
+
+model Tag {
+  id                    String          @id @default(cuid())
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  name                  String
+  post                  Post[]          @relation(name: "PostOnTags")
+}
+
+model File {
+  id                    String          @id @default(cuid())
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  name                  String?
+  preview               String?
+  source                String?
+  width                 Int?
+  height                Int?
+  size                  Int?
+  user                  User?           @relation(fields: [userId], references: [id])
+  userId                String?
+  post                  Post?           @relation(fields: [postId], references: [id])
+  postId                String?
+}
+
+
+enum UserStatus {
+    active
+    blocked
+    inactive
+}
+
+enum UserRole {
+    admin
+    moderator
+    user
+}
+
+enum PostType {
+    link
+    ask
+    job
+}
+
+enum PostStatus {
+    draft
+    published
+    hidden
+    blocked
+}
+
+enum VoteType {
+    upvotes
+    downvotes
+}
+
+enum SessionType {
+    AUTHENTICATED
+    ANONYMOUS
+    MAGIC
+}
