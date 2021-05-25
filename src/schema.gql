@@ -1,0 +1,648 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""Model For Advertisement"""
+type Advertisement {
+  backgroundColor: String
+  body: String
+  clicks: Float
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  expiresAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  image: File
+  order: Order
+  post: Post!
+  postId: String!
+  startsAt: DateTime!
+  status: AdvertisementStatus
+  targetAgeLowerLimit: Float!
+  targetAgeUpperLimit: Float!
+  targetSex: AdvertisementTargetSex
+  targetTags: [Tag!]
+  title: String
+  type: AdvertisementType!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  views: Float
+}
+
+enum AdvertisementStatus {
+  blocked
+  draft
+  expired
+  paused
+  published
+}
+
+enum AdvertisementTargetSex {
+  both
+  female
+  male
+}
+
+enum AdvertisementType {
+  banner
+  feeds
+  post
+  splash
+}
+
+"""Major Category for Post"""
+type Answer {
+  answer: MCQAnswer!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  question: LoksewaQuestion!
+  questionId: String!
+  status: AnswerStatus!
+  test: LoksewaTest!
+  testId: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+enum AnswerStatus {
+  correct
+  unanswered
+  wrong
+}
+
+"""Major Category for Post"""
+type Category {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  name: String!
+  post: [Post!]!
+  subCategories: [SubCategory!]!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+type Comment {
+  body: String!
+  children: [Comment!]
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  parent: Comment
+  post: Post
+  postId: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User
+  userId: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum Difficulty {
+  easy
+  hard
+  medium
+  veryEasy
+  veryHard
+}
+
+type File {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  height: Float!
+
+  """Unique UUID string"""
+  id: ID!
+  name: String!
+  post: Post
+  preview: String!
+  size: Float!
+  source: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User
+  width: Float!
+}
+
+type Flag {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  message: String!
+  moderator: User!
+  moderatorId: String!
+  post: Post!
+  postId: String!
+  status: FlagStatus!
+  type: FlagType!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+enum FlagStatus {
+  inreview
+  solved
+  submitted
+}
+
+enum FlagType {
+  fakenews
+  other
+  outdated
+  politicalcontent
+  religiouscontent
+  sexualcontent
+  slander
+}
+
+type Follow {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  following: User!
+  followingId: String!
+
+  """Unique UUID string"""
+  id: ID!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+type Hotshot {
+  backgroundColor: String!
+  body: String!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  image: File
+  post: Post
+  postId: String!
+  title: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+enum Language {
+  en
+  np
+}
+
+type LoksewaMockCategory {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  questionSets: [LoksewaMockSet!]!
+  title: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+type LoksewaMockSet {
+  category: LoksewaMockCategory!
+  categoryId: String!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  editor: User!
+  editorId: String!
+
+  """Unique UUID string"""
+  id: ID!
+  loksewaTest: [LoksewaTest!]!
+  orders: [Order!]!
+  questions: [LoksewaQuestion!]!
+  status: MockSetStatus!
+  type: MockSetType!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+type LoksewaQuestion {
+  additionalDetails: String!
+  answer: MCQAnswer!
+  category: LoksewaQuestionCategory!
+  categoryId: String!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  difficulty: Difficulty!
+
+  """Unique UUID string"""
+  id: ID!
+  meta: LoksewaQuestionMeta!
+  metaId: String!
+  optionA: String!
+  optionB: String!
+  optionC: String!
+  optionD: String!
+  set: LoksewaMockSet!
+  setId: String!
+  title: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  userAnswer: [Answer!]!
+}
+
+type LoksewaQuestionCategory {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  questions: [LoksewaQuestion!]!
+  title: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+type LoksewaQuestionMeta {
+  LoksewaQuestion: [LoksewaQuestion!]!
+  body: String!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+type LoksewaTest {
+  answers: [Answer!]!
+  completed: Boolean!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  score: Float!
+  set: LoksewaMockSet!
+  setId: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+enum MCQAnswer {
+  A
+  B
+  C
+  D
+}
+
+type Membership {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  expiresAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  order: Order!
+  type: MembershipType!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+enum MembershipType {
+  bronze
+  gold
+  silver
+}
+
+enum MockSetStatus {
+  draft
+  hidden
+  published
+}
+
+enum MockSetType {
+  free
+  official
+  premium
+}
+
+type Notification {
+  body: String!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  post: Post!
+  postId: String!
+  read: Boolean!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+type Order {
+  advertisementId: String!
+  advertsiment: Advertisement
+  amountPaid: Float!
+  body: String!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  membership: Membership
+  membershipId: String!
+  paymentId: String!
+  paymentMethod: PaymentMethod!
+  set: LoksewaMockSet
+  setId: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+enum PaymentMethod {
+  banktransfer
+  cash
+  esewa
+  imepay
+  ipsconnect
+  phonepay
+  visa
+}
+
+"""Post model"""
+type Post {
+  advertisement: Advertisement
+  body: String
+  category: Category
+  categoryId: String
+  comments: [Comment!]!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  deleted: Boolean!
+  editor: User
+  editorId: String
+  flag: [Flag!]!
+  hotShot: Hotshot
+
+  """Unique UUID string"""
+  id: ID!
+  image: File
+  language: Language!
+  publishedAt: DateTime
+  reactions: [Reaction!]
+  scholarship: Scholarship
+  slug: String!
+  status: PostStatus!
+  subCategory: SubCategory
+  subCategoryId: String
+  tags: [Tag!]!
+  title: String!
+  type: PostType!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  url: String
+  user: User
+  userId: String
+  views: Float!
+}
+
+enum PostStatus {
+  blocked
+  commented
+  draft
+  hidden
+  published
+  unverified
+  verified
+}
+
+enum PostType {
+  articles
+  information
+  loksewa
+  scholarships
+}
+
+type Query {
+  post(id: Int!): Post!
+}
+
+"""Major Category for Post"""
+type Reaction {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  post: Post
+  postId: String
+  type: ReactionType!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User
+  userId: String
+}
+
+enum ReactionType {
+  angry
+  dislike
+  happy
+  like
+  sad
+}
+
+type Scholarship {
+  country: String!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  deadlineAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  level: ScholarshipLevel!
+  post: Post!
+  postId: String!
+  startsAt: DateTime!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+enum ScholarshipLevel {
+  bachelors
+  k12
+  language
+  masters
+  phd
+  postgrad
+  research
+  training
+}
+
+type Session {
+  authToken: String!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  expires: DateTime!
+  facebookToken: String
+  githubToken: String
+  googleToken: String
+
+  """Unique UUID string"""
+  id: ID!
+  invalidate: Boolean!
+  refreshToken: String!
+  token: String!
+  type: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User
+}
+
+"""Sub Category for Post"""
+type SubCategory {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  name: String!
+  parent: Category
+  parentId: String
+  post: [Post!]!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+type Subscription {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  email: Boolean!
+
+  """Unique UUID string"""
+  id: ID!
+  postType: [PostType!]!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+type Tag {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Unique UUID string"""
+  id: ID!
+  name: String!
+  post: [Post!]
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+"""User Model"""
+type User {
+  comments: Comment
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  deleted: Boolean!
+  displayName: String
+  editedLoksewaMockSet: [LoksewaMockSet!]
+  editedPosts: [Post!]
+  email: String!
+  firstName: String!
+  flag: [Flag!]!
+  followers: [Follow!]
+  following: [Follow!]
+
+  """Unique UUID string"""
+  id: ID!
+  image: File
+  lastName: String
+  loksewaTest: [LoksewaTest!]
+  membership: Membership
+  middleName: String
+  moderatorFlag: [Flag!]
+  notifications: [Notification!]!
+  orders: [Order!]
+  posts: [Post!]
+  reactions: [Reaction!]
+  role: UserRole!
+  session: [Session!]!
+  status: UserStatus!
+  subcription: Subscription
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+enum UserRole {
+  admin
+  moderator
+  user
+}
+
+enum UserStatus {
+  active
+  blocked
+  inactive
+}
