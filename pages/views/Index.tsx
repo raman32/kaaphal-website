@@ -1,6 +1,7 @@
 import { Button } from 'antd'
 import { NextPage, NextPageContext } from 'next'
 import '/node_modules/antd/dist/antd.css'
+import 'tailwindcss/tailwind.css'
 
 // The component's props type
 type PageProps = {
@@ -17,7 +18,7 @@ const Page: NextPage<PageProps> = ({ title }) => {
     return (
         <div>
             <h1>{title}</h1>
-            <div> Hello From the Other Side!!!!</div>
+            <div className="hover:bg-gray-500"> Hello From the Other Side!!!!</div>
             <Button type="primary" >button</Button>
         </div>
     )
