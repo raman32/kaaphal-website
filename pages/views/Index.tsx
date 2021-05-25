@@ -1,4 +1,6 @@
+import { Button } from 'antd'
 import { NextPage, NextPageContext } from 'next'
+import '/node_modules/antd/dist/antd.css'
 
 // The component's props type
 type PageProps = {
@@ -16,6 +18,7 @@ const Page: NextPage<PageProps> = ({ title }) => {
         <div>
             <h1>{title}</h1>
             <div> Hello From the Other Side!!!!</div>
+            <Button type="primary" >button</Button>
         </div>
     )
 }
