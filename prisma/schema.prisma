@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-   previewFeatures = ["orderByRelation","selectRelationCount"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["orderByRelation", "selectRelationCount"]
 }
 
 datasource db {
@@ -9,154 +9,488 @@ datasource db {
 }
 
 model User {
-  id                    String          @id     @default(uuid())
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  email                 String          @unique
-  firstName             String
-  middleName            String?
-  lastName              String?
-  status                UserStatus      @default(value: active)
-  image                 File?
-  comments              Comment[]       @relation(name: "UserOnComment")
-  posts                 Post[]          @relation(name: "UserOnPost")
-  votes                 Vote[]          @relation(name: "UserOnVotes")
-  role                  UserRole        @default(value: user)
-  moderatorFlag         Flag[]          @relation(name: "ModeratorOnFlag")
-  flag                  Flag[]          @relation(name: "UserOnFlag")
-  session               Session[]       @relation(name: "UserOnSessions")
+  id             String           @id @default(uuid())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  email          String           @unique
+  firstName      String
+  middleName     String?
+  lastName       String?
+  displayName    String?
+  status         UserStatus       @default(value: active)
+  image          File?
+  comments       Comment[]        @relation(name: "UserOnComment")
+  posts          Post[]           @relation(name: "UserOnPost")
+  reactions      Reaction[]       @relation(name: "UserOnReaction")
+  role           UserRole         @default(value: user)
+  moderatorFlag  Flag[]           @relation(name: "ModeratorOnFlag")
+  flag           Flag[]           @relation(name: "UserOnFlag")
+  following      Follow[]         @relation(name: "UserOnFollow")
+  followers      Follow[]         @relation(name: "FollowingOnFollow")
+  deleted        Boolean          @default(false)
+  session        Session[]        @relation(name: "UserOnSessions")
+  editedPosts    Post[]           @relation(name: "EditorOnPost")
+  editedLoksewaMockSet LoksewaMockSet[] @relation(name:"EditorOnLoksewaMockSet")
+  loksewaTest    LoksewaTest[]    @relation(name:"UserOnLoksewaTest")
+  orders        Order[]                 @relation(name:"UserOnOrder")
+  membership    Membership?         @relation(name:"UserOnMembership")
+  subcription   Subscription?     @relation(name:"UserOnSubscription")
+  notifications Notification[]    @relation(name:"UserOnNotification")
 }
 
 model Session {
-  id                    String          @id     @default(uuid())
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  type                  SessionType
-  token                 String?         @unique
-  authToken             String?
-  refreshToken          String?
-  expires               DateTime?
-  invalidate            Boolean         @default(false)
-  user                  User?           @relation(name: "UserOnSessions", fields: [userId], references: [id])
-  userId                String?
-  googleToken           String?
-  githubToken           String?
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  type          SessionType
+  token         String?     @unique
+  authToken     String?
+  refreshToken  String?
+  expires       DateTime?
+  invalidate    Boolean     @default(false)
+  user          User?       @relation(name: "UserOnSessions", fields: [userId], references: [id])
+  userId        String?
+  googleToken   String?
+  githubToken   String?
+  facebookToken String?
 }
 
 model Post {
-  id                    String          @id @default(cuid())
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  slug                  String
-  body                  String?
-  url                   String?
-  title                 String
-  user                  User?           @relation(name: "UserOnPost", fields: [userId], references: [id])
-  userId                String?
-  deleted               Boolean         @default(false)
-  status                PostStatus      @default(value: draft)
-  comments              Comment[]       @relation(name: "PostOnComment")
-  image                 File?
-  tags                  Tag[]           @relation(name: "PostOnTags")
-  votes                 Vote[]          @relation(name: "PostOnVotes")
-  type                  PostType        @default(value: link)
-  flag                  Flag[]          @relation(name: "PostOnFlag")
+  id            String         @id @default(cuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  publishedAt   DateTime?
+  slug          String
+  body          String?
+  url           String?        @unique
+  title         String
+  user          User?          @relation(name: "UserOnPost", fields: [userId], references: [id])
+  userId        String?
+  deleted       Boolean        @default(false)
+  status        PostStatus     @default(value: draft)
+  comments      Comment[]      @relation(name: "PostOnComment")
+  image         File?
+  tags          Tag[]          @relation(name: "PostOnTags")
+  reactions     Reaction[]     @relation(name: "PostOnReaction")
+  type          PostType       @default(value: articles)
+  flag          Flag[]         @relation(name: "PostOnFlag")
+  views         Int            @default(0)
+  editor        User?          @relation(name: "EditorOnPost", fields: [editorId], references: [id])
+  editorId      String?
+  category      Category?      @relation(name: "CategoryOnPost", fields: [categoryId], references: [id])
+  categoryId    String?
+  subCategory   SubCategory?   @relation(name: "SubCategoryOnPost", fields: [subCategoryId], references: [id])
+  subCategoryId String?
+  advertisement Advertisement? @relation(name:"PostOnAdvertisement")
+  hotShot       HotShot?        @relation(name:"PostOnHotShot")
+  scholarship   Scholarship?   @relation(name:"PostOnScholarship")  
+  notifications Notification[]    @relation(name:"PostOnNotification")   
 }
 
 model Flag {
-  id                    String          @id @default(cuid())
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  moderator             User?           @relation(name: "ModeratorOnFlag", fields: [moderatorId], references: [id])
-  moderatorId           String?
-  user                  User?           @relation(name: "UserOnFlag", fields: [userId], references: [id])
-  userId                String?
-  post                  Post?           @relation(name: "PostOnFlag", fields: [postId], references: [id])
-  postId                String?
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  moderator   User?    @relation(name: "ModeratorOnFlag", fields: [moderatorId], references: [id])
+  moderatorId String?
+  user        User?    @relation(name: "UserOnFlag", fields: [userId], references: [id])
+  userId      String?
+  post        Post?    @relation(name: "PostOnFlag", fields: [postId], references: [id])
+  postId      String?
 }
 
-model Vote {
-  id                    String          @id @default(cuid())
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  type                  VoteType
-  post                  Post?           @relation(name: "PostOnVotes", fields: [postId], references: [id])
-  postId                String?
-  user                  User?           @relation(name: "UserOnVotes", fields: [userId], references: [id])
-  userId                String?
+model Reaction {
+  id        String       @id @default(cuid())
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  type      ReactionType
+  post      Post?        @relation(name: "PostOnReaction", fields: [postId], references: [id])
+  postId    String?
+  user      User?        @relation(name: "UserOnReaction", fields: [userId], references: [id])
+  userId    String?
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User?    @relation(name: "UserOnFollow", fields: [userId], references: [id])
+  userId      String?
+  following   User?    @relation(name: "FollowingOnFollow", fields: [followingId], references: [id])
+  followingId String?
 }
 
 model Comment {
-  id                    String          @id @default(cuid())
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  body                  String
-  children              Comment[]       @relation(name: "CommentOnComment")
-  parent                Comment?        @relation(name: "CommentOnComment", fields: [parentId], references: [id])
-  parentId              String?
-  user                  User?           @relation(name: "UserOnComment", fields: [userId], references: [id])
-  userId                String?
-  post                  Post?           @relation(name: "PostOnComment", fields: [postId], references: [id])
-  postId                String?
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  body      String
+  children  Comment[] @relation(name: "CommentOnComment")
+  parent    Comment?  @relation(name: "CommentOnComment", fields: [parentId], references: [id])
+  parentId  String?
+  user      User?     @relation(name: "UserOnComment", fields: [userId], references: [id])
+  userId    String?
+  post      Post?     @relation(name: "PostOnComment", fields: [postId], references: [id])
+  postId    String?
 }
 
 model Tag {
-  id                    String          @id @default(cuid())
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  name                  String
-  post                  Post[]          @relation(name: "PostOnTags")
+  id              String         @id @default(cuid())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  name            String
+  post            Post[]         @relation(name: "PostOnTags")
+  Advertisement   Advertisement? @relation(fields: [advertisementId], references: [id])
+  advertisementId String?
+}
+
+model Category {
+  id            String        @id @default(cuid())
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  name          String
+  post          Post[]        @relation(name: "CategoryOnPost")
+  subCategories SubCategory[] @relation(name: "CategoryOnSubCategory")
+}
+
+model SubCategory {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  name      String
+  post      Post[]    @relation(name: "SubCategoryOnPost")
+  parent    Category? @relation(name: "CategoryOnSubCategory", fields: [parentId], references: [id])
+  parentId  String?
 }
 
 model File {
-  id                    String          @id @default(cuid())
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  name                  String?
-  preview               String?
-  source                String?
-  width                 Int?
-  height                Int?
-  size                  Int?
-  user                  User?           @relation(fields: [userId], references: [id])
-  userId                String?
-  post                  Post?           @relation(fields: [postId], references: [id])
-  postId                String?
+  id            String          @id @default(cuid())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  name          String?
+  preview       String?
+  source        String?
+  width         Int?
+  height        Int?
+  size          Int?
+  user          User?           @relation(fields: [userId], references: [id])
+  userId        String?
+  post          Post?           @relation(fields: [postId], references: [id])
+  postId        String?
+  hotShot       HotShot?        @relation(fields:[hostShotId], references:[id])
+  hostShotId    String?
+  advertisement Advertisement?  @relation(fields:[advertisementId], references:[id])
+  advertisementId String?       
+}
+
+model HotShot {
+  id              String        @id @default(cuid())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  post            Post?         @relation(name:"PostOnHotShot",fields: [postId], references: [id])
+  postId          String?
+  image           File?         
+  backgroundColor String?       @default("#ffffff")
+  title           String?
+  body            String?
+}
+
+model Advertisement {
+  id                  String                  @id @default(cuid())
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
+  startsAt            DateTime?
+  expiresAt           DateTime?
+  type                AdvertisementTye
+  targetTags          Tag[]
+  targetSex           AdvertisementTargetSex? @default(value: both)
+  targetAgeLowerLimit Int?                    @default(14)
+  targetAgeUpperLimit Int?                    @default(60)
+  post                Post?                   @relation(name:"PostOnAdvertisement",fields: [postId], references: [id])
+  postId              String?
+  image               File?
+  status              AdvertisementStatus?
+  backgroundColor     String?                 @default("#ffffff")
+  title               String?
+  body                String?
+  views               Int?
+  clicks              Int?
+  order               Order?                 @relation(name:"AdvertisementOnOrder")
+}
+
+model Notification {
+  id                String                   @id @default(cuid())
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  post              Post?                    @relation(name:"PostOnNotification",fields:[postId],references:[id])
+  postId            String?
+  user              User                     @relation(name:"UserOnNotification",fields:[userId],references:[id])
+  userId            String
+  body              String?
+  read              Boolean                  @default(false)
+}
+
+model Subscription {
+  id                String                   @id @default(cuid())
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  user              User                     @relation(name:"UserOnSubscription",fields:[userId],references:[id])
+  userId            String
+  postType          PostType[]
+  email             Boolean                  @default(false)
+}
+
+model Scholarship {
+  id                String                   @id @default(cuid())
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  country           String?
+  level             ScholarshipLevel
+  startsAt          DateTime
+  deadlineAt        DateTime
+  post              Post?                    @relation(name: "PostOnScholarship", fields:[postId], references:[id])
+  postId            String?  
+}
+
+model LoksewaQuestion {
+  id                String                   @id @default(cuid())
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  category          LoksewaQuestionCategory? @relation(name: "CategoryOnLoksewaQuestions", fields: [categoryId], references: [id])
+  categoryId        String?
+  set               LoksewaMockSet?          @relation(name: "SetOnLoksewaQuestions", fields: [setId], references: [id])
+  setId             String?
+  title             String
+  optionA           String
+  optionB           String
+  optionC           String
+  optionD           String
+  answer            MCQAnswer
+  additionalDetails String?
+  meta              LoksewaQuestionMeta?     @relation(name: "MetaOnLoksewaQuestions", fields: [metaId], references: [id])
+  metaId            String?
+  difficulty        Difficulty               @default(value: medium)
+  userAnswer        Answer[]                 @relation(name:"QuestionOnAnswer")
+}
+
+model LoksewaQuestionMeta {
+  id              String            @id @default(cuid())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  body            String?
+  LoksewaQuestion LoksewaQuestion[] @relation("MetaOnLoksewaQuestions")
+}
+
+model LoksewaMockSet {
+  id         String               @id @default(cuid())
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+  questions  LoksewaQuestion[]    @relation(name: "SetOnLoksewaQuestions")
+  category   LoksewaMockCategory? @relation(name: "CategoryOnLoksewaMockSet", fields: [categoryId], references: [id])
+  categoryId String?
+  status     MockSetStatus
+  type       MockSetType
+  editor     User?                @relation(name: "EditorOnLoksewaMockSet", fields: [editorId], references: [id])
+  editorId   String?
+  loksewaTest LoksewaTest[]       @relation(name:"SetOnLoksewaTest")
+  orders      Order[]                 @relation(name:"SetOnOrder")
+}
+
+model LoksewaQuestionCategory {
+  id        String            @id @default(cuid())
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  questions LoksewaQuestion[] @relation(name: "CategoryOnLoksewaQuestions")
+}
+
+model LoksewaMockCategory {
+  id           String           @id @default(cuid())
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  questionSets LoksewaMockSet[] @relation(name: "CategoryOnLoksewaMockSet")
+  title        String?
+}
+
+model LoksewaTest {
+  id           String           @id @default(cuid())
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  user         User             @relation(name:"UserOnLoksewaTest",fields:[userId],references:[id])
+  userId       String
+  set          LoksewaMockSet   @relation(name:"SetOnLoksewaTest",fields:[setId],references:[id])
+  setId        String         
+  score        Int              @default(0)
+  completed    Boolean          @default(false)
+  answers      Answer[]         @relation(name:"TestOnAnswer")
+}
+
+model Answer {
+  id           String           @id @default(cuid())
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  test         LoksewaTest      @relation(name:"TestOnAnswer",fields:[testId],references:[id])
+  testId       String
+  question     LoksewaQuestion  @relation(name:"QuestionOnAnswer",fields:[questionId],references:[id])
+  questionId   String
+  answer       MCQAnswer?
+  status       AnswerStatus    @default(value:unanswered)
+}
+
+model Membership {
+  id                String                   @id @default(cuid())
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  user              User                     @relation(name:"UserOnMembership",fields:[userId],references:[id])
+  userId            String
+  expiresAt         DateTime
+  type              MembershipType
+  order             Order?                   @relation(name:"MembershipOnOrder") 
 }
 
 
+model Order {
+  id                String                   @id @default(cuid())
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  user              User                     @relation(name:"UserOnOrder",fields:[userId],references:[id])
+  userId            String
+  set               LoksewaMockSet?          @relation(name:"SetOnOrder",fields:[setId],references:[id])
+  setId             String?
+  advertsiment      Advertisement?           @relation(name:"AdvertisementOnOrder",fields:[advertisementId],references:[id])
+  advertisementId   String?
+  membership        Membership?              @relation(name:"MembershipOnOrder",fields:[membershipId],references:[id])
+  membershipId      String?
+  body              String?
+  amountPaid        Int
+  paymentMethod     PaymentMethod?
+  paymentId         String?
+}
+
 enum UserStatus {
-    active
-    blocked
-    inactive
+  active
+  blocked
+  inactive
 }
 
 enum UserRole {
-    admin
-    moderator
-    user
+  admin
+  moderator
+  user
 }
 
 enum PostType {
-    link
-    ask
-    job
+  articles
+  scholarships
+  information
+  loksewa
 }
 
 enum PostStatus {
-    draft
-    published
-    hidden
-    blocked
+  draft
+  unverified
+  commented
+  verified
+  published
+  hidden
+  blocked
 }
 
-enum VoteType {
-    upvotes
-    downvotes
+enum AdvertisementStatus {
+  draft
+  published
+  blocked
+  expired
+  paused
+}
+
+enum ReactionType {
+  like
+  happy
+  dislike
+  sad
+  angry
 }
 
 enum SessionType {
-    AUTHENTICATED
-    ANONYMOUS
-    MAGIC
+  AUTHENTICATED
+  ANONYMOUS
+  MAGIC
+}
+
+enum Language {
+  np
+  en
+}
+
+enum AdvertisementTye {
+  banner
+  post
+  splash
+  feed
+}
+
+enum AdvertisementTargetSex {
+  male
+  female
+  both
+}
+
+enum MCQAnswer {
+  A
+  B
+  C
+  D
+}
+
+enum Difficulty {
+  veryEasy
+  easy
+  medium
+  hard
+  veryHard
+}
+
+enum MockSetType {
+  free
+  official
+  premium
+}
+
+enum MockSetStatus {
+  draft
+  published
+  hidden
+}
+
+enum ScholarshipLevel {
+  langugage
+  training
+  research
+  k12
+  bachelors
+  masters
+  phd
+  postgrad
+}
+
+enum AnswerStatus {
+  unanswered
+  wrong
+  correct
+}
+
+enum PaymentMethod {
+  esewa
+  phonepay
+  imepay
+  ipsconnect
+  visa
+  banktransfer
+  cash
+}
+
+enum MembershipType {
+  gold
+  silver
+  bronze
 }
