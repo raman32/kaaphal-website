@@ -1,7 +1,8 @@
+import { useQuery } from '@apollo/client'
 import { Button } from 'antd'
 import { NextPage, NextPageContext } from 'next'
-import '/node_modules/antd/dist/antd.css'
-import 'tailwindcss/tailwind.css'
+import { useState } from 'react'
+import { PostQuery, PostQueryVariables, usePostQuery } from '../../gql'
 
 // The component's props type
 type PageProps = {
@@ -15,11 +16,16 @@ type PageContext = NextPageContext & {
 
 // react component
 const Page: NextPage<PageProps> = ({ title }) => {
+    const [id, setId] = useState('')
+    const { data, loading, error } = usePostQuery({ variables: { id: id } })
+    console.log(data, loading, error)
     return (
         <div>
             <h1>{title}</h1>
             <div className="hover:bg-gray-500"> Hello From the Other Side!!!!</div>
-            <Button type="primary" >button</Button>
+            <Button type="primary" onClick={() => setId("ckp4ace3o00006j2f1ol45n2h")} >button</Button>
+
+            <div></div>
         </div>
     )
 }

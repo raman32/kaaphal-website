@@ -15,6 +15,17 @@ import { AppService } from './app.service'
       playground: true,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      cors: {
+        origin: 'http://localhost:3000',
+        credentials: true
+      },
+      buildSchemaOptions: {
+        numberScalarMode: 'integer',
+      },
+      uploads: {
+        maxFileSize: 20971520,
+      },
+      context: ({ req }) => ({ req }),
     }),
     ApiModule
   ],

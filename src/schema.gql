@@ -6,7 +6,7 @@
 type Advertisement {
   backgroundColor: String
   body: String
-  clicks: Float
+  clicks: Int
 
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!
@@ -20,8 +20,8 @@ type Advertisement {
   postId: String!
   startsAt: DateTime!
   status: AdvertisementStatus
-  targetAgeLowerLimit: Float!
-  targetAgeUpperLimit: Float!
+  targetAgeLowerLimit: Int!
+  targetAgeUpperLimit: Int!
   targetSex: AdvertisementTargetSex
   targetTags: [Tag!]
   title: String
@@ -29,7 +29,7 @@ type Advertisement {
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
-  views: Float
+  views: Int
 }
 
 enum AdvertisementStatus {
@@ -128,20 +128,20 @@ enum Difficulty {
 type File {
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!
-  height: Float!
+  height: Int!
 
   """Unique UUID string"""
   id: ID!
   name: String!
   post: Post
   preview: String!
-  size: Float!
+  size: Int!
   source: String!
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
   user: User
-  width: Float!
+  width: Int!
 }
 
 type Flag {
@@ -315,7 +315,7 @@ type LoksewaTest {
 
   """Unique UUID string"""
   id: ID!
-  score: Float!
+  score: Int!
   set: LoksewaMockSet!
   setId: String!
 
@@ -387,7 +387,7 @@ type Notification {
 type Order {
   advertisementId: String!
   advertsiment: Advertisement
-  amountPaid: Float!
+  amountPaid: Int!
   body: String!
 
   """Identifies the date and time when the object was created."""
@@ -454,7 +454,7 @@ type Post {
   url: String
   user: User
   userId: String
-  views: Float!
+  views: Int!
 }
 
 enum PostStatus {
