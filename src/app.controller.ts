@@ -11,4 +11,8 @@ export class AppController {
       title: 'Kaaphal Website',
     }
   }
+  @Get('/admin')
+  @Render('Admin')
+  renderAdmin(): void { };
 }
+

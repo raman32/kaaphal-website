@@ -28,6 +28,7 @@
     "antd": "^4.16.0",
     "apollo-link-token-refresh": "^0.3.2",
     "apollo-server-express": "^2.24.1",
+    "braft-editor": "^2.3.9",
     "cross-env": "^7.0.3",
     "graphql": "^15.5.0",
     "graphql-tools": "^7.0.5",

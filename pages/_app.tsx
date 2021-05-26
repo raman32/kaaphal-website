@@ -15,6 +15,7 @@ function MyApp({ Component, pageProps, apolloClient }) {
                     content="minimum-scale=1, initial-scale=1, width=device-width"
                     key="viewport-meta"
                 />
+                <meta name="description" content="Kaaphal Website -  Articles, Informations, Scholarships and Loksewa" />
             </Head>
             <ApolloProvider client={apolloClient}>
                 <Component {...pageProps} />
