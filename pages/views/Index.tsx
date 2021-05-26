@@ -23,7 +23,7 @@ const Page: NextPage<PageProps> = ({ title }) => {
         <div>
             <h1>{title}</h1>
             <div className="hover:bg-gray-500"> Hello From the Other Side!!!!</div>
-            <Button type="primary" onClick={() => setId("ckp4ace3o00006j2f1ol45n2h")} >button</Button>
+            <Button type="primary" onClick={() => setId('ckp4ace3o00006j2f1ol45n2h')} >button</Button>
 
             <div></div>
         </div>

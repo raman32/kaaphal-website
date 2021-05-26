@@ -6,13 +6,15 @@ import dynamic from 'next/dynamic'
 const BraftEditor = dynamic(() => import('braft-editor'), {
     ssr: false
 })
+
 import 'braft-editor/dist/index.css'
 import { useState } from 'react';
 const { Header, Content, Footer, Sider } = Layout;
 const Admin: NextPage<Record<string, never>> = () => {
     const [editorState, setEditorState] = useState(null);
+
     return (
-        <Layout>
+        <Layout >
             <Sider
                 breakpoint="lg"
                 collapsedWidth="0"
@@ -22,7 +24,7 @@ const Admin: NextPage<Record<string, never>> = () => {
                 onCollapse={(collapsed, type) => {
                     console.log(collapsed, type);
                 }}
-                className="h-full"
+                className="min-h-screen h-full"
             >
                 <div className="rounded-full shadow-md w-20 h-20 bg-gray-300 mx-auto my-5"></div>
                 <div className="text-lg text-white text-center">Howdy Admin!</div>
@@ -43,7 +45,7 @@ const Admin: NextPage<Record<string, never>> = () => {
                         <Menu.Item key="9">Create New User</Menu.Item>
                         <Menu.Item key="10">Edit User</Menu.Item>
                     </Menu.SubMenu>
-                    <Menu.Item key="10" icon={<UserOutlined />}>
+                    <Menu.Item key="11" icon={<UserOutlined />}>
                         Admin Profile
                     </Menu.Item>
                 </Menu>
