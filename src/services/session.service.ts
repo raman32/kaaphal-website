@@ -49,17 +49,17 @@ export class SessionService {
         });
     }
 
-    async authenticate(user: User): Promise<{
+    async authenticate(user: User, facebookToken?: string, googleToken?: string): Promise<{
         user: User;
         authToken: string;
         refreshToken: string;
     }> {
-        return this.createNewAuthenticatedSession({ user });
+        return this.createNewAuthenticatedSession({ user, facebookToken, googleToken });
     }
 
     async createNewAuthenticatedSession({
-        user,
-    }: { user: User }): Promise<{ user: User; authToken: string; refreshToken: string }> {
+        user, facebookToken, googleToken
+    }: { user: User, facebookToken?: string, googleToken?: string }): Promise<{ user: User; authToken: string; refreshToken: string }> {
         const token = await this.generateSessionToken();
         const authToken = await this.generateAccessToken(user.id, token);
         const awaitSession = await this.prisma.session.create({
@@ -75,6 +75,9 @@ export class SessionService {
                 expires: this.getExpiryDate(this.sessionDurationInMs),
                 invalidate: false,
                 type: 'AUTHENTICATED',
+                facebookToken: facebookToken,
+                googleToken: googleToken
+
             },
             include: {
                 user: true,

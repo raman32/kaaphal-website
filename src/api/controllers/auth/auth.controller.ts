@@ -1,11 +1,39 @@
-import { Controller, Get, Post, Header, Render, Headers, Param } from '@nestjs/common';
+import { Controller, Get, Post, Header, Render, Headers, Param, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from '../../../services/auth.service';
 import { SessionService } from '../../../services/session.service';
+import { GoogleAuthGuard } from '../../resolvers/auth/guards/google-auth.guard'
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService,
         private readonly sessionService: SessionService) { }
+
+
+
+
+    @Get('google')
+    @UseGuards(GoogleAuthGuard)
+    async googleAuth(@Req() req) { }
+
+    @Get('/google/redirect')
+    @Render('MagicLinkValidating')
+    @UseGuards(GoogleAuthGuard)
+    async googleAuthRedirect(@Req() req) {
+        const validate = await this.authService.validateGoogleLogin(req.user)
+        if (!validate.invalid) {
+            return {
+                invalid: false,
+                auth: {
+                    accessToken: validate.auth.refreshToken,
+                    refreshToken: validate.auth.refreshToken,
+                },
+            };
+        }
+        return {
+            invalid: true,
+        };
+    }
+
 
     @Get('validationError')
     @Render('MagicLinkError')
@@ -68,6 +96,5 @@ export class AuthController {
             }
         }
     }
-
 
 }

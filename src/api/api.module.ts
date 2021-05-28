@@ -10,6 +10,7 @@ import { DateScalar } from './common/scalar/date.scalar';
 import { AuthController } from './controllers/auth/auth.controller';
 import { UserController } from './controllers/user/user.controller';
 import { AuthModule } from './resolvers/auth/auth.module';
+import { GoogleStrategy } from './resolvers/auth/google.strategy';
 import { GQLAuthGuard } from './resolvers/auth/guards/auth.guard';
 import { PostModule } from './resolvers/post/post.module';
 import { UserModule } from './resolvers/user/user.module';
@@ -25,6 +26,7 @@ import { UserModule } from './resolvers/user/user.module';
             provide: APP_GUARD,
             useClass: GQLAuthGuard,
         },
-        DateScalar,],
+        DateScalar,
+        GoogleStrategy,],
 })
 export class ApiModule { }
