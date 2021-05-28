@@ -1,5 +1,5 @@
-query post ($id: String!) {
-    post(id:$id){
+query getPost ($id: String!) {
+    getPost(id:$id){
     userId
     title
     body

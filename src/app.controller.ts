@@ -14,5 +14,11 @@ export class AppController {
   @Get('/admin')
   @Render('Admin')
   renderAdmin(): void { };
+
+  @Get('/login')
+  @Render('Login')
+  async Login() {
+    return {};
+  }
 }
 

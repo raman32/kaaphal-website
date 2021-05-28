@@ -9,8 +9,8 @@ type Advertisement {
   clicks: Int
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
-  expiresAt: DateTime!
+  createdAt: Date!
+  expiresAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -18,7 +18,7 @@ type Advertisement {
   order: Order
   post: Post!
   postId: String!
-  startsAt: DateTime!
+  startsAt: Date!
   status: AdvertisementStatus
   targetAgeLowerLimit: Int!
   targetAgeUpperLimit: Int!
@@ -28,7 +28,7 @@ type Advertisement {
   type: AdvertisementType!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   views: Int
 }
 
@@ -58,7 +58,7 @@ type Answer {
   answer: MCQAnswer!
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -69,7 +69,7 @@ type Answer {
   testId: String!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
 }
 
 enum AnswerStatus {
@@ -81,7 +81,7 @@ enum AnswerStatus {
 """Major Category for Post"""
 type Category {
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -90,7 +90,7 @@ type Category {
   subCategories: [SubCategory!]!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
 }
 
 type Comment {
@@ -98,7 +98,7 @@ type Comment {
   children: [Comment!]
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -107,15 +107,13 @@ type Comment {
   postId: String!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   user: User
   userId: String!
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
+"""Date custom scalar type"""
+scalar Date
 
 enum Difficulty {
   easy
@@ -127,7 +125,7 @@ enum Difficulty {
 
 type File {
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
   height: Int!
 
   """Unique UUID string"""
@@ -139,14 +137,14 @@ type File {
   source: String!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   user: User
   width: Int!
 }
 
 type Flag {
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -159,7 +157,7 @@ type Flag {
   type: FlagType!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   user: User!
   userId: String!
 }
@@ -182,7 +180,7 @@ enum FlagType {
 
 type Follow {
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
   following: User!
   followingId: String!
 
@@ -190,7 +188,7 @@ type Follow {
   id: ID!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   user: User!
   userId: String!
 }
@@ -200,7 +198,7 @@ type Hotshot {
   body: String!
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -210,7 +208,7 @@ type Hotshot {
   title: String!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
 }
 
 enum Language {
@@ -220,7 +218,7 @@ enum Language {
 
 type LoksewaMockCategory {
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -228,7 +226,7 @@ type LoksewaMockCategory {
   title: String!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
 }
 
 type LoksewaMockSet {
@@ -236,7 +234,7 @@ type LoksewaMockSet {
   categoryId: String!
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
   editor: User!
   editorId: String!
 
@@ -249,7 +247,7 @@ type LoksewaMockSet {
   type: MockSetType!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
 }
 
 type LoksewaQuestion {
@@ -259,7 +257,7 @@ type LoksewaQuestion {
   categoryId: String!
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
   difficulty: Difficulty!
 
   """Unique UUID string"""
@@ -275,13 +273,13 @@ type LoksewaQuestion {
   title: String!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   userAnswer: [Answer!]!
 }
 
 type LoksewaQuestionCategory {
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -289,7 +287,7 @@ type LoksewaQuestionCategory {
   title: String!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
 }
 
 type LoksewaQuestionMeta {
@@ -297,13 +295,13 @@ type LoksewaQuestionMeta {
   body: String!
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
 }
 
 type LoksewaTest {
@@ -311,7 +309,7 @@ type LoksewaTest {
   completed: Boolean!
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -320,7 +318,7 @@ type LoksewaTest {
   setId: String!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   user: User!
   userId: String!
 }
@@ -332,10 +330,15 @@ enum MCQAnswer {
   D
 }
 
+type MagicLink {
+  listener: String!
+  status: Boolean!
+}
+
 type Membership {
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
-  expiresAt: DateTime!
+  createdAt: Date!
+  expiresAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -343,7 +346,7 @@ type Membership {
   type: MembershipType!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   user: User!
   userId: String!
 }
@@ -366,11 +369,15 @@ enum MockSetType {
   premium
 }
 
+type Mutation {
+  sendMagicLink(email: String!): MagicLink!
+}
+
 type Notification {
   body: String!
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -379,7 +386,7 @@ type Notification {
   read: Boolean!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   user: User!
   userId: String!
 }
@@ -391,7 +398,7 @@ type Order {
   body: String!
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -403,7 +410,7 @@ type Order {
   setId: String!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   user: User!
   userId: String!
 }
@@ -427,7 +434,7 @@ type Post {
   comments: [Comment!]!
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
   deleted: Boolean!
   editor: User
   editorId: String
@@ -438,7 +445,7 @@ type Post {
   id: ID!
   image: File
   language: Language!
-  publishedAt: DateTime
+  publishedAt: Date
   reactions: [Reaction!]
   scholarship: Scholarship
   slug: String!
@@ -450,7 +457,7 @@ type Post {
   type: PostType!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   url: String
   user: User
   userId: String
@@ -475,13 +482,14 @@ enum PostType {
 }
 
 type Query {
-  post(id: String!): Post!
+  getPost(id: String!): Post!
+  me: User
 }
 
 """Major Category for Post"""
 type Reaction {
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -490,7 +498,7 @@ type Reaction {
   type: ReactionType!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   user: User
   userId: String
 }
@@ -507,18 +515,18 @@ type Scholarship {
   country: String!
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
-  deadlineAt: DateTime!
+  createdAt: Date!
+  deadlineAt: Date!
 
   """Unique UUID string"""
   id: ID!
   level: ScholarshipLevel!
   post: Post!
   postId: String!
-  startsAt: DateTime!
+  startsAt: Date!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
 }
 
 enum ScholarshipLevel {
@@ -536,8 +544,8 @@ type Session {
   authToken: String!
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
-  expires: DateTime!
+  createdAt: Date!
+  expires: Date!
   facebookToken: String
   githubToken: String
   googleToken: String
@@ -550,14 +558,14 @@ type Session {
   type: String!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   user: User
 }
 
 """Sub Category for Post"""
 type SubCategory {
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -567,12 +575,12 @@ type SubCategory {
   post: [Post!]!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
 }
 
 type Subscription {
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
   email: Boolean!
 
   """Unique UUID string"""
@@ -580,14 +588,14 @@ type Subscription {
   postType: [PostType!]!
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
   user: User!
   userId: String!
 }
 
 type Tag {
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
 
   """Unique UUID string"""
   id: ID!
@@ -595,7 +603,7 @@ type Tag {
   post: [Post!]
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
 }
 
 """User Model"""
@@ -603,7 +611,7 @@ type User {
   comments: Comment
 
   """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
+  createdAt: Date!
   deleted: Boolean!
   displayName: String
   editedLoksewaMockSet: [LoksewaMockSet!]
@@ -632,7 +640,7 @@ type User {
   subcription: Subscription
 
   """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+  updatedAt: Date!
 }
 
 enum UserRole {

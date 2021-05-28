@@ -1,8 +1,7 @@
-import { useQuery } from '@apollo/client'
 import { Button } from 'antd'
 import { NextPage, NextPageContext } from 'next'
 import { useState } from 'react'
-import { PostQuery, PostQueryVariables, usePostQuery } from '../../gql'
+import { useGetPostQuery } from '../../gql'
 
 // The component's props type
 type PageProps = {
@@ -17,7 +16,7 @@ type PageContext = NextPageContext & {
 // react component
 const Page: NextPage<PageProps> = ({ title }) => {
     const [id, setId] = useState('')
-    const { data, loading, error } = usePostQuery({ variables: { id: id } })
+    const { data, loading, error } = useGetPostQuery({ variables: { id: id } })
     console.log(data, loading, error)
     return (
         <div>

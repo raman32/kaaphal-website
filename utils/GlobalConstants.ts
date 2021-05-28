@@ -4,3 +4,6 @@ export const graphQLEndpoint = `${host ? host : 'https://kaaphal.com'
     }/graphql`;
 export const refreshUrl = `${host ? host : 'https://kaaphal.com'
     }/auth/refresh-token`;
+export const jwtConstans = {
+    secret: process.env.JWT_SECRET
+}

@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ServicesModule } from '../../../services/service.module';
-import { SessionService } from '../../../services/session.service';
 import { RequestContextService } from '../../common/requestContext.service';
-import { PostResolver } from './post.resolver';
+import { UserResolver } from './user.resolver';
 
 @Module({
     imports: [ServicesModule],
-    providers: [PostResolver, RequestContextService],
+    providers: [UserResolver, RequestContextService],
 })
-export class PostModule { }
+export class UserModule { }

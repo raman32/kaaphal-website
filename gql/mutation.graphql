@@ -1,0 +1,6 @@
+mutation sendMagicLink($email:String!){
+sendMagicLink (email:$email) {
+    status 
+    listener
+  }
+}

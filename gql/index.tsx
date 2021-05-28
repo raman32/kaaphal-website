@@ -21,7 +21,7 @@ export type Advertisement = {
   __typename?: 'Advertisement';
   backgroundColor?: Maybe<Scalars['String']>;
   body?: Maybe<Scalars['String']>;
-  clicks?: Maybe<Scalars['Float']>;
+  clicks?: Maybe<Scalars['Int']>;
   /** Identifies the date and time when the object was created. */
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
@@ -33,15 +33,15 @@ export type Advertisement = {
   postId: Scalars['String'];
   startsAt: Scalars['DateTime'];
   status?: Maybe<AdvertisementStatus>;
-  targetAgeLowerLimit: Scalars['Float'];
-  targetAgeUpperLimit: Scalars['Float'];
+  targetAgeLowerLimit: Scalars['Int'];
+  targetAgeUpperLimit: Scalars['Int'];
   targetSex?: Maybe<AdvertisementTargetSex>;
   targetTags?: Maybe<Array<Tag>>;
   title?: Maybe<Scalars['String']>;
   type: AdvertisementType;
   /** Identifies the date and time when the object was last updated. */
   updatedAt: Scalars['DateTime'];
-  views?: Maybe<Scalars['Float']>;
+  views?: Maybe<Scalars['Int']>;
 };
 
 export enum AdvertisementStatus {
@@ -132,18 +132,18 @@ export type File = {
   __typename?: 'File';
   /** Identifies the date and time when the object was created. */
   createdAt: Scalars['DateTime'];
-  height: Scalars['Float'];
+  height: Scalars['Int'];
   /** Unique UUID string */
   id: Scalars['ID'];
   name: Scalars['String'];
   post?: Maybe<Post>;
   preview: Scalars['String'];
-  size: Scalars['Float'];
+  size: Scalars['Int'];
   source: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
   updatedAt: Scalars['DateTime'];
   user?: Maybe<User>;
-  width: Scalars['Float'];
+  width: Scalars['Int'];
 };
 
 export type Flag = {
@@ -304,7 +304,7 @@ export type LoksewaTest = {
   createdAt: Scalars['DateTime'];
   /** Unique UUID string */
   id: Scalars['ID'];
-  score: Scalars['Float'];
+  score: Scalars['Int'];
   set: LoksewaMockSet;
   setId: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
@@ -319,6 +319,12 @@ export enum McqAnswer {
   C = 'C',
   D = 'D'
 }
+
+export type MagicLink = {
+  __typename?: 'MagicLink';
+  listener: Scalars['String'];
+  status: Scalars['Boolean'];
+};
 
 export type Membership = {
   __typename?: 'Membership';
@@ -353,6 +359,16 @@ export enum MockSetType {
   Premium = 'premium'
 }
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  sendMagicLink: MagicLink;
+};
+
+
+export type MutationSendMagicLinkArgs = {
+  email: Scalars['String'];
+};
+
 export type Notification = {
   __typename?: 'Notification';
   body: Scalars['String'];
@@ -373,7 +389,7 @@ export type Order = {
   __typename?: 'Order';
   advertisementId: Scalars['String'];
   advertsiment?: Maybe<Advertisement>;
-  amountPaid: Scalars['Float'];
+  amountPaid: Scalars['Int'];
   body: Scalars['String'];
   /** Identifies the date and time when the object was created. */
   createdAt: Scalars['DateTime'];
@@ -435,7 +451,7 @@ export type Post = {
   url?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']>;
-  views: Scalars['Float'];
+  views: Scalars['Int'];
 };
 
 export enum PostStatus {
@@ -457,11 +473,11 @@ export enum PostType {
 
 export type Query = {
   __typename?: 'Query';
-  post: Post;
+  getPost: Post;
 };
 
 
-export type QueryPostArgs = {
+export type QueryGetPostArgs = {
   id: Scalars['String'];
 };
 
@@ -624,23 +640,70 @@ export enum UserStatus {
   Inactive = 'inactive'
 }
 
-export type PostQueryVariables = Exact<{
+export type SendMagicLinkMutationVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type SendMagicLinkMutation = (
+  { __typename?: 'Mutation' }
+  & { sendMagicLink: (
+    { __typename?: 'MagicLink' }
+    & Pick<MagicLink, 'status' | 'listener'>
+  ) }
+);
+
+export type GetPostQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type PostQuery = (
+export type GetPostQuery = (
   { __typename?: 'Query' }
-  & { post: (
+  & { getPost: (
     { __typename?: 'Post' }
     & Pick<Post, 'userId' | 'title' | 'body'>
   ) }
 );
 
 
-export const PostDocument = gql`
-    query post($id: String!) {
-  post(id: $id) {
+export const SendMagicLinkDocument = gql`
+    mutation sendMagicLink($email: String!) {
+  sendMagicLink(email: $email) {
+    status
+    listener
+  }
+}
+    `;
+export type SendMagicLinkMutationFn = Apollo.MutationFunction<SendMagicLinkMutation, SendMagicLinkMutationVariables>;
+
+/**
+ * __useSendMagicLinkMutation__
+ *
+ * To run a mutation, you first call `useSendMagicLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMagicLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMagicLinkMutation, { data, loading, error }] = useSendMagicLinkMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useSendMagicLinkMutation(baseOptions?: Apollo.MutationHookOptions<SendMagicLinkMutation, SendMagicLinkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendMagicLinkMutation, SendMagicLinkMutationVariables>(SendMagicLinkDocument, options);
+      }
+export type SendMagicLinkMutationHookResult = ReturnType<typeof useSendMagicLinkMutation>;
+export type SendMagicLinkMutationResult = Apollo.MutationResult<SendMagicLinkMutation>;
+export type SendMagicLinkMutationOptions = Apollo.BaseMutationOptions<SendMagicLinkMutation, SendMagicLinkMutationVariables>;
+export const GetPostDocument = gql`
+    query getPost($id: String!) {
+  getPost(id: $id) {
     userId
     title
     body
@@ -649,29 +712,29 @@ export const PostDocument = gql`
     `;
 
 /**
- * __usePostQuery__
+ * __useGetPostQuery__
  *
- * To run a query within a React component, call `usePostQuery` and pass it any options that fit your needs.
- * When your component renders, `usePostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetPostQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usePostQuery({
+ * const { data, loading, error } = useGetPostQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function usePostQuery(baseOptions: Apollo.QueryHookOptions<PostQuery, PostQueryVariables>) {
+export function useGetPostQuery(baseOptions: Apollo.QueryHookOptions<GetPostQuery, GetPostQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PostQuery, PostQueryVariables>(PostDocument, options);
+        return Apollo.useQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
       }
-export function usePostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostQuery, PostQueryVariables>) {
+export function useGetPostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostQuery, GetPostQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PostQuery, PostQueryVariables>(PostDocument, options);
+          return Apollo.useLazyQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
         }
-export type PostQueryHookResult = ReturnType<typeof usePostQuery>;
-export type PostLazyQueryHookResult = ReturnType<typeof usePostLazyQuery>;
-export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
+export type GetPostQueryHookResult = ReturnType<typeof useGetPostQuery>;
+export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>;
+export type GetPostQueryResult = Apollo.QueryResult<GetPostQuery, GetPostQueryVariables>;

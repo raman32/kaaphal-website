@@ -25,30 +25,30 @@ import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
+import React from 'react';
 
 export const restrictedPath = ['/user/profile', '/user/account'];
 
 export const isServer = (): boolean => typeof window === 'undefined';
 
-export function withApollo(PageComponent) {
+export function withApollo(PageComponent): React.ReactNode {
     const WithApollo = ({
         apolloClient,
         apolloState,
         authToken,
         ...pageprops
-    }: any) => {
-        // if (!isServer() && !getAccessToken()) {
-        //     const token = sessionStorage.getItem(refresh);
-        //     if (token) {
-        //         setRefreshToken(token);
-        //     } else {
-        //         if (restrictedPath.indexOf(Router.pathname) !== -1) {
-        //             Router.push('/login');
-        //         }
-        //     }
-        // }
-        const client = new ApolloClient({ uri: "http://localhost:3000/graphql", cache: new InMemoryCache() });
-        //const client = apolloClient || initApolloClient(apolloState);
+    }) => {
+        if (!isServer() && !getAccessToken()) {
+            const token = sessionStorage.getItem(refresh);
+            if (token) {
+                setRefreshToken(token);
+            } else {
+                if (restrictedPath.indexOf(Router.pathname) !== -1) {
+                    Router.push('/login');
+                }
+            }
+        }
+        const client = apolloClient || initApolloClient(apolloState);
         return <PageComponent {...pageprops} apolloClient={client} />;
     };
     if (process.env.NODE_ENV !== 'production') {
