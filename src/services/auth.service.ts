@@ -141,6 +141,41 @@ export class AuthService {
         // );
         return deliveryData;
     }
+    async validateFacebookLogin({ email, firstName, lastName, accessToken }: {
+        email: string,
+        firstName: string,
+        lastName: string,
+        image: string,
+        accessToken: string
+    }): Promise<{ auth?: Auth; isRegistered?: boolean; invalid: boolean }> {
+        const user = await this.prisma.user.findUnique({
+            where: { email: email },
+        });
 
+        // eslint-disable-next-line
+        const currentUser = user ? user
+            : await this.prisma.user.create({
+                data: {
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                },
+            });
+        const session = await this.sessionService.authenticate(user, accessToken, null);
+        const deliveryData = {
+            auth: {
+                user: currentUser,
+                accessToken: session.authToken,
+                refreshToken: session.refreshToken,
+            },
+            isRegistered: !!user,
+            invalid: false,
+        };
+        //TODO EMIT A GOOGLE LOGIN EVENT
+        // this.eventBus.publish(
+        //   ,
+        // );
+        return deliveryData;
+    }
 
 }

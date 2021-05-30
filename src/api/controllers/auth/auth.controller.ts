@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Header, Render, Headers, Param, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from '../../../services/auth.service';
 import { SessionService } from '../../../services/session.service';
+import { FacebookAuthGuard } from '../../resolvers/auth/guards/facebook-auth.guard';
 import { GoogleAuthGuard } from '../../resolvers/auth/guards/google-auth.guard'
 
 @Controller('auth')
@@ -34,6 +35,28 @@ export class AuthController {
         };
     }
 
+    @Get('facebook')
+    @UseGuards(FacebookAuthGuard)
+    async facebookLogin(): Promise<any> { }
+
+    @Get('/facebook/redirect')
+    @Render('MagicLinkValidating')
+    @UseGuards(FacebookAuthGuard)
+    async facebookLoginRedirect(@Req() req): Promise<any> {
+        const validate = await this.authService.validateFacebookLogin(req.user)
+        if (!validate.invalid) {
+            return {
+                invalid: false,
+                auth: {
+                    accessToken: validate.auth.refreshToken,
+                    refreshToken: validate.auth.refreshToken,
+                },
+            };
+        }
+        return {
+            invalid: true,
+        };
+    }
 
     @Get('validationError')
     @Render('MagicLinkError')
