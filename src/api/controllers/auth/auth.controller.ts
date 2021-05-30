@@ -9,9 +9,6 @@ export class AuthController {
     constructor(private readonly authService: AuthService,
         private readonly sessionService: SessionService) { }
 
-
-
-
     @Get('google')
     @UseGuards(GoogleAuthGuard)
     async googleAuth(@Req() req) { }
