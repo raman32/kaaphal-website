@@ -10,5 +10,6 @@ export class AuthenticatedSessionGuard implements CanActivate {
         if (!user) {
             return false
         }
+        return true
     }
 }

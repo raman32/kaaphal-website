@@ -11,11 +11,8 @@ import { UserController } from './controllers/user/user.controller';
 import { AuthModule } from './resolvers/auth/auth.module';
 import { FacebookStrategy } from './controllers/auth/facebook.strategy';
 import { GoogleStrategy } from './controllers/auth/google.strategy';
-import { RolesGuard } from './resolvers/auth/guards/role.guard';
-import { AuthenticatedSessionGuard } from './resolvers/auth/guards/auth.guard';
 import { PostModule } from './resolvers/post/post.module';
 import { UserModule } from './resolvers/user/user.module';
-import { GQLGuard } from './resolvers/auth/guards/gql.guard';
 
 
 @Module({
@@ -24,18 +21,6 @@ import { GQLGuard } from './resolvers/auth/guards/gql.guard';
     providers: [RequestContextService,
         SessionService,
         ConfigService,
-        {
-            provide: APP_GUARD,
-            useClass: GQLGuard,
-        },
-        {
-            provide: APP_GUARD,
-            useClass: RolesGuard,
-        },
-        {
-            provide: APP_GUARD,
-            useClass: AuthenticatedSessionGuard,
-        },
         DateScalar,
         GoogleStrategy, FacebookStrategy],
 })
