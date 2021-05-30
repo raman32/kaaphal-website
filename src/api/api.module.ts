@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
 import { EventBusModule } from '../event-bus/event-bus.module';
 import { ServicesModule } from '../services/service.module';
 import { SessionService } from '../services/session.service';
