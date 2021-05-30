@@ -483,6 +483,7 @@ enum PostType {
 
 type Query {
   getPost(id: String!): Post!
+  getUsers: [User!]
   me: User
 }
 

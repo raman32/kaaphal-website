@@ -6,7 +6,6 @@ import { SecurityConfig } from '../../../config/config.interface';
 import { ServicesModule } from '../../../services/service.module';
 import { RequestContextService } from '../../common/requestContext.service';
 import { AuthResolver } from './auth.resolver';
-import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
@@ -26,7 +25,7 @@ import { JwtStrategy } from './jwt.strategy';
         }),
         ServicesModule,
     ],
-    providers: [AuthResolver, JwtStrategy, GoogleStrategy, RequestContextService],
+    providers: [AuthResolver, JwtStrategy, RequestContextService],
     exports: [JwtModule]
 })
 export class AuthModule { }

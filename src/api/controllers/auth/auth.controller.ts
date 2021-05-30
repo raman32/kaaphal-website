@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Header, Render, Headers, Param, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from '../../../services/auth.service';
 import { SessionService } from '../../../services/session.service';
-import { FacebookAuthGuard } from '../../resolvers/auth/guards/facebook-auth.guard';
-import { GoogleAuthGuard } from '../../resolvers/auth/guards/google-auth.guard'
+import { FacebookAuthGuard } from './guards/facebookAuth.guard';
+import { GoogleAuthGuard } from './guards/googleAuth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -11,6 +11,7 @@ export class AuthController {
 
     @Get('google')
     @UseGuards(GoogleAuthGuard)
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     async googleAuth(@Req() req) { }
 
     @Get('/google/redirect')
@@ -34,6 +35,7 @@ export class AuthController {
 
     @Get('facebook')
     @UseGuards(FacebookAuthGuard)
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     async facebookLogin(): Promise<any> { }
 
     @Get('/facebook/redirect')

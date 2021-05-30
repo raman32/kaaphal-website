@@ -21,9 +21,9 @@ export enum UserStatus {
 }
 
 export enum UserRole {
-    admin,
-    moderator,
-    user
+    admin = 'admin',
+    moderator = 'moderator',
+    user = 'user'
 }
 
 registerEnumType(UserStatus, { name: 'UserStatus' })

@@ -3,10 +3,10 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { Post } from '../../../models/post.model';
 import { PrismaService } from '../../../services/prisma.service';
-import { GQLAuthGuard } from '../auth/guards/auth.guard';
+import { GQLGuard } from '../auth/guards/gql.guard';
 
 @Resolver(of => Post)
-@UseGuards(GQLAuthGuard)
+@UseGuards(GQLGuard)
 export class PostResolver {
     constructor(private prisma: PrismaService) { }
 
