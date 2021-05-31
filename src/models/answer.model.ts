@@ -5,15 +5,15 @@ import { LoksewaTest } from './loksewaTest.model';
 
 
 export enum AnswerStatus {
-    unanswered,
-    wrong,
-    correct
+    unanswered = 'unanswered',
+    wrong = 'wrong',
+    correct = 'correct'
 }
 export enum MCQAnswer {
-    A,
-    B,
-    C,
-    D
+    A = 'A',
+    B = 'B',
+    C = 'C',
+    D = 'D'
 }
 
 registerEnumType(AnswerStatus, { name: 'AnswerStatus' })

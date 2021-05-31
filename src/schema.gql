@@ -112,6 +112,15 @@ type Comment {
   userId: String!
 }
 
+input CreatePostInput {
+  body: String
+  image: String
+  slug: String
+  title: String!
+  type: PostType = articles
+  url: String
+}
+
 """Date custom scalar type"""
 scalar Date
 
@@ -370,6 +379,8 @@ enum MockSetType {
 }
 
 type Mutation {
+  createMePost(post: CreatePostInput!): Post!
+  createPost(post: CreatePostInput!, userId: String!): Post!
   sendMagicLink(email: String!): MagicLink!
 }
 

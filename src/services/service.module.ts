@@ -7,6 +7,7 @@ import { EventBusModule } from '../event-bus/event-bus.module';
 import { AuthService } from './auth.service';
 import { EmailService } from './email.service';
 import { EmailGeneratorService } from './emailGenerator.service';
+import { PostService } from './post.service';
 import { PrismaService } from './prisma.service';
 import { SessionService } from './session.service';
 import { UserService } from './user.service';
@@ -28,7 +29,7 @@ import { UserService } from './user.service';
             inject: [ConfigService],
         }), EventBusModule,],
     controllers: [],
-    providers: [PrismaService, AuthService, EmailService, EmailGeneratorService, SessionService, UserService],
-    exports: [PrismaService, AuthService, SessionService, UserService, EmailService],
+    providers: [PrismaService, AuthService, EmailService, EmailGeneratorService, SessionService, UserService, PostService],
+    exports: [PrismaService, AuthService, SessionService, UserService, EmailService, PostService],
 })
 export class ServicesModule { }

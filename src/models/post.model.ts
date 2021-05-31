@@ -14,10 +14,10 @@ import { User } from './user.model';
 
 
 export enum PostType {
-    articles,
-    scholarships,
-    information,
-    loksewa
+    articles = 'articles',
+    scholarships = 'scholarships',
+    information = 'information',
+    loksewa = 'loksewa'
 }
 
 export enum PostStatus {
