@@ -6,6 +6,8 @@ export class CreateUserInput {
     firstName: string;
     @Field({ nullable: true })
     lastName: string;
+    @Field()
+    email: string;
     @Field({ nullable: true })
     middleName: string;
     @Field({ nullable: true })

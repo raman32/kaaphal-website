@@ -1,14 +1,15 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { parseContext } from '../../../common/parseContext';
 import { RequestContext } from '../../../common/requestContext';
+import { REQUEST_CONTEXT_KEY } from '../../../common/requestContext.service';
 
 @Injectable()
 export class AuthenticatedSessionGuard implements CanActivate {
-    constructor(private reflector: Reflector) { }
     canActivate(context: ExecutionContext): boolean {
-        const { user } = context as unknown as RequestContext;
+        const { req } = parseContext(context);
+        const { user } = req[REQUEST_CONTEXT_KEY] as RequestContext;
         if (!user) {
-            return false
+            return false;
         }
         return true
     }

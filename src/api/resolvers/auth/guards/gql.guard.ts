@@ -22,7 +22,7 @@ export class GQLGuard implements CanActivate {
                 info,
                 session,
             );
-            (req as any)[REQUEST_CONTEXT_KEY] = requestContext;
+            req[REQUEST_CONTEXT_KEY] = requestContext;
             return true;
         } else {
             return false;
