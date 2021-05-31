@@ -794,6 +794,11 @@
   resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-3.4.0.tgz#c3c5ae543c897caa9c2a68630bed355be5f9990f"
   integrity sha512-JZButFdZ1+/xAfpguQHoabIXkcqRRKpMrWKBkpEZZyxfY9C1DpADFB8PEqGSTeFr135SaTRfKqGKx5xSCLI7ZQ==
 
+"@devoxa/prisma-relay-cursor-connection@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@devoxa/prisma-relay-cursor-connection/-/prisma-relay-cursor-connection-2.0.2.tgz#01d2d713293a4546b38935eb56c36360ccb3c4ba"
+  integrity sha512-1Q/y7R7OxWtx5lpy5nn4ywSK5DGDGablOhX3ys2mXGidHshTaBMGv9semV3wPmaCBxvEtazAMgNuvkH0Kx+Yjg==
+
 "@endemolshinegroup/cosmiconfig-typescript-loader@3.0.2":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@endemolshinegroup/cosmiconfig-typescript-loader/-/cosmiconfig-typescript-loader-3.0.2.tgz#eea4635828dde372838b0909693ebd9aafeec22d"

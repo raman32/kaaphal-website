@@ -426,6 +426,13 @@ type Order {
   userId: String!
 }
 
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
 enum PaymentMethod {
   banktransfer
   cash
@@ -475,6 +482,17 @@ type Post {
   views: Int!
 }
 
+type PostConnection {
+  edges: [PostEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PostEdge {
+  cursor: String!
+  node: Post!
+}
+
 enum PostStatus {
   blocked
   commented
@@ -494,7 +512,8 @@ enum PostType {
 
 type Query {
   getPost(id: String!): Post!
-  getUsers: [User!]
+  getPosts(after: String, before: String, first: Int, last: Int, skip: Int): PostConnection!
+  getUsers(after: String, before: String, first: Int, last: Int, skip: Int): UserConnection!
   me: User
 }
 
@@ -653,6 +672,17 @@ type User {
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: Date!
+}
+
+type UserConnection {
+  edges: [UserEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type UserEdge {
+  cursor: String!
+  node: User!
 }
 
 enum UserRole {
