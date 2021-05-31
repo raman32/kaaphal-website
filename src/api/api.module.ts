@@ -7,6 +7,7 @@ import { RequestContextService } from './common/requestContext.service';
 import { DateScalar } from './common/scalar/date.scalar';
 import { AuthController } from './controllers/auth/auth.controller';
 import { UserController } from './controllers/user/user.controller';
+import { AdminController } from './controllers/admin/admin.controller';
 import { AuthModule } from './resolvers/auth/auth.module';
 import { FacebookStrategy } from './controllers/auth/facebook.strategy';
 import { GoogleStrategy } from './controllers/auth/google.strategy';
@@ -16,7 +17,7 @@ import { UserModule } from './resolvers/user/user.module';
 
 @Module({
     imports: [PostModule, AuthModule, ServicesModule, UserModule, EventBusModule],
-    controllers: [AuthController, UserController],
+    controllers: [AuthController, UserController, AdminController],
     providers: [RequestContextService,
         SessionService,
         ConfigService,

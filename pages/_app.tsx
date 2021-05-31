@@ -6,6 +6,7 @@ import { ApolloProvider } from '@apollo/client';
 import Head from 'next/head';
 
 function MyApp({ Component, pageProps, apolloClient }) {
+    const getLayout = Component.getLayout || ((page) => page);
     return (
         <>
             <Head>
@@ -18,7 +19,7 @@ function MyApp({ Component, pageProps, apolloClient }) {
                 <meta name="description" content="Kaaphal Website -  Articles, Informations, Scholarships and Loksewa" />
             </Head>
             <ApolloProvider client={apolloClient}>
-                <Component {...pageProps} />
+                {getLayout(<Component {...pageProps} />)}
             </ApolloProvider>
         </>
     );
