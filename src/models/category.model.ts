@@ -8,7 +8,7 @@ export class Category extends BaseModel {
     @Field()
     name: string
     @Field(type => [Post])
-    post: Post[]
+    posts: Post[]
     @Field(type => [SubCategory])
     subCategories: SubCategory[]
 }

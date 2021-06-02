@@ -12,8 +12,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
-  DateTime: any;
+  /** Date custom scalar type */
+  Date: any;
 };
 
 /** Model For Advertisement */
@@ -23,15 +23,15 @@ export type Advertisement = {
   body?: Maybe<Scalars['String']>;
   clicks?: Maybe<Scalars['Int']>;
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
-  expiresAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
+  expiresAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   image?: Maybe<File>;
   order?: Maybe<Order>;
   post: Post;
   postId: Scalars['String'];
-  startsAt: Scalars['DateTime'];
+  startsAt: Scalars['Date'];
   status?: Maybe<AdvertisementStatus>;
   targetAgeLowerLimit: Scalars['Int'];
   targetAgeUpperLimit: Scalars['Int'];
@@ -40,7 +40,7 @@ export type Advertisement = {
   title?: Maybe<Scalars['String']>;
   type: AdvertisementType;
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   views?: Maybe<Scalars['Int']>;
 };
 
@@ -70,7 +70,7 @@ export type Answer = {
   __typename?: 'Answer';
   answer: McqAnswer;
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   question: LoksewaQuestion;
@@ -79,7 +79,7 @@ export type Answer = {
   test: LoksewaTest;
   testId: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
 };
 
 export enum AnswerStatus {
@@ -92,14 +92,15 @@ export enum AnswerStatus {
 export type Category = {
   __typename?: 'Category';
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   name: Scalars['String'];
   post: Array<Post>;
+  posts: Array<Post>;
   subCategories: Array<SubCategory>;
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
 };
 
 export type Comment = {
@@ -107,16 +108,55 @@ export type Comment = {
   body: Scalars['String'];
   children?: Maybe<Array<Comment>>;
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   parent?: Maybe<Comment>;
   post?: Maybe<Post>;
   postId: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   user?: Maybe<User>;
   userId: Scalars['String'];
+};
+
+export type CreateCategoryInput = {
+  name: Scalars['String'];
+};
+
+export type CreatePostInput = {
+  body?: Maybe<Scalars['String']>;
+  categoryId?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  language?: Maybe<Language>;
+  slug?: Maybe<Scalars['String']>;
+  status?: Maybe<PostStatus>;
+  subCategoryId?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  title: Scalars['String'];
+  type?: Maybe<PostType>;
+  url?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type CreateSubCategoryInput = {
+  name: Scalars['String'];
+  parentId: Scalars['String'];
+};
+
+export type CreateTagInput = {
+  advertisementId?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type CreateUserInput = {
+  displayName?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  middleName?: Maybe<Scalars['String']>;
+  role?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
 };
 
 
@@ -131,7 +171,7 @@ export enum Difficulty {
 export type File = {
   __typename?: 'File';
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   height: Scalars['Int'];
   /** Unique UUID string */
   id: Scalars['ID'];
@@ -141,7 +181,7 @@ export type File = {
   size: Scalars['Int'];
   source: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   user?: Maybe<User>;
   width: Scalars['Int'];
 };
@@ -149,7 +189,7 @@ export type File = {
 export type Flag = {
   __typename?: 'Flag';
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   message: Scalars['String'];
@@ -160,7 +200,7 @@ export type Flag = {
   status: FlagStatus;
   type: FlagType;
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   user: User;
   userId: Scalars['String'];
 };
@@ -184,13 +224,13 @@ export enum FlagType {
 export type Follow = {
   __typename?: 'Follow';
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   following: User;
   followingId: Scalars['String'];
   /** Unique UUID string */
   id: Scalars['ID'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   user: User;
   userId: Scalars['String'];
 };
@@ -200,7 +240,7 @@ export type Hotshot = {
   backgroundColor: Scalars['String'];
   body: Scalars['String'];
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   image?: Maybe<File>;
@@ -208,7 +248,7 @@ export type Hotshot = {
   postId: Scalars['String'];
   title: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
 };
 
 export enum Language {
@@ -219,13 +259,13 @@ export enum Language {
 export type LoksewaMockCategory = {
   __typename?: 'LoksewaMockCategory';
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   questionSets: Array<LoksewaMockSet>;
   title: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
 };
 
 export type LoksewaMockSet = {
@@ -233,7 +273,7 @@ export type LoksewaMockSet = {
   category: LoksewaMockCategory;
   categoryId: Scalars['String'];
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   editor: User;
   editorId: Scalars['String'];
   /** Unique UUID string */
@@ -244,7 +284,7 @@ export type LoksewaMockSet = {
   status: MockSetStatus;
   type: MockSetType;
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
 };
 
 export type LoksewaQuestion = {
@@ -254,7 +294,7 @@ export type LoksewaQuestion = {
   category: LoksewaQuestionCategory;
   categoryId: Scalars['String'];
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   difficulty: Difficulty;
   /** Unique UUID string */
   id: Scalars['ID'];
@@ -268,20 +308,20 @@ export type LoksewaQuestion = {
   setId: Scalars['String'];
   title: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   userAnswer: Array<Answer>;
 };
 
 export type LoksewaQuestionCategory = {
   __typename?: 'LoksewaQuestionCategory';
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   questions: Array<LoksewaQuestion>;
   title: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
 };
 
 export type LoksewaQuestionMeta = {
@@ -289,11 +329,11 @@ export type LoksewaQuestionMeta = {
   LoksewaQuestion: Array<LoksewaQuestion>;
   body: Scalars['String'];
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
 };
 
 export type LoksewaTest = {
@@ -301,14 +341,14 @@ export type LoksewaTest = {
   answers: Array<Answer>;
   completed: Scalars['Boolean'];
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   score: Scalars['Int'];
   set: LoksewaMockSet;
   setId: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   user: User;
   userId: Scalars['String'];
 };
@@ -329,14 +369,14 @@ export type MagicLink = {
 export type Membership = {
   __typename?: 'Membership';
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
-  expiresAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
+  expiresAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   order: Order;
   type: MembershipType;
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   user: User;
   userId: Scalars['String'];
 };
@@ -361,7 +401,43 @@ export enum MockSetType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createCategory: Category;
+  createMePost: Post;
+  createPost: Post;
+  createSubCategory: Category;
+  createTag: Category;
+  createUser: User;
   sendMagicLink: MagicLink;
+};
+
+
+export type MutationCreateCategoryArgs = {
+  category: CreateCategoryInput;
+};
+
+
+export type MutationCreateMePostArgs = {
+  post: CreatePostInput;
+};
+
+
+export type MutationCreatePostArgs = {
+  post: CreatePostInput;
+};
+
+
+export type MutationCreateSubCategoryArgs = {
+  subCategory: CreateSubCategoryInput;
+};
+
+
+export type MutationCreateTagArgs = {
+  tag: CreateTagInput;
+};
+
+
+export type MutationCreateUserArgs = {
+  user: CreateUserInput;
 };
 
 
@@ -373,14 +449,14 @@ export type Notification = {
   __typename?: 'Notification';
   body: Scalars['String'];
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   post: Post;
   postId: Scalars['String'];
   read: Scalars['Boolean'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   user: User;
   userId: Scalars['String'];
 };
@@ -392,7 +468,7 @@ export type Order = {
   amountPaid: Scalars['Int'];
   body: Scalars['String'];
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   membership?: Maybe<Membership>;
@@ -402,9 +478,17 @@ export type Order = {
   set?: Maybe<LoksewaMockSet>;
   setId: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   user: User;
   userId: Scalars['String'];
+};
+
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['String']>;
+  hasNextPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean'];
+  startCursor?: Maybe<Scalars['String']>;
 };
 
 export enum PaymentMethod {
@@ -426,7 +510,7 @@ export type Post = {
   categoryId?: Maybe<Scalars['String']>;
   comments: Array<Comment>;
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   deleted: Scalars['Boolean'];
   editor?: Maybe<User>;
   editorId?: Maybe<Scalars['String']>;
@@ -436,7 +520,7 @@ export type Post = {
   id: Scalars['ID'];
   image?: Maybe<File>;
   language: Language;
-  publishedAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['Date']>;
   reactions?: Maybe<Array<Reaction>>;
   scholarship?: Maybe<Scholarship>;
   slug: Scalars['String'];
@@ -447,11 +531,24 @@ export type Post = {
   title: Scalars['String'];
   type: PostType;
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   url?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']>;
   views: Scalars['Int'];
+};
+
+export type PostConnection = {
+  __typename?: 'PostConnection';
+  edges?: Maybe<Array<PostEdge>>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PostEdge = {
+  __typename?: 'PostEdge';
+  cursor: Scalars['String'];
+  node: Post;
 };
 
 export enum PostStatus {
@@ -473,7 +570,19 @@ export enum PostType {
 
 export type Query = {
   __typename?: 'Query';
+  getCategories: Array<Category>;
+  getCategory: Category;
   getPost: Post;
+  getPosts: PostConnection;
+  getTag: Category;
+  getTags: TagConnection;
+  getUsers: UserConnection;
+  me?: Maybe<User>;
+};
+
+
+export type QueryGetCategoryArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -481,18 +590,53 @@ export type QueryGetPostArgs = {
   id: Scalars['String'];
 };
 
+
+export type QueryGetPostsArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryGetTagArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryGetTagsArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  contains?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryGetUsersArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  contains?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  roles?: Maybe<Array<Maybe<UserRole>>>;
+  skip?: Maybe<Scalars['Int']>;
+};
+
 /** Major Category for Post */
 export type Reaction = {
   __typename?: 'Reaction';
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   post?: Maybe<Post>;
   postId?: Maybe<Scalars['String']>;
   type: ReactionType;
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']>;
 };
@@ -509,16 +653,16 @@ export type Scholarship = {
   __typename?: 'Scholarship';
   country: Scalars['String'];
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
-  deadlineAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
+  deadlineAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   level: ScholarshipLevel;
   post: Post;
   postId: Scalars['String'];
-  startsAt: Scalars['DateTime'];
+  startsAt: Scalars['Date'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
 };
 
 export enum ScholarshipLevel {
@@ -536,8 +680,8 @@ export type Session = {
   __typename?: 'Session';
   authToken: Scalars['String'];
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
-  expires: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
+  expires: Scalars['Date'];
   facebookToken?: Maybe<Scalars['String']>;
   githubToken?: Maybe<Scalars['String']>;
   googleToken?: Maybe<Scalars['String']>;
@@ -548,7 +692,7 @@ export type Session = {
   token: Scalars['String'];
   type: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   user?: Maybe<User>;
 };
 
@@ -556,27 +700,27 @@ export type Session = {
 export type SubCategory = {
   __typename?: 'SubCategory';
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   name: Scalars['String'];
   parent?: Maybe<Category>;
   parentId?: Maybe<Scalars['String']>;
-  post: Array<Post>;
+  posts: Array<Post>;
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
 };
 
 export type Subscription = {
   __typename?: 'Subscription';
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   email: Scalars['Boolean'];
   /** Unique UUID string */
   id: Scalars['ID'];
   postType: Array<PostType>;
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
   user: User;
   userId: Scalars['String'];
 };
@@ -584,13 +728,26 @@ export type Subscription = {
 export type Tag = {
   __typename?: 'Tag';
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
   name: Scalars['String'];
   post?: Maybe<Array<Post>>;
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
+};
+
+export type TagConnection = {
+  __typename?: 'TagConnection';
+  edges?: Maybe<Array<TagEdge>>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type TagEdge = {
+  __typename?: 'TagEdge';
+  cursor: Scalars['String'];
+  node: Tag;
 };
 
 /** User Model */
@@ -598,7 +755,7 @@ export type User = {
   __typename?: 'User';
   comments?: Maybe<Comment>;
   /** Identifies the date and time when the object was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   deleted: Scalars['Boolean'];
   displayName?: Maybe<Scalars['String']>;
   editedLoksewaMockSet?: Maybe<Array<LoksewaMockSet>>;
@@ -625,7 +782,20 @@ export type User = {
   status: UserStatus;
   subcription?: Maybe<Subscription>;
   /** Identifies the date and time when the object was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['Date'];
+};
+
+export type UserConnection = {
+  __typename?: 'UserConnection';
+  edges?: Maybe<Array<UserEdge>>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type UserEdge = {
+  __typename?: 'UserEdge';
+  cursor: Scalars['String'];
+  node: User;
 };
 
 export enum UserRole {
@@ -653,6 +823,58 @@ export type SendMagicLinkMutation = (
   ) }
 );
 
+export type CreateUserMutationVariables = Exact<{
+  user: CreateUserInput;
+}>;
+
+
+export type CreateUserMutation = (
+  { __typename?: 'Mutation' }
+  & { createUser: (
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  ) }
+);
+
+export type CreatePostMutationVariables = Exact<{
+  post: CreatePostInput;
+}>;
+
+
+export type CreatePostMutation = (
+  { __typename?: 'Mutation' }
+  & { createPost: (
+    { __typename?: 'Post' }
+    & Pick<Post, 'id'>
+  ) }
+);
+
+export type CreateMePostMutationVariables = Exact<{
+  post: CreatePostInput;
+}>;
+
+
+export type CreateMePostMutation = (
+  { __typename?: 'Mutation' }
+  & { createMePost: (
+    { __typename?: 'Post' }
+    & Pick<Post, 'id'>
+  ) }
+);
+
+export type CreateTagMutationVariables = Exact<{
+  tag: CreateTagInput;
+}>;
+
+
+export type CreateTagMutation = (
+  { __typename?: 'Mutation' }
+  & { createTag: (
+    { __typename?: 'Category' }
+    & Pick<Category, 'id' | 'name'>
+  ) }
+);
+
 export type GetPostQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -663,6 +885,100 @@ export type GetPostQuery = (
   & { getPost: (
     { __typename?: 'Post' }
     & Pick<Post, 'userId' | 'title' | 'body'>
+  ) }
+);
+
+export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCategoriesQuery = (
+  { __typename?: 'Query' }
+  & { getCategories: Array<(
+    { __typename?: 'Category' }
+    & Pick<Category, 'id' | 'name'>
+  )> }
+);
+
+export type GetCategoriesWithSubCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCategoriesWithSubCategoriesQuery = (
+  { __typename?: 'Query' }
+  & { getCategories: Array<(
+    { __typename?: 'Category' }
+    & Pick<Category, 'id' | 'name'>
+    & { subCategories: Array<(
+      { __typename?: 'SubCategory' }
+      & Pick<SubCategory, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+export type GetCategoryQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetCategoryQuery = (
+  { __typename?: 'Query' }
+  & { getCategory: (
+    { __typename?: 'Category' }
+    & Pick<Category, 'name'>
+    & { subCategories: Array<(
+      { __typename?: 'SubCategory' }
+      & Pick<SubCategory, 'id' | 'name'>
+    )> }
+  ) }
+);
+
+export type GetUsersQueryVariables = Exact<{
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  contains?: Maybe<Scalars['String']>;
+  roles?: Maybe<Array<Maybe<UserRole>> | Maybe<UserRole>>;
+}>;
+
+
+export type GetUsersQuery = (
+  { __typename?: 'Query' }
+  & { getUsers: (
+    { __typename?: 'UserConnection' }
+    & { edges?: Maybe<Array<(
+      { __typename?: 'UserEdge' }
+      & { node: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'firstName' | 'lastName' | 'displayName' | 'email' | 'deleted' | 'status'>
+        & { image?: Maybe<(
+          { __typename?: 'File' }
+          & Pick<File, 'preview'>
+        )> }
+      ) }
+    )>> }
+  ) }
+);
+
+export type GetTagsQueryVariables = Exact<{
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  contains?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetTagsQuery = (
+  { __typename?: 'Query' }
+  & { getTags: (
+    { __typename?: 'TagConnection' }
+    & { edges?: Maybe<Array<(
+      { __typename?: 'TagEdge' }
+      & { node: (
+        { __typename?: 'Tag' }
+        & Pick<Tag, 'id' | 'name'>
+      ) }
+    )>> }
   ) }
 );
 
@@ -701,6 +1017,139 @@ export function useSendMagicLinkMutation(baseOptions?: Apollo.MutationHookOption
 export type SendMagicLinkMutationHookResult = ReturnType<typeof useSendMagicLinkMutation>;
 export type SendMagicLinkMutationResult = Apollo.MutationResult<SendMagicLinkMutation>;
 export type SendMagicLinkMutationOptions = Apollo.BaseMutationOptions<SendMagicLinkMutation, SendMagicLinkMutationVariables>;
+export const CreateUserDocument = gql`
+    mutation createUser($user: CreateUserInput!) {
+  createUser(user: $user) {
+    id
+  }
+}
+    `;
+export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
+
+/**
+ * __useCreateUserMutation__
+ *
+ * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
+ *   variables: {
+ *      user: // value for 'user'
+ *   },
+ * });
+ */
+export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
+      }
+export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
+export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const CreatePostDocument = gql`
+    mutation createPost($post: CreatePostInput!) {
+  createPost(post: $post) {
+    id
+  }
+}
+    `;
+export type CreatePostMutationFn = Apollo.MutationFunction<CreatePostMutation, CreatePostMutationVariables>;
+
+/**
+ * __useCreatePostMutation__
+ *
+ * To run a mutation, you first call `useCreatePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPostMutation, { data, loading, error }] = useCreatePostMutation({
+ *   variables: {
+ *      post: // value for 'post'
+ *   },
+ * });
+ */
+export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<CreatePostMutation, CreatePostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument, options);
+      }
+export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
+export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
+export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const CreateMePostDocument = gql`
+    mutation createMePost($post: CreatePostInput!) {
+  createMePost(post: $post) {
+    id
+  }
+}
+    `;
+export type CreateMePostMutationFn = Apollo.MutationFunction<CreateMePostMutation, CreateMePostMutationVariables>;
+
+/**
+ * __useCreateMePostMutation__
+ *
+ * To run a mutation, you first call `useCreateMePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMePostMutation, { data, loading, error }] = useCreateMePostMutation({
+ *   variables: {
+ *      post: // value for 'post'
+ *   },
+ * });
+ */
+export function useCreateMePostMutation(baseOptions?: Apollo.MutationHookOptions<CreateMePostMutation, CreateMePostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMePostMutation, CreateMePostMutationVariables>(CreateMePostDocument, options);
+      }
+export type CreateMePostMutationHookResult = ReturnType<typeof useCreateMePostMutation>;
+export type CreateMePostMutationResult = Apollo.MutationResult<CreateMePostMutation>;
+export type CreateMePostMutationOptions = Apollo.BaseMutationOptions<CreateMePostMutation, CreateMePostMutationVariables>;
+export const CreateTagDocument = gql`
+    mutation createTag($tag: CreateTagInput!) {
+  createTag(tag: $tag) {
+    id
+    name
+  }
+}
+    `;
+export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, CreateTagMutationVariables>;
+
+/**
+ * __useCreateTagMutation__
+ *
+ * To run a mutation, you first call `useCreateTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTagMutation, { data, loading, error }] = useCreateTagMutation({
+ *   variables: {
+ *      tag: // value for 'tag'
+ *   },
+ * });
+ */
+export function useCreateTagMutation(baseOptions?: Apollo.MutationHookOptions<CreateTagMutation, CreateTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument, options);
+      }
+export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation>;
+export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
+export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
 export const GetPostDocument = gql`
     query getPost($id: String!) {
   getPost(id: $id) {
@@ -738,3 +1187,226 @@ export function useGetPostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetPostQueryHookResult = ReturnType<typeof useGetPostQuery>;
 export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>;
 export type GetPostQueryResult = Apollo.QueryResult<GetPostQuery, GetPostQueryVariables>;
+export const GetCategoriesDocument = gql`
+    query getCategories {
+  getCategories {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
+      }
+export function useGetCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
+        }
+export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>;
+export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>;
+export type GetCategoriesQueryResult = Apollo.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
+export const GetCategoriesWithSubCategoriesDocument = gql`
+    query getCategoriesWithSubCategories {
+  getCategories {
+    id
+    name
+    subCategories {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCategoriesWithSubCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetCategoriesWithSubCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoriesWithSubCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoriesWithSubCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCategoriesWithSubCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoriesWithSubCategoriesQuery, GetCategoriesWithSubCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCategoriesWithSubCategoriesQuery, GetCategoriesWithSubCategoriesQueryVariables>(GetCategoriesWithSubCategoriesDocument, options);
+      }
+export function useGetCategoriesWithSubCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoriesWithSubCategoriesQuery, GetCategoriesWithSubCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCategoriesWithSubCategoriesQuery, GetCategoriesWithSubCategoriesQueryVariables>(GetCategoriesWithSubCategoriesDocument, options);
+        }
+export type GetCategoriesWithSubCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesWithSubCategoriesQuery>;
+export type GetCategoriesWithSubCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesWithSubCategoriesLazyQuery>;
+export type GetCategoriesWithSubCategoriesQueryResult = Apollo.QueryResult<GetCategoriesWithSubCategoriesQuery, GetCategoriesWithSubCategoriesQueryVariables>;
+export const GetCategoryDocument = gql`
+    query getCategory($id: String!) {
+  getCategory(id: $id) {
+    name
+    subCategories {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCategoryQuery__
+ *
+ * To run a query within a React component, call `useGetCategoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoryQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCategoryQuery(baseOptions: Apollo.QueryHookOptions<GetCategoryQuery, GetCategoryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCategoryQuery, GetCategoryQueryVariables>(GetCategoryDocument, options);
+      }
+export function useGetCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryQuery, GetCategoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCategoryQuery, GetCategoryQueryVariables>(GetCategoryDocument, options);
+        }
+export type GetCategoryQueryHookResult = ReturnType<typeof useGetCategoryQuery>;
+export type GetCategoryLazyQueryHookResult = ReturnType<typeof useGetCategoryLazyQuery>;
+export type GetCategoryQueryResult = Apollo.QueryResult<GetCategoryQuery, GetCategoryQueryVariables>;
+export const GetUsersDocument = gql`
+    query getUsers($after: String, $before: String, $first: Int, $last: Int, $contains: String, $roles: [UserRole]) {
+  getUsers(
+    after: $after
+    before: $before
+    first: $first
+    last: $last
+    contains: $contains
+    roles: $roles
+  ) {
+    edges {
+      node {
+        id
+        firstName
+        lastName
+        displayName
+        email
+        deleted
+        status
+        image {
+          preview
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUsersQuery__
+ *
+ * To run a query within a React component, call `useGetUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUsersQuery({
+ *   variables: {
+ *      after: // value for 'after'
+ *      before: // value for 'before'
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *      contains: // value for 'contains'
+ *      roles: // value for 'roles'
+ *   },
+ * });
+ */
+export function useGetUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+      }
+export function useGetUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+        }
+export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
+export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
+export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
+export const GetTagsDocument = gql`
+    query getTags($after: String, $before: String, $first: Int, $last: Int, $contains: String) {
+  getTags(
+    after: $after
+    before: $before
+    first: $first
+    last: $last
+    contains: $contains
+  ) {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTagsQuery__
+ *
+ * To run a query within a React component, call `useGetTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTagsQuery({
+ *   variables: {
+ *      after: // value for 'after'
+ *      before: // value for 'before'
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *      contains: // value for 'contains'
+ *   },
+ * });
+ */
+export function useGetTagsQuery(baseOptions?: Apollo.QueryHookOptions<GetTagsQuery, GetTagsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTagsQuery, GetTagsQueryVariables>(GetTagsDocument, options);
+      }
+export function useGetTagsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTagsQuery, GetTagsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTagsQuery, GetTagsQueryVariables>(GetTagsDocument, options);
+        }
+export type GetTagsQueryHookResult = ReturnType<typeof useGetTagsQuery>;
+export type GetTagsLazyQueryHookResult = ReturnType<typeof useGetTagsLazyQuery>;
+export type GetTagsQueryResult = Apollo.QueryResult<GetTagsQuery, GetTagsQueryVariables>;

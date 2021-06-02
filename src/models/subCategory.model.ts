@@ -8,7 +8,7 @@ export class SubCategory extends BaseModel {
     @Field()
     name: string
     @Field(type => [Post])
-    post: Post[]
+    posts: Post[]
     @Field(type => Category, { nullable: true })
     parent?: Category
     @Field({ nullable: true })

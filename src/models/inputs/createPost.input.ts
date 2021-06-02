@@ -1,6 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { PostType } from '../post.model';
-
+import { Language, PostStatus, PostType } from '../post.model';
 @InputType()
 export class CreatePostInput {
     @Field()
@@ -13,6 +12,20 @@ export class CreatePostInput {
     slug: string;
     @Field({ nullable: true })
     image: string;
+    @Field(() => PostStatus, { nullable: true, defaultValue: PostStatus.unverified })
+    status: PostStatus;
     @Field(() => PostType, { nullable: true, defaultValue: PostType.articles })
-    type: 'articles' | 'scholarships' | 'information' | 'loksewa';
+    type: PostType;
+    @Field(() => Language, { nullable: true, defaultValue: Language.en })
+    language: Language;
+    @Field({ nullable: true })
+    userId: string;
+    @Field({ nullable: true })
+    categoryId: string;
+    @Field({ nullable: true })
+    subCategoryId: string;
+    @Field(() => [String], { nullable: 'itemsAndList' })
+    tags: string[];
+
+
 }

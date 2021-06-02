@@ -7,3 +7,5 @@ export const refreshUrl = `${host ? host : 'https://kaaphal.com'
 export const jwtConstans = {
     secret: process.env.JWT_SECRET
 }
+export const activePollingInterval = 1000;
+export const defaultPollingInterval = 30000;

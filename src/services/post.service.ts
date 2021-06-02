@@ -3,6 +3,7 @@ import { PrismaService } from './prisma.service';
 import { EventBus } from '../event-bus/event-bus';
 import { Flag, Post, PostType, Tag, User } from '.prisma/client';
 import { CreatePostEvents, UpdatePostEvent } from '../event-bus/events/post.event';
+import { Language, PostStatus } from '../models/post.model';
 
 @Injectable()
 export class PostService {
@@ -11,20 +12,13 @@ export class PostService {
         private eventBus: EventBus,
     ) { }
 
-    async getSinglePost(id: string): Promise<Post & {
-        user: User,
-        tags: Tag[],
-        flag: Flag[],
-        _count: {
-            comments: number
-        }
-    }> {
+    async getSinglePost(id: string): Promise<Post> {
         return this.prisma.post.findUnique({
             where: { id },
             include: {
                 user: true,
                 tags: true,
-                flag: true,
+                flags: true,
                 _count: {
                     select: {
                         comments: true,
@@ -50,7 +44,9 @@ export class PostService {
         });
         return topPosts;
     }
-    async createPost({ type, title, body, slug, url, userId }: { type: PostType, title: string, body: string, slug: string, url: string, userId: string }): Promise<Post> {
+    async createPost({ type, title, body, slug, url, userId, categoryId, language, subCategoryId, status, tags }:
+        { type: PostType, title: string, body: string, slug: string, url: string, userId: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[] }):
+        Promise<Post> {
         const post = await this.prisma.post.create({
             data: {
                 type,
@@ -58,7 +54,12 @@ export class PostService {
                 body,
                 slug,
                 url,
-                userId,
+                user: { connect: { id: userId } },
+                category: { connect: { id: categoryId } },
+                language,
+                subCategory: { connect: { id: subCategoryId } },
+                status,
+                tags: { connect: tags.map(tag => ({ id: tag })) }
             },
         });
         this.eventBus.publish(new CreatePostEvents(post));

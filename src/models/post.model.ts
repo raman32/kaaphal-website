@@ -21,18 +21,18 @@ export enum PostType {
 }
 
 export enum PostStatus {
-    draft,
-    unverified,
-    commented,
-    verified,
-    published,
-    hidden,
-    blocked
+    draft = 'draft',
+    unverified = 'unverified',
+    commented = 'commented',
+    verified = 'verified',
+    published = 'published',
+    hidden = 'hidden',
+    blocked = 'blocked'
 }
 
 export enum Language {
-    np,
-    en
+    np = 'np',
+    en = 'en'
 }
 
 

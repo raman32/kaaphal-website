@@ -4,3 +4,27 @@ sendMagicLink (email:$email) {
     listener
   }
 }
+
+mutation createUser($user: CreateUserInput!) {
+  createUser(user:$user){
+    id
+  }
+}
+
+mutation createPost($post: CreatePostInput!){
+  createPost(post: $post){
+    id
+  }
+}
+mutation createMePost($post: CreatePostInput!){
+  createMePost(post: $post){
+    id
+  }
+}
+
+mutation createTag($tag:CreateTagInput!) {
+createTag(tag: $tag) {
+  id
+  name
+}
+}

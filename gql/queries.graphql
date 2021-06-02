@@ -5,3 +5,59 @@ query getPost ($id: String!) {
     body
   }
 }
+query getCategories {
+  getCategories {
+    id
+    name
+  }
+}
+query getCategoriesWithSubCategories {
+  getCategories {
+    id
+    name
+    subCategories {
+      id 
+      name 
+    }
+  }
+}
+
+query getCategory ($id : String!) {
+getCategory (id: $id){
+  name 
+  subCategories {
+    id
+    name
+  }
+}
+}
+
+query getUsers ( $after: String, $before: String, $first: Int, $last: Int , $contains:String, $roles: [UserRole]){
+    getUsers ( after: $after, before :$before, first:$first, last:$last, contains:$contains, roles: $roles){
+    edges {
+      node {
+        id
+        firstName
+        lastName
+        displayName
+        email
+        deleted
+        status
+        image {
+          preview
+        }
+      }
+    }
+  }
+}
+
+query	getTags ($after: String, $before: String, $first: Int, $last: Int , $contains:String) {
+    getTags ( after: $after, before :$before, first:$first, last:$last, contains:$contains) {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}

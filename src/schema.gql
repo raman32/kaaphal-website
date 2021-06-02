@@ -87,6 +87,7 @@ type Category {
   id: ID!
   name: String!
   post: [Post!]!
+  posts: [Post!]!
   subCategories: [SubCategory!]!
 
   """Identifies the date and time when the object was last updated."""
@@ -112,13 +113,43 @@ type Comment {
   userId: String!
 }
 
+input CreateCategoryInput {
+  name: String!
+}
+
 input CreatePostInput {
   body: String
+  categoryId: String
   image: String
+  language: Language = en
   slug: String
+  status: PostStatus = unverified
+  subCategoryId: String
+  tags: [String]
   title: String!
   type: PostType = articles
   url: String
+  userId: String
+}
+
+input CreateSubCategoryInput {
+  name: String!
+  parentId: String!
+}
+
+input CreateTagInput {
+  advertisementId: String
+  name: String!
+}
+
+input CreateUserInput {
+  displayName: String
+  email: String!
+  firstName: String
+  lastName: String
+  middleName: String
+  role: String = "user"
+  status: String = "active"
 }
 
 """Date custom scalar type"""
@@ -379,8 +410,12 @@ enum MockSetType {
 }
 
 type Mutation {
+  createCategory(category: CreateCategoryInput!): Category!
   createMePost(post: CreatePostInput!): Post!
-  createPost(post: CreatePostInput!, userId: String!): Post!
+  createPost(post: CreatePostInput!): Post!
+  createSubCategory(subCategory: CreateSubCategoryInput!): Category!
+  createTag(tag: CreateTagInput!): Category!
+  createUser(user: CreateUserInput!): User!
   sendMagicLink(email: String!): MagicLink!
 }
 
@@ -511,9 +546,13 @@ enum PostType {
 }
 
 type Query {
+  getCategories: [Category!]!
+  getCategory(id: String!): Category!
   getPost(id: String!): Post!
   getPosts(after: String, before: String, first: Int, last: Int, skip: Int): PostConnection!
-  getUsers(after: String, before: String, first: Int, last: Int, skip: Int): UserConnection!
+  getTag(id: String!): Category!
+  getTags(after: String, before: String, contains: String, first: Int, last: Int, skip: Int): TagConnection!
+  getUsers(after: String, before: String, contains: String, first: Int, last: Int, roles: [UserRole], skip: Int): UserConnection!
   me: User
 }
 
@@ -603,7 +642,7 @@ type SubCategory {
   name: String!
   parent: Category
   parentId: String
-  post: [Post!]!
+  posts: [Post!]!
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: Date!
@@ -635,6 +674,17 @@ type Tag {
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: Date!
+}
+
+type TagConnection {
+  edges: [TagEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type TagEdge {
+  cursor: String!
+  node: Tag!
 }
 
 """User Model"""

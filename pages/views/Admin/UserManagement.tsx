@@ -1,5 +1,5 @@
 import { Form, Table, Space, Button, Popconfirm, Popover, Input, Select } from 'antd';
-import { NextPage } from 'next';
+import { useGetUsersQuery } from '../../../gql';
 import AdminLayout from '../../layouts/default';
 
 export interface User {
@@ -14,8 +14,8 @@ export interface User {
 const columns = [
     {
         title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'displayName',
+        key: 'displayName',
 
     },
     {
@@ -149,213 +149,13 @@ const content = (
 
     </Form>
 );
-//const row:User[];
-const data: User[] = [
-    {
 
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-    {
-
-        name: 'John Brown',
-        email: 'asujan205@gmail.com',
-        membership: 'gold',
-        post: 'engineer',
-        comments: 'hello world',
-        flags: true
-    },
-
-];
-const url = '';
 const UserManagement = (): JSX.Element => {
+    const { data, loading, error } = useGetUsersQuery({ variables: { first: 20 } })
+
     return (
 
-        <Table columns={columns} dataSource={data} />);
+        <Table columns={columns} dataSource={data ? data.getUsers.edges.map(edge => edge.node) : []} />);
 }
 // eslint-disable-next-line react/display-name
 UserManagement.getLayout = (page: JSX.Element): React.ReactNode => <AdminLayout>{page}</AdminLayout>

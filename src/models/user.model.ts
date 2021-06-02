@@ -15,9 +15,9 @@ import { Session } from './session.model';
 import { Subscription } from './subsciption.model';
 
 export enum UserStatus {
-    active,
-    blocked,
-    inactive
+    active = 'active',
+    blocked = 'blocked',
+    inactive = 'inactive'
 }
 
 export enum UserRole {

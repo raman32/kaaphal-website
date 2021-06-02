@@ -13,4 +13,12 @@ export class AdminController {
     @Get('UserManagement')
     @Render('Admin/UserManagement')
     userManagement() { }
+
+    @Get('CreateUser')
+    @Render('Admin/CreateUser')
+    createUser() { }
+
+    @Get('CreateArticleCategory')
+    @Render('Admin/CreateArticleCategory')
+    createArticleCategory() { }
 }

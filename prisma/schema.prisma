@@ -71,10 +71,10 @@ model Post {
   status        PostStatus     @default(value: draft)
   comments      Comment[]      @relation(name: "PostOnComment")
   image         File?
-  tags          Tag[]          @relation(name: "PostOnTags")
+  tags          Tag[]          
   reactions     Reaction[]     @relation(name: "PostOnReaction")
   type          PostType       @default(value: articles)
-  flag          Flag[]         @relation(name: "PostOnFlag")
+  flags          Flag[]         @relation(name: "PostOnFlag")
   views         Int            @default(0)
   editor        User?          @relation(name: "EditorOnPost", fields: [editorId], references: [id])
   editorId      String?
@@ -142,8 +142,8 @@ model Tag {
   id              String         @id @default(cuid())
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
-  name            String
-  post            Post[]         @relation(name: "PostOnTags")
+  name            String         @unique
+  posts            Post[]        
   Advertisement   Advertisement? @relation(fields: [advertisementId], references: [id])
   advertisementId String?
 }
@@ -152,8 +152,8 @@ model Category {
   id            String        @id @default(cuid())
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
-  name          String
-  post          Post[]        @relation(name: "CategoryOnPost")
+  name          String        @unique
+  posts          Post[]        @relation(name: "CategoryOnPost")
   subCategories SubCategory[] @relation(name: "CategoryOnSubCategory")
 }
 
@@ -162,7 +162,7 @@ model SubCategory {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   name      String
-  post      Post[]    @relation(name: "SubCategoryOnPost")
+  posts      Post[]    @relation(name: "SubCategoryOnPost")
   parent    Category? @relation(name: "CategoryOnSubCategory", fields: [parentId], references: [id])
   parentId  String?
 }

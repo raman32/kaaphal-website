@@ -1,4 +1,6 @@
+
 import { Field, InputType } from '@nestjs/graphql';
+import { UserRole, UserStatus } from '../user.model';
 
 @InputType()
 export class CreateUserInput {
@@ -12,4 +14,10 @@ export class CreateUserInput {
     middleName: string;
     @Field({ nullable: true })
     displayName: string;
+    @Field({ nullable: true, defaultValue: UserRole.user })
+    role: UserRole
+    @Field({ nullable: true, defaultValue: UserStatus.active })
+    status: UserStatus
+
+
 }

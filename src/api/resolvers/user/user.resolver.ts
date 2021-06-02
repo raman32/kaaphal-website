@@ -1,4 +1,4 @@
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { User, UserRole } from '../../../models/user.model';
 import { UseGuards } from '@nestjs/common';
 import { GQLGuard } from '../auth/guards/gql.guard';
@@ -15,6 +15,7 @@ import { Post } from '../../../models/post.model';
 import { UserConnection } from '../../../models/pagination/user-connection';
 import { PaginationArgs } from '../../../common/pagination/pagination.args';
 import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
+import { CreateUserInput } from '../../../models/inputs/createUser.input';
 
 @Resolver((of) => User)
 @UseGuards(GQLGuard)
@@ -34,10 +35,33 @@ export class UserResolver {
     @Query((returns) => UserConnection)
     @Roles(UserRole.admin, UserRole.moderator)
     @UseGuards(RolesGuard)
-    async getUsers(@Args() { after, before, first, last }: PaginationArgs): Promise<Connection<User_, Edge<User_>>> {
+    async getUsers(@Args() { after, before, first, last }: PaginationArgs,
+        @Args({ name: 'contains', nullable: true, type: () => String, }) contains?: string,
+        @Args({ name: 'roles', nullable: 'itemsAndList', type: () => [UserRole], }) roles?: UserRole[]): Promise<Connection<User_, Edge<User_>>> {
+
+        const containsFilter = contains ? [
+            { firstName: { contains } },
+            { lastName: { contains } },
+            { middleName: { contains } },
+            { email: { contains } },
+            { displayName: { contains } },
+        ] : [];
+
+        const rolesFilter = (roles && roles.length) ? roles.map((_role) => ({ role: _role })) : [];
+
+        const ORFilter = containsFilter.length || rolesFilter.length ? {
+            OR: [
+                ...rolesFilter,
+                ...containsFilter
+            ],
+        } : null;
+
         const userCursors = findManyCursorConnection(
             (args) =>
                 this.prisma.user.findMany({
+                    where: {
+                        ...ORFilter
+                    },
                     ...args,
                 }),
             () => this.prisma.post.count(),
@@ -50,6 +74,14 @@ export class UserResolver {
     async posts(@Parent() user: User): Promise<Post_[]> {
         const { id } = user;
         return this.prisma.post.findMany({ where: { userId: id } })
+    }
+
+    @Mutation((returns) => User)
+    @Roles(UserRole.admin, UserRole.moderator)
+    @UseGuards(RolesGuard)
+    async createUser(@Args('user') user: CreateUserInput): Promise<User_> {
+        // TODO create user in service.
+        return this.prisma.user.create({ data: user });
     }
 
 }
