@@ -6,6 +6,8 @@ import { LoksewaMockSet } from './loksewaMockSet';
 export class LoksewaMockCategory extends BaseModel {
     @Field(type => [LoksewaMockSet])
     questionSets: LoksewaMockSet[]
-    @Field()
+    @Field({ nullable: true })
     title?: string
+    @Field({ nullable: true })
+    titleNP?: string
 }

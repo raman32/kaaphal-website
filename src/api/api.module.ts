@@ -15,11 +15,14 @@ import { PostModule } from './resolvers/post/post.module';
 import { UserModule } from './resolvers/user/user.module';
 import { CategoryModule } from './resolvers/category/category.module';
 import { TagModule } from './resolvers/tag/tag.module';
+import { LoksewaModule } from './resolvers/loksewa/loksewa.module';
+import { AssetsModule } from './resolvers/asset/asset.module';
+import { AssetsController } from './controllers/asset/assest.controller';
 
 
 @Module({
-    imports: [PostModule, AuthModule, ServicesModule, CategoryModule, UserModule, TagModule, EventBusModule],
-    controllers: [AuthController, UserController, AdminController],
+    imports: [PostModule, AuthModule, ServicesModule, CategoryModule, UserModule, TagModule, LoksewaModule, EventBusModule, AssetsModule],
+    controllers: [AuthController, UserController, AdminController, AssetsController],
     providers: [RequestContextService,
         SessionService,
         ConfigService,

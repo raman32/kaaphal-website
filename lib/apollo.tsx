@@ -27,7 +27,7 @@ import { onError } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
 import React from 'react';
 
-export const restrictedPath = ['/user/profile', '/user/account'];
+export const restrictedPath = ['/views/Profile', '/views/Account'];
 
 export const isServer = (): boolean => typeof window === 'undefined';
 

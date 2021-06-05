@@ -2,19 +2,21 @@ import { Button, Form, Input, message, Select } from 'antd';
 import React, { useEffect } from 'react';
 import { useCreateUserMutation, UserRole, UserStatus } from '../../../gql';
 import AdminLayout from '../../layouts/admin';
-
-
+import UploadAvatarImage from '../../../lib/components/atomic/UploadAvatarImage';
 function CreateUser(): JSX.Element {
     const [createUser, { data, error, loading }] = useCreateUserMutation();
     useEffect(() => {
-        if (data) message.success('Succesfully created user of id: ' + data.createUser.id)
+        if (data) {
+            message.success('Succesfully created user of id: ' + data.createUser.id);
+            form.resetFields()
+        }
         if (error) {
             message.error('Something went wrong while creating user');
             console.log(error.message)
         }
     }, [data, error])
     const [form] = Form.useForm();
-    return <Form form={form} layout="vertical" name="createUser" onFinish={() => { createUser({ variables: { user: form.getFieldsValue() } }) }} >
+    return <Form form={form} layout="vertical" name="createUser" onFinish={(value) => { createUser({ variables: { user: value } }) }} scrollToFirstError={true} >
         <Form.Item
             name="firstName"
             label="First Name"
@@ -85,11 +87,20 @@ function CreateUser(): JSX.Element {
                 <Select.Option value={UserStatus.Blocked}>Blocked</Select.Option>
             </Select>
         </Form.Item>
+        <Form.Item
+            name="image"
+            label="Image"
+            className="max-w-sm"
+
+        >
+            <UploadAvatarImage />
+        </Form.Item>
+
         <Form.Item className="max-w-sm">
-            <Button type="text" htmlType="submit" className="mx-4 bg-blue-600 hover:bg-blue-400 text-white" loading={loading}>
+            <Button type="primary" htmlType="submit" className="mx-4" loading={loading}>
                 Submit
                 </Button>
-            <Button type="text" htmlType="reset" onClick={() => { form.resetFields() }} className="bg-red-600 hover:bg-red-400 text-white mx-4">
+            <Button type="primary" htmlType="reset" danger={true} className="mx-4">
                 Reset
                 </Button>
         </Form.Item>

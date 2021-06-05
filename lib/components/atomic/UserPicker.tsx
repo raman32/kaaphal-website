@@ -1,7 +1,8 @@
 import { message, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useGetUsersQuery, UserRole } from '../../gql';
-import { parseFullName } from '../common/helpers/parse';
+import { useGetUsersQuery, User, UserRole } from '../../../gql';
+import { parseFullName } from '../../common/helpers/parse';
+import { UserPopover } from './UserPopover';
 
 export default function UserPicker(props: React.ComponentProps<typeof Select> & { roles?: UserRole[] }): JSX.Element {
     const [searchText, setSearchText] = useState('')
@@ -21,6 +22,6 @@ export default function UserPicker(props: React.ComponentProps<typeof Select> & 
         loading={loading}
         filterOption={false}
     >
-        {data && !loading ? data.getUsers.edges.map(({ node }, index) => <Select.Option value={node.id} key={index}>{parseFullName(node.firstName, '', node.lastName)}</Select.Option>) : null}
+        {data && !loading ? data.getUsers.edges.map(({ node }, index) => <Select.Option value={node.id} key={index}><UserPopover user={node as User}>{parseFullName(node.firstName, '', node.lastName)}</UserPopover></Select.Option>) : null}
     </Select>
 }

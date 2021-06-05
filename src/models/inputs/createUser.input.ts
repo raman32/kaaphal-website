@@ -11,6 +11,8 @@ export class CreateUserInput {
     @Field()
     email: string;
     @Field({ nullable: true })
+    image: string;
+    @Field({ nullable: true })
     middleName: string;
     @Field({ nullable: true })
     displayName: string;

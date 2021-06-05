@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import fs from 'fs'
+//TODO MAKE IT A NEST MIDDLEWARE
+import { graphqlUploadExpress } from 'graphql-upload';
 async function bootstrap() {
   const keyFile = fs.readFileSync(__dirname + '/../../ssl/localhost.key');
   const certFile = fs.readFileSync(__dirname + '/../../ssl/localhost.crt');
@@ -10,6 +12,7 @@ async function bootstrap() {
     //   cert: certFile,
     // }
   });
+  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),)
   await app.listen(3000);
 }
 bootstrap();

@@ -44,8 +44,8 @@ export class PostService {
         });
         return topPosts;
     }
-    async createPost({ type, title, body, slug, url, userId, categoryId, language, subCategoryId, status, tags }:
-        { type: PostType, title: string, body: string, slug: string, url: string, userId: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[] }):
+    async createPost({ type, title, body, slug, url, userId, categoryId, language, subCategoryId, status, tags, image }:
+        { type: PostType, title: string, body: string, slug: string, url: string, userId: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[], image?: string }):
         Promise<Post> {
         const post = await this.prisma.post.create({
             data: {
@@ -59,7 +59,8 @@ export class PostService {
                 language,
                 subCategory: { connect: { id: subCategoryId } },
                 status,
-                tags: { connect: tags.map(tag => ({ id: tag })) }
+                tags: { connect: tags.map(tag => ({ id: tag })) },
+                image: { connect: { id: image } }
             },
         });
         this.eventBus.publish(new CreatePostEvents(post));

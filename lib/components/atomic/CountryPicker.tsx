@@ -197,7 +197,13 @@ const countries = [
     'Vietnam',
     'Yemen',
     'Zambia',
-    'Zimbabwe'];
+    'Zimbabwe',
+    'Asia',
+    'Europe',
+    'Africa',
+    'North America',
+    'South America',
+];
 
 export default function CountryPicker(props: React.ComponentProps<typeof Select>): JSX.Element {
     return <Select

@@ -1,56 +1,103 @@
 import { Layout, Menu } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import React from 'react';
-import Link from 'next/link'
+
+import SubMenu from 'antd/lib/menu/SubMenu';
+import React, { useState } from 'react';
+import { UserOutlined, LaptopOutlined, NotificationOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { ArticleIcon, InformationIcon, NotificationIcon, ScholarshipIcon, UserIcon } from '../../lib/components/Icons/Index';
 const { Header, Content, Footer, Sider } = Layout;
 interface Props {
     children: React.ReactNode
 }
-function AdminLayout({ children }: Props): JSX.Element {
+
+function DefaultLayout({ children }: Props): JSX.Element {
+    const [collapsed, setCollapased] = useState(true);
     return (
-        <Layout >
-            <Sider
-                breakpoint="lg"
-                collapsedWidth="0"
-                onBreakpoint={broken => {
-                    console.log(broken);
-                }}
-                onCollapse={(collapsed, type) => {
-                    console.log(collapsed, type);
-                }}
-                className="min-h-screen h-full"
-            >
-                <div className="rounded-full shadow-md w-20 h-20 bg-gray-300 mx-auto my-5"></div>
-                <div className="text-lg text-white text-center">Howdy Admin!</div>
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={['10']}>
-                    <Menu.SubMenu key="sub1" icon={<UserOutlined />} title="Article Management">
-                        <Menu.Item key="1"><Link href='/admin/CreateArticle'>Create Article</Link></Menu.Item>
-                        <Menu.Item key="2"><Link href='/admin/EditArticle'>Edit Article</Link></Menu.Item>
-                        <Menu.Item key="3"><Link href='/admin/VerifyArticle'>Verify Article</Link></Menu.Item>
-                        <Menu.Item key="4"><Link href='/admin/CreateArticleCategory'>Create Category</Link></Menu.Item>
-                    </Menu.SubMenu>
-                    <Menu.SubMenu key="sub2" icon={<UserOutlined />} title="Loksewa">
-                        <Menu.Item key="5"><Link href='/admin/CreateLoksewaSet'>Create Set</Link></Menu.Item>
-                        <Menu.Item key="6"><Link href='/admin/CreateLoksewaQuestion'>Create Questions</Link></Menu.Item>
-                        <Menu.Item key="7"><Link href='/admin/CreateLoksewaCategory'>Create Category</Link></Menu.Item>
-                    </Menu.SubMenu>
-                    <Menu.SubMenu key="sub3" icon={<UserOutlined />} title="User Management">
-                        <Menu.Item key="8"><Link href='/admin/UserManagement'>Show User Statistics</Link></Menu.Item>
-                        <Menu.Item key="9"><Link href='/admin/CreateUser'>Create New User</Link></Menu.Item>
-                        <Menu.Item key="10"><Link href='/admin/EditUser'>Edit User</Link></Menu.Item>
-                    </Menu.SubMenu>
-                    <Menu.Item key="11" icon={<UserOutlined />}>
-                        <Link href='/admin'>Admin Profile</Link>
+        <Layout className=" bg-white">
+            <Header className=" bg-white flex flex-row">
+                {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                    id: 'navigation-drawer-button',
+                    className: 'md:hidden my-auto flex-1 text-left',
+                    onClick: () => setCollapased(prev => !prev),
+                })}
+                <div className="float-left my-auto md:h-13 flex-1 text-center" >
+                    <img src='https://kaaphal.com/wp-content/uploads/2020/09/cropped-Wide-Kp.png' className="h-12" />
+                </div>
+                <Menu mode="horizontal" defaultSelectedKeys={['2']} className="hidden md:block ">
+                    <SubMenu key="sub1" icon={<ArticleIcon />} title="Article">
+                        <Menu.Item key="11">option1</Menu.Item>
+                        <Menu.Item key="12">option2</Menu.Item>
+                        <Menu.Item key="13">option3</Menu.Item>
+                        <Menu.Item key="14">option4</Menu.Item>
+                    </SubMenu>
+
+                    <Menu.Item key="scholarship" icon={<ScholarshipIcon />}>
+                        Scholarship
                     </Menu.Item>
+                    <SubMenu key="sub3" icon={<ScholarshipIcon />} title="Loksewa">
+                        <Menu.Item key="31">option1</Menu.Item>
+                        <Menu.Item key="32">option2</Menu.Item>
+                        <Menu.Item key="33">option3</Menu.Item>
+                        <Menu.Item key="34">option4</Menu.Item>
+                    </SubMenu>
+                    <SubMenu key="sub4" icon={<InformationIcon />} title="Information">
+                        <Menu.Item key="41">option1</Menu.Item>
+                        <Menu.Item key="42">option2</Menu.Item>
+                        <Menu.Item key="43">option3</Menu.Item>
+                        <Menu.Item key="44">option4</Menu.Item>
+                    </SubMenu>
                 </Menu>
-            </Sider>
+                <Menu mode="horizontal" className="flex-1 text-right ">
+                    <SubMenu key="notification" icon={<NotificationIcon />} >
+                    </SubMenu >
+                    <SubMenu icon={<UserIcon />} >
+                        <Menu.Item key="profile">Profile</Menu.Item>
+                        <Menu.Item key="settings">Settings</Menu.Item>
+                        <Menu.Item key="logout  ">Logout</Menu.Item>
+                    </SubMenu>
+                </Menu>
+
+            </Header>
             <Layout>
-                <Header className="site-layout-sub-header-background" style={{ padding: 0 }} />
-                <Content style={{ margin: '24px 16px 0' }}>
-                    {children}
+                <Content >
+                    <Sider trigger={null} collapsible={true} collapsed={collapsed} collapsedWidth={0} className="md:hidden absolute" theme="light"  >
+                        <Menu mode="inline" defaultSelectedKeys={['2']} >
+                            <SubMenu key="sub1" icon={<ArticleIcon />} title="Article">
+                                <Menu.Item key="11">option1</Menu.Item>
+                                <Menu.Item key="12">option2</Menu.Item>
+                                <Menu.Item key="13">option3</Menu.Item>
+                                <Menu.Item key="14">option4</Menu.Item>
+                            </SubMenu>
+
+                            <SubMenu key="sub2" icon={<ScholarshipIcon />} title="Scholarship">
+                                <Menu.Item key="21">option1</Menu.Item>
+                                <Menu.Item key="22">option2</Menu.Item>
+                                <Menu.Item key="23">option3</Menu.Item>
+                                <Menu.Item key="24">option4</Menu.Item>
+                            </SubMenu>
+                            <SubMenu key="sub3" icon={<ScholarshipIcon />} title="Loksewa">
+                                <Menu.Item key="31">option1</Menu.Item>
+                                <Menu.Item key="32">option2</Menu.Item>
+                                <Menu.Item key="33">option3</Menu.Item>
+                                <Menu.Item key="34">option4</Menu.Item>
+                            </SubMenu>
+                            <SubMenu key="sub4" icon={<InformationIcon />} title="Information">
+                                <Menu.Item key="41">option1</Menu.Item>
+                                <Menu.Item key="42">option2</Menu.Item>
+                                <Menu.Item key="43">option3</Menu.Item>
+                                <Menu.Item key="44">option4</Menu.Item>
+                            </SubMenu>
+                        </Menu>
+
+                    </Sider>
+                    <Content style={{ padding: '0 50px' }} className="container  bg-white mt-4 mx-auto block  min-h min-h-screen">
+                        {children}
+                    </Content>
+                    <Footer style={{ textAlign: 'center' }}>
+                        Copyright Kaaphal Inc.
+                     </Footer>
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>Created with Ant Design and Braft Editor.  Copyright © Kapahal</Footer>
-            </Layout>
+
+            </Layout >
         </Layout>)
 }
-export default AdminLayout;
+export default DefaultLayout;

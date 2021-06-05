@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import React from 'react';
-import { useGetCategoriesQuery } from '../../gql';
+import { useGetCategoriesQuery } from '../../../gql';
 
 export default function CategoryPicker(props: React.ComponentProps<typeof Select>): JSX.Element {
     const { data } = useGetCategoriesQuery()

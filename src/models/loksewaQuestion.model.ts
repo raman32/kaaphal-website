@@ -6,11 +6,11 @@ import { LoksewaQuestionCategory } from './loksewaQuestionCategory.model';
 import { LoksewaQuestionMeta } from './loksewaQuestionMeta.model';
 
 export enum Difficulty {
-    veryEasy,
-    easy,
-    medium,
-    hard,
-    veryHard,
+    veryEasy = 'veryEasy',
+    easy = 'easy',
+    medium = 'medium',
+    hard = 'hard',
+    veryHard = 'veryHard',
 }
 
 

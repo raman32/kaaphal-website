@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import React from 'react';
-import { PostType } from '../../gql';
+import { PostType } from '../../../gql';
 
 export const postTypes = [
     { value: PostType.Articles, name: 'Article' },

@@ -8,6 +8,7 @@ import {
 import moment from 'moment';
 import Router from 'next/router';
 import { Auth } from '../../src/api/common/dto/auth.dto';
+import { Spin, Typography } from 'antd';
 
 interface Props {
     data: {
@@ -28,8 +29,8 @@ const MagicLinkValidating: NextPage<Props> = ({ data }) => {
     }, []);
 
     return (
-        <div >
-            Validating your magic link...
+        <div className="m-auto" >
+            <Spin size="large"><Typography>Validating!! We will redirect you shortly</Typography></Spin>
         </div>
 
     );

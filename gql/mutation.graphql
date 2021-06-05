@@ -28,3 +28,25 @@ createTag(tag: $tag) {
   name
 }
 }
+mutation  createLoksewaCategory($category:CreateLoksewaQuestionCategoryInput!){
+  createLoksewaCategory(category: $category){
+    id
+    title
+    titleNP
+  }
+}
+
+mutation createQuestion($question:CreateLoksewaQuestionInput!){
+createQuestion(question:$question){
+  id
+}
+}
+mutation createAsset($file: Upload!){
+  createAsset(file: $file) {
+    id
+  }
+}
+
+mutation createAssetOnServer($file: Upload!){
+  createAssetOnServer(file: $file) 
+}

@@ -14,6 +14,8 @@ export type Scalars = {
   Float: number;
   /** Date custom scalar type */
   Date: any;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any;
 };
 
 /** Model For Advertisement */
@@ -124,6 +126,25 @@ export type CreateCategoryInput = {
   name: Scalars['String'];
 };
 
+export type CreateLoksewaQuestionCategoryInput = {
+  title: Scalars['String'];
+  titleNP?: Maybe<Scalars['String']>;
+};
+
+export type CreateLoksewaQuestionInput = {
+  additionalDetails?: Maybe<Scalars['String']>;
+  answer: McqAnswer;
+  categoryId?: Maybe<Scalars['String']>;
+  difficulty?: Maybe<Difficulty>;
+  metaId?: Maybe<Scalars['String']>;
+  optionA?: Maybe<Scalars['String']>;
+  optionB?: Maybe<Scalars['String']>;
+  optionC?: Maybe<Scalars['String']>;
+  optionD?: Maybe<Scalars['String']>;
+  setId?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+};
+
 export type CreatePostInput = {
   body?: Maybe<Scalars['String']>;
   categoryId?: Maybe<Scalars['String']>;
@@ -153,6 +174,7 @@ export type CreateUserInput = {
   displayName?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   middleName?: Maybe<Scalars['String']>;
   role?: Maybe<Scalars['String']>;
@@ -263,7 +285,8 @@ export type LoksewaMockCategory = {
   /** Unique UUID string */
   id: Scalars['ID'];
   questionSets: Array<LoksewaMockSet>;
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  titleNP?: Maybe<Scalars['String']>;
   /** Identifies the date and time when the object was last updated. */
   updatedAt: Scalars['Date'];
 };
@@ -319,9 +342,23 @@ export type LoksewaQuestionCategory = {
   /** Unique UUID string */
   id: Scalars['ID'];
   questions: Array<LoksewaQuestion>;
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  titleNP?: Maybe<Scalars['String']>;
   /** Identifies the date and time when the object was last updated. */
   updatedAt: Scalars['Date'];
+};
+
+export type LoksewaQuestionConnection = {
+  __typename?: 'LoksewaQuestionConnection';
+  edges?: Maybe<Array<LoksewaQuestionEdge>>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type LoksewaQuestionEdge = {
+  __typename?: 'LoksewaQuestionEdge';
+  cursor: Scalars['String'];
+  node: LoksewaQuestion;
 };
 
 export type LoksewaQuestionMeta = {
@@ -401,9 +438,13 @@ export enum MockSetType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createAsset: File;
+  createAssetOnServer: Scalars['Boolean'];
   createCategory: Category;
+  createLoksewaCategory: LoksewaQuestionCategory;
   createMePost: Post;
   createPost: Post;
+  createQuestion: LoksewaQuestion;
   createSubCategory: Category;
   createTag: Category;
   createUser: User;
@@ -411,8 +452,23 @@ export type Mutation = {
 };
 
 
+export type MutationCreateAssetArgs = {
+  file: Scalars['Upload'];
+};
+
+
+export type MutationCreateAssetOnServerArgs = {
+  file: Scalars['Upload'];
+};
+
+
 export type MutationCreateCategoryArgs = {
   category: CreateCategoryInput;
+};
+
+
+export type MutationCreateLoksewaCategoryArgs = {
+  category: CreateLoksewaQuestionCategoryInput;
 };
 
 
@@ -423,6 +479,11 @@ export type MutationCreateMePostArgs = {
 
 export type MutationCreatePostArgs = {
   post: CreatePostInput;
+};
+
+
+export type MutationCreateQuestionArgs = {
+  question: CreateLoksewaQuestionInput;
 };
 
 
@@ -572,8 +633,10 @@ export type Query = {
   __typename?: 'Query';
   getCategories: Array<Category>;
   getCategory: Category;
+  getLoksewaCategories: Array<LoksewaQuestionCategory>;
   getPost: Post;
   getPosts: PostConnection;
+  getQuestions: LoksewaQuestionConnection;
   getTag: Category;
   getTags: TagConnection;
   getUsers: UserConnection;
@@ -592,6 +655,15 @@ export type QueryGetPostArgs = {
 
 
 export type QueryGetPostsArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryGetQuestionsArgs = {
   after?: Maybe<Scalars['String']>;
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
@@ -750,6 +822,7 @@ export type TagEdge = {
   node: Tag;
 };
 
+
 /** User Model */
 export type User = {
   __typename?: 'User';
@@ -875,6 +948,55 @@ export type CreateTagMutation = (
   ) }
 );
 
+export type CreateLoksewaCategoryMutationVariables = Exact<{
+  category: CreateLoksewaQuestionCategoryInput;
+}>;
+
+
+export type CreateLoksewaCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & { createLoksewaCategory: (
+    { __typename?: 'LoksewaQuestionCategory' }
+    & Pick<LoksewaQuestionCategory, 'id' | 'title' | 'titleNP'>
+  ) }
+);
+
+export type CreateQuestionMutationVariables = Exact<{
+  question: CreateLoksewaQuestionInput;
+}>;
+
+
+export type CreateQuestionMutation = (
+  { __typename?: 'Mutation' }
+  & { createQuestion: (
+    { __typename?: 'LoksewaQuestion' }
+    & Pick<LoksewaQuestion, 'id'>
+  ) }
+);
+
+export type CreateAssetMutationVariables = Exact<{
+  file: Scalars['Upload'];
+}>;
+
+
+export type CreateAssetMutation = (
+  { __typename?: 'Mutation' }
+  & { createAsset: (
+    { __typename?: 'File' }
+    & Pick<File, 'id'>
+  ) }
+);
+
+export type CreateAssetOnServerMutationVariables = Exact<{
+  file: Scalars['Upload'];
+}>;
+
+
+export type CreateAssetOnServerMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'createAssetOnServer'>
+);
+
 export type GetPostQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -952,7 +1074,7 @@ export type GetUsersQuery = (
         & Pick<User, 'id' | 'firstName' | 'lastName' | 'displayName' | 'email' | 'deleted' | 'status'>
         & { image?: Maybe<(
           { __typename?: 'File' }
-          & Pick<File, 'preview'>
+          & Pick<File, 'source' | 'preview'>
         )> }
       ) }
     )>> }
@@ -980,6 +1102,17 @@ export type GetTagsQuery = (
       ) }
     )>> }
   ) }
+);
+
+export type GetLoksewaCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetLoksewaCategoriesQuery = (
+  { __typename?: 'Query' }
+  & { getLoksewaCategories: Array<(
+    { __typename?: 'LoksewaQuestionCategory' }
+    & Pick<LoksewaQuestionCategory, 'id' | 'title' | 'titleNP'>
+  )> }
 );
 
 
@@ -1150,6 +1283,138 @@ export function useCreateTagMutation(baseOptions?: Apollo.MutationHookOptions<Cr
 export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation>;
 export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
 export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
+export const CreateLoksewaCategoryDocument = gql`
+    mutation createLoksewaCategory($category: CreateLoksewaQuestionCategoryInput!) {
+  createLoksewaCategory(category: $category) {
+    id
+    title
+    titleNP
+  }
+}
+    `;
+export type CreateLoksewaCategoryMutationFn = Apollo.MutationFunction<CreateLoksewaCategoryMutation, CreateLoksewaCategoryMutationVariables>;
+
+/**
+ * __useCreateLoksewaCategoryMutation__
+ *
+ * To run a mutation, you first call `useCreateLoksewaCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLoksewaCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLoksewaCategoryMutation, { data, loading, error }] = useCreateLoksewaCategoryMutation({
+ *   variables: {
+ *      category: // value for 'category'
+ *   },
+ * });
+ */
+export function useCreateLoksewaCategoryMutation(baseOptions?: Apollo.MutationHookOptions<CreateLoksewaCategoryMutation, CreateLoksewaCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateLoksewaCategoryMutation, CreateLoksewaCategoryMutationVariables>(CreateLoksewaCategoryDocument, options);
+      }
+export type CreateLoksewaCategoryMutationHookResult = ReturnType<typeof useCreateLoksewaCategoryMutation>;
+export type CreateLoksewaCategoryMutationResult = Apollo.MutationResult<CreateLoksewaCategoryMutation>;
+export type CreateLoksewaCategoryMutationOptions = Apollo.BaseMutationOptions<CreateLoksewaCategoryMutation, CreateLoksewaCategoryMutationVariables>;
+export const CreateQuestionDocument = gql`
+    mutation createQuestion($question: CreateLoksewaQuestionInput!) {
+  createQuestion(question: $question) {
+    id
+  }
+}
+    `;
+export type CreateQuestionMutationFn = Apollo.MutationFunction<CreateQuestionMutation, CreateQuestionMutationVariables>;
+
+/**
+ * __useCreateQuestionMutation__
+ *
+ * To run a mutation, you first call `useCreateQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createQuestionMutation, { data, loading, error }] = useCreateQuestionMutation({
+ *   variables: {
+ *      question: // value for 'question'
+ *   },
+ * });
+ */
+export function useCreateQuestionMutation(baseOptions?: Apollo.MutationHookOptions<CreateQuestionMutation, CreateQuestionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateQuestionMutation, CreateQuestionMutationVariables>(CreateQuestionDocument, options);
+      }
+export type CreateQuestionMutationHookResult = ReturnType<typeof useCreateQuestionMutation>;
+export type CreateQuestionMutationResult = Apollo.MutationResult<CreateQuestionMutation>;
+export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<CreateQuestionMutation, CreateQuestionMutationVariables>;
+export const CreateAssetDocument = gql`
+    mutation createAsset($file: Upload!) {
+  createAsset(file: $file) {
+    id
+  }
+}
+    `;
+export type CreateAssetMutationFn = Apollo.MutationFunction<CreateAssetMutation, CreateAssetMutationVariables>;
+
+/**
+ * __useCreateAssetMutation__
+ *
+ * To run a mutation, you first call `useCreateAssetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAssetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAssetMutation, { data, loading, error }] = useCreateAssetMutation({
+ *   variables: {
+ *      file: // value for 'file'
+ *   },
+ * });
+ */
+export function useCreateAssetMutation(baseOptions?: Apollo.MutationHookOptions<CreateAssetMutation, CreateAssetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAssetMutation, CreateAssetMutationVariables>(CreateAssetDocument, options);
+      }
+export type CreateAssetMutationHookResult = ReturnType<typeof useCreateAssetMutation>;
+export type CreateAssetMutationResult = Apollo.MutationResult<CreateAssetMutation>;
+export type CreateAssetMutationOptions = Apollo.BaseMutationOptions<CreateAssetMutation, CreateAssetMutationVariables>;
+export const CreateAssetOnServerDocument = gql`
+    mutation createAssetOnServer($file: Upload!) {
+  createAssetOnServer(file: $file)
+}
+    `;
+export type CreateAssetOnServerMutationFn = Apollo.MutationFunction<CreateAssetOnServerMutation, CreateAssetOnServerMutationVariables>;
+
+/**
+ * __useCreateAssetOnServerMutation__
+ *
+ * To run a mutation, you first call `useCreateAssetOnServerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAssetOnServerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAssetOnServerMutation, { data, loading, error }] = useCreateAssetOnServerMutation({
+ *   variables: {
+ *      file: // value for 'file'
+ *   },
+ * });
+ */
+export function useCreateAssetOnServerMutation(baseOptions?: Apollo.MutationHookOptions<CreateAssetOnServerMutation, CreateAssetOnServerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAssetOnServerMutation, CreateAssetOnServerMutationVariables>(CreateAssetOnServerDocument, options);
+      }
+export type CreateAssetOnServerMutationHookResult = ReturnType<typeof useCreateAssetOnServerMutation>;
+export type CreateAssetOnServerMutationResult = Apollo.MutationResult<CreateAssetOnServerMutation>;
+export type CreateAssetOnServerMutationOptions = Apollo.BaseMutationOptions<CreateAssetOnServerMutation, CreateAssetOnServerMutationVariables>;
 export const GetPostDocument = gql`
     query getPost($id: String!) {
   getPost(id: $id) {
@@ -1320,6 +1585,7 @@ export const GetUsersDocument = gql`
         deleted
         status
         image {
+          source
           preview
         }
       }
@@ -1410,3 +1676,39 @@ export function useGetTagsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetTagsQueryHookResult = ReturnType<typeof useGetTagsQuery>;
 export type GetTagsLazyQueryHookResult = ReturnType<typeof useGetTagsLazyQuery>;
 export type GetTagsQueryResult = Apollo.QueryResult<GetTagsQuery, GetTagsQueryVariables>;
+export const GetLoksewaCategoriesDocument = gql`
+    query getLoksewaCategories {
+  getLoksewaCategories {
+    id
+    title
+    titleNP
+  }
+}
+    `;
+
+/**
+ * __useGetLoksewaCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetLoksewaCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLoksewaCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLoksewaCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLoksewaCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetLoksewaCategoriesQuery, GetLoksewaCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLoksewaCategoriesQuery, GetLoksewaCategoriesQueryVariables>(GetLoksewaCategoriesDocument, options);
+      }
+export function useGetLoksewaCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLoksewaCategoriesQuery, GetLoksewaCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLoksewaCategoriesQuery, GetLoksewaCategoriesQueryVariables>(GetLoksewaCategoriesDocument, options);
+        }
+export type GetLoksewaCategoriesQueryHookResult = ReturnType<typeof useGetLoksewaCategoriesQuery>;
+export type GetLoksewaCategoriesLazyQueryHookResult = ReturnType<typeof useGetLoksewaCategoriesLazyQuery>;
+export type GetLoksewaCategoriesQueryResult = Apollo.QueryResult<GetLoksewaCategoriesQuery, GetLoksewaCategoriesQueryVariables>;

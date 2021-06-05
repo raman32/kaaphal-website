@@ -1,7 +1,8 @@
 import { Button, Form, Input } from 'antd/lib/';
 import { NextPage } from 'next';
-import { InfoCircleOutlined, MailOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, MailOutlined, FacebookFilled, GoogleOutlined } from '@ant-design/icons';
 import { useSendMagicLinkMutation } from '../../gql'
+import Router from 'next/router';
 const Login: NextPage<Record<string, never>> = () => {
     const [sendMagicLink, { loading, data, called }] = useSendMagicLinkMutation()
     const layout = {
@@ -32,8 +33,18 @@ const Login: NextPage<Record<string, never>> = () => {
                 <Input className="bg-gray-100 " />
             </Form.Item>
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                <Button className="items-center" type="primary" htmlType="submit" icon={<MailOutlined className="align-text-top" />} >
+                <Button className="items-center bg-green-600 border-none hover:bg-green-400" type="primary" icon={<MailOutlined className="align-text-top" />} >
                     Send Magic Link
+                </Button>
+            </Form.Item>
+            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                <Button className="items-center bg-blue-600 border-none hover:bg-blue-400" type="primary" htmlType="submit" icon={<FacebookFilled className="align-text-top" />} onClick={() => Router.replace('/auth/facebook')} >
+                    Login with Facebook
+                </Button>
+            </Form.Item>
+            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                <Button className="items-center bg-red-600 border-none hover:bg-red-400" type="primary" htmlType="submit" icon={<GoogleOutlined className="align-text-top" />} onClick={() => Router.replace('/auth/google')}>
+                    Login with Google
                 </Button>
             </Form.Item>
         </Form>

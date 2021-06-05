@@ -1,7 +1,7 @@
 import { Button, message, Select, Spin } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import { useCreateTagMutation, useGetTagsQuery } from '../../gql';
-import { activePollingInterval } from '../../utils/GlobalConstants';
+import { useCreateTagMutation, useGetTagsQuery } from '../../../gql';
+import { activePollingInterval } from '../../../utils/GlobalConstants';
 
 export default function TagPicker(props: React.ComponentProps<typeof Select>): JSX.Element {
     const [searchText, setSearchText] = useState('')

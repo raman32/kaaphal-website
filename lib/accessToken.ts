@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { isServer } from './apollo';
-import { refresh } from '../utils/GlobalConstants';
+import { host, refresh, refreshUrl } from '../utils/GlobalConstants';
 
 let accessToken = undefined;
 let refreshToken = undefined;
@@ -58,3 +58,17 @@ export const skipper = () => {
         }
     }
 };
+
+export const fetchAccessToken = () => {
+    return fetch(refreshUrl, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': host,
+            'Access-Control-Allow-Credentials': 'true',
+            refresh_token: getRefreshToken(),
+        },
+    });
+}

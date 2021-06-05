@@ -9,6 +9,8 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import config from './config/config'
 
+
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,10 +30,9 @@ import config from './config/config'
       buildSchemaOptions: {
         numberScalarMode: 'integer',
       },
-      uploads: {
-        maxFileSize: 20971520,
-      },
+      uploads: false,
       context: ({ req }) => ({ req }),
+
     }),
     ApiModule
   ],

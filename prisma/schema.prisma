@@ -305,6 +305,7 @@ model LoksewaQuestionCategory {
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
   title     String?
+  titleNP    String?
   questions LoksewaQuestion[] @relation(name: "CategoryOnLoksewaQuestions")
 }
 
@@ -314,6 +315,7 @@ model LoksewaMockCategory {
   updatedAt    DateTime         @updatedAt
   questionSets LoksewaMockSet[] @relation(name: "CategoryOnLoksewaMockSet")
   title        String?
+  titleNP     String?
 }
 
 model LoksewaTest {

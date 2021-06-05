@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import React from 'react';
-import { ScholarshipLevel } from '../../gql';
+import { ScholarshipLevel } from '../../../gql';
 
 export const scholarshipLevels = [
     { value: ScholarshipLevel.K12, name: 'K-12' },

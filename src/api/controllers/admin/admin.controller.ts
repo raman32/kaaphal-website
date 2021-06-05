@@ -1,24 +1,38 @@
 import { Controller, Get, Render } from '@nestjs/common';
+import { S3StorageServive } from '../../../services/s3storage.service';
 
 @Controller('admin')
 export class AdminController {
+    constructor(
+        private readonly s3: S3StorageServive
+    ) { }
     @Get()
     @Render('Admin')
-    admin() { }
+    async admin() { }
 
     @Get('CreateArticle')
     @Render('Admin/CreateArticle')
-    createArticle() { }
+    async createArticle() { }
 
     @Get('UserManagement')
     @Render('Admin/UserManagement')
-    userManagement() { }
+    async userManagement() { }
 
     @Get('CreateUser')
     @Render('Admin/CreateUser')
-    createUser() { }
+    async createUser() { }
 
     @Get('CreateArticleCategory')
     @Render('Admin/CreateArticleCategory')
-    createArticleCategory() { }
+    async createArticleCategory() { }
+
+    @Get('CreateLoksewaQuestion')
+    @Render('Admin/CreateLoksewaQuestion')
+    async CreateLoksewaQuestion() { }
+
+
+    @Get('S3Test')
+    async getS3test() {
+        return this.s3.listBucketContents('/')
+    }
 }

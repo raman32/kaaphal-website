@@ -117,6 +117,25 @@ input CreateCategoryInput {
   name: String!
 }
 
+input CreateLoksewaQuestionCategoryInput {
+  title: String!
+  titleNP: String
+}
+
+input CreateLoksewaQuestionInput {
+  additionalDetails: String
+  answer: MCQAnswer!
+  categoryId: String
+  difficulty: Difficulty = medium
+  metaId: String
+  optionA: String
+  optionB: String
+  optionC: String
+  optionD: String
+  setId: String
+  title: String!
+}
+
 input CreatePostInput {
   body: String
   categoryId: String
@@ -146,6 +165,7 @@ input CreateUserInput {
   displayName: String
   email: String!
   firstName: String
+  image: String
   lastName: String
   middleName: String
   role: String = "user"
@@ -263,7 +283,8 @@ type LoksewaMockCategory {
   """Unique UUID string"""
   id: ID!
   questionSets: [LoksewaMockSet!]!
-  title: String!
+  title: String
+  titleNP: String
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: Date!
@@ -324,10 +345,22 @@ type LoksewaQuestionCategory {
   """Unique UUID string"""
   id: ID!
   questions: [LoksewaQuestion!]!
-  title: String!
+  title: String
+  titleNP: String
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: Date!
+}
+
+type LoksewaQuestionConnection {
+  edges: [LoksewaQuestionEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type LoksewaQuestionEdge {
+  cursor: String!
+  node: LoksewaQuestion!
 }
 
 type LoksewaQuestionMeta {
@@ -410,9 +443,13 @@ enum MockSetType {
 }
 
 type Mutation {
+  createAsset(file: Upload!): File!
+  createAssetOnServer(file: Upload!): Boolean!
   createCategory(category: CreateCategoryInput!): Category!
+  createLoksewaCategory(category: CreateLoksewaQuestionCategoryInput!): LoksewaQuestionCategory!
   createMePost(post: CreatePostInput!): Post!
   createPost(post: CreatePostInput!): Post!
+  createQuestion(question: CreateLoksewaQuestionInput!): LoksewaQuestion!
   createSubCategory(subCategory: CreateSubCategoryInput!): Category!
   createTag(tag: CreateTagInput!): Category!
   createUser(user: CreateUserInput!): User!
@@ -548,8 +585,10 @@ enum PostType {
 type Query {
   getCategories: [Category!]!
   getCategory(id: String!): Category!
+  getLoksewaCategories: [LoksewaQuestionCategory!]!
   getPost(id: String!): Post!
   getPosts(after: String, before: String, first: Int, last: Int, skip: Int): PostConnection!
+  getQuestions(after: String, before: String, first: Int, last: Int, skip: Int): LoksewaQuestionConnection!
   getTag(id: String!): Category!
   getTags(after: String, before: String, contains: String, first: Int, last: Int, skip: Int): TagConnection!
   getUsers(after: String, before: String, contains: String, first: Int, last: Int, roles: [UserRole], skip: Int): UserConnection!
@@ -686,6 +725,9 @@ type TagEdge {
   cursor: String!
   node: Tag!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 """User Model"""
 type User {

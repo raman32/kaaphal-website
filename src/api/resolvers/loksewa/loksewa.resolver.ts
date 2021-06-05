@@ -1,0 +1,57 @@
+import { LoksewaQuestion as LoksewaQuestion_, LoksewaQuestionCategory as LoksewaQuestionCategory_ } from '.prisma/client';
+import { UseGuards } from '@nestjs/common';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { PaginationArgs } from '../../../common/pagination/pagination.args';
+import { PrismaService } from '../../../services/prisma.service';
+import { AuthenticatedSessionGuard } from '../auth/guards/auth.guard';
+import { GQLGuard } from '../auth/guards/gql.guard';
+import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
+import { LoksewaQuestion } from '../../../models/loksewaQuestion.model';
+import { LoksewaQuestionConnection } from '../../../models/pagination/loksewaQuestion-connection';
+import { LoksewaQuestionCategory } from '../../../models/loksewaQuestionCategory.model';
+import { CreateLoksewaQuestionInput } from '../../../models/inputs/createLoksewaQuestion.input';
+import { Roles } from '../../decorators/role.decorator';
+import { UserRole } from '../../../models/user.model';
+import { RolesGuard } from '../auth/guards/role.guard';
+import { CreateLoksewaQuestionCategoryInput } from '../../../models/inputs/createLoksewaCategory.input';
+@Resolver(of => LoksewaQuestion)
+@UseGuards(GQLGuard)
+export class LoksewaResolver {
+    constructor(
+        private readonly prisma: PrismaService) { }
+
+    @Query(returns => LoksewaQuestionConnection)
+    @UseGuards(AuthenticatedSessionGuard)
+    async getQuestions(@Args() { after, before, first, last }: PaginationArgs): Promise<Connection<LoksewaQuestion_, Edge<LoksewaQuestion_>>> {
+
+        const questionConnection = findManyCursorConnection(
+            (args) =>
+                this.prisma.loksewaQuestion.findMany({ ...args }),
+            () => this.prisma.post.count(),
+            { first, last, before, after },
+        );
+        return questionConnection;
+    }
+
+    @Mutation(returns => LoksewaQuestion)
+    @Roles(UserRole.admin, UserRole.moderator)
+    @UseGuards(RolesGuard)
+    async createQuestion(@Args('question') input: CreateLoksewaQuestionInput): Promise<LoksewaQuestion_> {
+        return this.prisma.loksewaQuestion.create({ data: input })
+    }
+
+
+    @Mutation(returns => LoksewaQuestionCategory)
+    @Roles(UserRole.admin, UserRole.moderator)
+    @UseGuards(RolesGuard)
+    async createLoksewaCategory(@Args('category') input: CreateLoksewaQuestionCategoryInput): Promise<LoksewaQuestionCategory_> {
+        return this.prisma.loksewaQuestionCategory.create({ data: input })
+    }
+
+    @Query(returns => [LoksewaQuestionCategory])
+    async getLoksewaCategories(): Promise<LoksewaQuestionCategory_[]> {
+        return this.prisma.loksewaQuestionCategory.findMany();
+    }
+
+
+}

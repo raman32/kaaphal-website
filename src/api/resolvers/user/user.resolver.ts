@@ -62,6 +62,9 @@ export class UserResolver {
                     where: {
                         ...ORFilter
                     },
+                    include: {
+                        image: true
+                    },
                     ...args,
                 }),
             () => this.prisma.post.count(),
@@ -81,7 +84,19 @@ export class UserResolver {
     @UseGuards(RolesGuard)
     async createUser(@Args('user') user: CreateUserInput): Promise<User_> {
         // TODO create user in service.
-        return this.prisma.user.create({ data: user });
+        return this.prisma.user.create({
+            data: {
+                email: user.email,
+                firstName: user.firstName,
+                middleName: user.middleName,
+                lastName: user.lastName,
+                displayName: user.displayName,
+                image: { connect: { id: user.image } },
+                role: user.role,
+                status: user.status
+
+            }
+        });
     }
 
 }
