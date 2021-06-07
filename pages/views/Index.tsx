@@ -71,6 +71,7 @@ const Page = ({ title }: PageProps): JSX.Element => {
     )
 }
 
+// eslint-disable-next-line react/display-name
 Page.getLayout = (page: JSX.Element): React.ReactNode => <DefaultLayout>{page}</DefaultLayout>
 // assigning the initial props to the component's props
 Page.getInitialProps = (ctx: PageContext) => {
