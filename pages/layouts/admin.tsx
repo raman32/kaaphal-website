@@ -1,12 +1,33 @@
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Spin } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link'
+import useStore from '../../store/storeProvider';
+import { useGetMeQuery } from '../../gql';
+import { logout, skipper } from '../../lib/accessToken';
+import Router from 'next/router';
+import UserAvatar from '../../lib/components/atomic/UserAvatar';
 const { Header, Content, Footer, Sider } = Layout;
 interface Props {
     children: React.ReactNode
 }
 function AdminLayout({ children }: Props): JSX.Element {
+    const [collapsed, setCollapased] = useState(true);
+    const store = useStore();
+
+    const { data, loading, error } = useGetMeQuery({ skip: skipper() },
+    );
+    useEffect(() => {
+        if (data && !store.user) {
+            store.login(data.me);
+        }
+    }, [data]);
+    const onTriggerLogout = () => {
+        localStorage.clear();
+        logout();
+        Router.push('/');
+    };
+    if (!data) return <div className="flex flex-col w-screen h-screen justify-center items-center"> <Spin /> Loading </div>
     return (
         <Layout >
             <Sider
@@ -20,8 +41,10 @@ function AdminLayout({ children }: Props): JSX.Element {
                 }}
                 className="min-h-screen h-full"
             >
-                <div className="rounded-full shadow-md w-20 h-20 bg-gray-300 mx-auto my-5"></div>
-                <div className="text-lg text-white text-center">Howdy Admin!</div>
+                <div className="text-center my-4">
+                    <UserAvatar user={data.me} size={60} />
+                    <div className="text-lg text-white">Howdy Admin!</div>
+                </div>
                 <Menu theme="dark" mode="inline" defaultSelectedKeys={['10']}>
                     <Menu.SubMenu key="sub1" icon={<UserOutlined />} title="Article Management">
                         <Menu.Item key="1"><Link href='/admin/CreateArticle'>Create Article</Link></Menu.Item>
@@ -45,7 +68,6 @@ function AdminLayout({ children }: Props): JSX.Element {
                 </Menu>
             </Sider>
             <Layout>
-                <Header className="site-layout-sub-header-background" style={{ padding: 0 }} />
                 <Content style={{ margin: '24px 16px 0' }}>
                     {children}
                 </Content>

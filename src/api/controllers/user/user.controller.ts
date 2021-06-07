@@ -6,6 +6,5 @@ export class UserController {
     @Get('profile')
     @Render('Profile')
     async getProfile() {
-
     }
 }

@@ -1,9 +1,14 @@
-import { Layout, Menu } from 'antd';
-
+import { Divider, Layout, Menu } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
-import React, { useState } from 'react';
-import { UserOutlined, LaptopOutlined, NotificationOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
-import { ArticleIcon, InformationIcon, NotificationIcon, ScholarshipIcon, UserIcon } from '../../lib/components/Icons/Index';
+import React, { useEffect, useState } from 'react';
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { ArticleIcon, InformationIcon, LoksewaIcon, NotificationIcon, ScholarshipIcon, UserIcon } from '../../lib/components/Icons/Index';
+import { logout, skipper } from '../../lib/accessToken';
+import Router from 'next/router';
+import useStore from '../../store/storeProvider';
+import { useGetMeQuery, User } from '../../gql';
+import UserAvatar from '../../lib/components/atomic/UserAvatar';
+import Link from 'next/link';
 const { Header, Content, Footer, Sider } = Layout;
 interface Props {
     children: React.ReactNode
@@ -11,93 +16,141 @@ interface Props {
 
 function DefaultLayout({ children }: Props): JSX.Element {
     const [collapsed, setCollapased] = useState(true);
+    const store = useStore();
+
+    const { data, loading, error } = useGetMeQuery({ skip: skipper() },
+    );
+    useEffect(() => {
+        if (data && !store.user) {
+            store.login(data.me);
+        }
+    }, [data]);
+    const onTriggerLogout = () => {
+        localStorage.clear();
+        logout();
+        Router.push('/');
+    };
+    console.log(data)
     return (
         <Layout className=" bg-white">
-            <Header className=" bg-white flex flex-row">
+            <Header className=" bg-white flex flex-row px-4">
                 {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                    id: 'navigation-drawer-button',
-                    className: 'md:hidden my-auto flex-1 text-left',
+                    className: 'lg:hidden my-auto  mx-2 text-left min-w-max flex-1',
                     onClick: () => setCollapased(prev => !prev),
                 })}
-                <div className="float-left my-auto md:h-13 flex-1 text-center" >
-                    <img src='https://kaaphal.com/wp-content/uploads/2020/09/cropped-Wide-Kp.png' className="h-12" />
+                <div className="my-auto lg:h-13 text-center min-w-max flex-1" >
+                    <img src='https://kaaphal.com/wp-content/uploads/2020/09/cropped-Wide-Kp.png' className="h-9 mx-2" />
                 </div>
-                <Menu mode="horizontal" defaultSelectedKeys={['2']} className="hidden md:block ">
-                    <SubMenu key="sub1" icon={<ArticleIcon />} title="Article">
-                        <Menu.Item key="11">option1</Menu.Item>
-                        <Menu.Item key="12">option2</Menu.Item>
-                        <Menu.Item key="13">option3</Menu.Item>
-                        <Menu.Item key="14">option4</Menu.Item>
+                <Menu mode="horizontal" selectable={false} className="hidden lg:block min-w-max flex-1">
+                    <SubMenu icon={<ArticleIcon />} title="Article" className="mx-2">
+                        <Menu.Item >Article</Menu.Item>
+                        <Menu.Item >Opinions</Menu.Item>
+                        <Menu.Item >Science And Technology</Menu.Item>
+                        <Menu.Item >Other</Menu.Item>
                     </SubMenu>
 
-                    <Menu.Item key="scholarship" icon={<ScholarshipIcon />}>
+                    <Menu.Item icon={<ScholarshipIcon />} className="mx-2">
                         Scholarship
                     </Menu.Item>
-                    <SubMenu key="sub3" icon={<ScholarshipIcon />} title="Loksewa">
-                        <Menu.Item key="31">option1</Menu.Item>
-                        <Menu.Item key="32">option2</Menu.Item>
-                        <Menu.Item key="33">option3</Menu.Item>
-                        <Menu.Item key="34">option4</Menu.Item>
+                    <SubMenu icon={<LoksewaIcon />} title="Loksewa" className="mx-2" onTitleClick={() => Router.push('/loksewa')}>
+                        <Menu.Item ><Link href="/loksewa/mcq">MCQ</Link></Menu.Item>
+                        <Menu.Item >Mock Test</Menu.Item>
+                        <Menu.Item >Notices and Reading Materials</Menu.Item>
+                        <Menu.Item >Syllabus and Other</Menu.Item>
                     </SubMenu>
-                    <SubMenu key="sub4" icon={<InformationIcon />} title="Information">
-                        <Menu.Item key="41">option1</Menu.Item>
-                        <Menu.Item key="42">option2</Menu.Item>
-                        <Menu.Item key="43">option3</Menu.Item>
-                        <Menu.Item key="44">option4</Menu.Item>
+                    <SubMenu icon={<InformationIcon />} title="Information" className="mx-2">
+                        <Menu.Item >Special Info</Menu.Item>
+                        <Menu.Item >Exams and Standarized Test</Menu.Item>
+                        <Menu.Item >How to ?</Menu.Item>
+                        <Menu.Item >Federal Nepal</Menu.Item>
                     </SubMenu>
                 </Menu>
-                <Menu mode="horizontal" className="flex-1 text-right ">
-                    <SubMenu key="notification" icon={<NotificationIcon />} >
-                    </SubMenu >
-                    <SubMenu icon={<UserIcon />} >
-                        <Menu.Item key="profile">Profile</Menu.Item>
-                        <Menu.Item key="settings">Settings</Menu.Item>
-                        <Menu.Item key="logout  ">Logout</Menu.Item>
-                    </SubMenu>
+                <Menu mode="horizontal" selectable={false} className=" text-right min-w-min mx-2 flex-1 " style={{ marginLeft: 0, marginRight: 0 }}>
+                    {data && data.me ?
+                        <>
+                            <Menu.Item icon={<NotificationIcon />} style={{ marginLeft: 2, marginRight: 4 }} >
+                            </Menu.Item  >
+                            <SubMenu icon={<UserAvatar user={data.me as User} />} style={{ marginLeft: 4, marginRight: 2 }} >
+                                <Menu.Item ><Link href="/user/profile">Profile</Link></Menu.Item>
+                                <Menu.Item >Settings</Menu.Item>
+                                <Menu.Item onClick={onTriggerLogout}>Logout</Menu.Item>
+                            </SubMenu>
+                        </> :
+                        <Menu.Item  > <Link href="/login"><span><span className="mr-2 hidden lg:inline">Login/Register</span> <span className="lg:hidden"><UserIcon /></span></span></Link></Menu.Item>
+                    }
                 </Menu>
 
             </Header>
             <Layout>
                 <Content >
-                    <Sider trigger={null} collapsible={true} collapsed={collapsed} collapsedWidth={0} className="md:hidden absolute" theme="light"  >
-                        <Menu mode="inline" defaultSelectedKeys={['2']} >
+                    <Sider trigger={null} collapsible={true} collapsed={collapsed} collapsedWidth={0} className="lg:hidden absolute z-50" theme="light"  >
+                        <Menu mode="inline" >
                             <SubMenu key="sub1" icon={<ArticleIcon />} title="Article">
-                                <Menu.Item key="11">option1</Menu.Item>
-                                <Menu.Item key="12">option2</Menu.Item>
-                                <Menu.Item key="13">option3</Menu.Item>
-                                <Menu.Item key="14">option4</Menu.Item>
+                                <Menu.Item key="11">Article</Menu.Item>
+                                <Menu.Item key="12">Opinions</Menu.Item>
+                                <Menu.Item key="13">Science And Technology</Menu.Item>
+                                <Menu.Item key="14">Other</Menu.Item>
                             </SubMenu>
 
-                            <SubMenu key="sub2" icon={<ScholarshipIcon />} title="Scholarship">
-                                <Menu.Item key="21">option1</Menu.Item>
-                                <Menu.Item key="22">option2</Menu.Item>
-                                <Menu.Item key="23">option3</Menu.Item>
-                                <Menu.Item key="24">option4</Menu.Item>
-                            </SubMenu>
-                            <SubMenu key="sub3" icon={<ScholarshipIcon />} title="Loksewa">
-                                <Menu.Item key="31">option1</Menu.Item>
-                                <Menu.Item key="32">option2</Menu.Item>
-                                <Menu.Item key="33">option3</Menu.Item>
-                                <Menu.Item key="34">option4</Menu.Item>
+                            <Menu.Item key="scholarship" icon={<ScholarshipIcon />}>
+                                Scholarship
+                            </Menu.Item>
+                            <SubMenu key="sub3" icon={<LoksewaIcon />} title="Loksewa">
+                                <Menu.Item key="31">MCQ</Menu.Item>
+                                <Menu.Item key="32">Mock Test</Menu.Item>
+                                <Menu.Item key="33">Notices and Reading Materials</Menu.Item>
+                                <Menu.Item key="34">Syllabus and Other</Menu.Item>
                             </SubMenu>
                             <SubMenu key="sub4" icon={<InformationIcon />} title="Information">
-                                <Menu.Item key="41">option1</Menu.Item>
-                                <Menu.Item key="42">option2</Menu.Item>
-                                <Menu.Item key="43">option3</Menu.Item>
-                                <Menu.Item key="44">option4</Menu.Item>
+                                <Menu.Item key="41">Special Info</Menu.Item>
+                                <Menu.Item key="42">Exams and Standarized Test</Menu.Item>
+                                <Menu.Item key="43">How to ?</Menu.Item>
+                                <Menu.Item key="44">Federal Nepal</Menu.Item>
                             </SubMenu>
                         </Menu>
-
                     </Sider>
-                    <Content style={{ padding: '0 50px' }} className="container  bg-white mt-4 mx-auto block  min-h min-h-screen">
+                    <Content className="container flex flex-col bg-white mt-4 mx-auto  min-h-screen">
                         {children}
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>
-                        Copyright Kaaphal Inc.
-                     </Footer>
+
                 </Content>
 
+
             </Layout >
+            <Footer style={{ textAlign: 'center' }} className="bg-gray-600 text-white mx-0 ">
+                <div className="flex flex-row flex-wrap">
+                    <div className="flex-1 min-w-max my-4 mx-4">
+                        <div>Send Articles</div>
+                        <div>Donate</div>
+                        <div>Advertise With Us</div>
+                        <div>Write For Us</div>
+                        <div>Suggestions and Complaint</div>
+
+                    </div>
+                    <div className="flex-1 min-w-max  my-4 mx-4">
+                        <div>Articles</div>
+                        <div>Scholarships</div>
+                        <div>Loksewa Materials and MCQ</div>
+                        <div>Mock Test</div>
+                        <div>Notices</div>
+                    </div>
+
+                    <div className="flex-1 min-w-max  my-4 mx-4">
+                        <div><Link href="/privacy-policy">Privacy Policy</Link></div>
+                        <div><Link href="/terms-and-conditions">Terms and Conditions</Link></div>
+                        <div><Link href="/about-us">About Us</Link></div>
+                        <div>CSR</div>
+                        <div>Job Vacancy</div>
+                    </div>
+                </div>
+                <Divider className="bg-gray-400" />
+                <div>
+                    <span className="font-bold">Kaaphal</span> is a trademark owned by <Link href="https://kaaphal.com">Kaaphal Inc.</Link>
+                </div>
+                <div>
+                    Copyright ©2020 by <Link href="https://kaaphal.com">Kaaphal.</Link> All Rights  Reserved.
+                    </div>
+            </Footer>
         </Layout>)
 }
 export default DefaultLayout;

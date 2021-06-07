@@ -17,6 +17,7 @@ model User {
   middleName     String?
   lastName       String?
   displayName    String?
+  bio            String?
   status         UserStatus       @default(value: active)
   image          File?
   comments       Comment[]        @relation(name: "UserOnComment")

@@ -18,11 +18,13 @@ import { TagModule } from './resolvers/tag/tag.module';
 import { LoksewaModule } from './resolvers/loksewa/loksewa.module';
 import { AssetsModule } from './resolvers/asset/asset.module';
 import { AssetsController } from './controllers/asset/assest.controller';
+import { LoksewaContorller } from './controllers/loksewa/loksewa.controller';
+import { AboutUsController, PrivacyPolicyController, TermsAndConditionsController } from './controllers/other/other.controller';
 
 
 @Module({
     imports: [PostModule, AuthModule, ServicesModule, CategoryModule, UserModule, TagModule, LoksewaModule, EventBusModule, AssetsModule],
-    controllers: [AuthController, UserController, AdminController, AssetsController],
+    controllers: [AuthController, UserController, AdminController, AssetsController, LoksewaContorller, PrivacyPolicyController, TermsAndConditionsController, AboutUsController],
     providers: [RequestContextService,
         SessionService,
         ConfigService,

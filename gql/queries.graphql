@@ -70,3 +70,20 @@ query getLoksewaCategories{
     titleNP
   }
 }
+
+query getMe {
+  me {
+    id
+    firstName
+    lastName
+    middleName
+    displayName
+    image {
+      source
+      preview
+    }
+    role
+    email
+    status
+  }
+}

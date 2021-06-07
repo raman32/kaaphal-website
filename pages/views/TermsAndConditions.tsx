@@ -1,0 +1,76 @@
+import { NextPage } from 'next';
+import React from 'react';
+import DefaultLayout from '../layouts/default';
+
+
+const TermsAndConditions: NextPage<Record<string, never>> = () => {
+    return (
+        <div className="mx-4 sm:mx-8 my-4 text-justify tracking-wide">
+            <h1 className="font-bold text-xl text-center mb-4">Welcome to Kaaphal</h1>
+            <h2><span className="font-bold">These terms and conditions outline the rules and regulations for the use of Kaaphal’s Website.</span></h2>
+            <p><span className="font-normal">By accessing this website we assume you accept these terms and conditions in full. By clicking your consent (e.g. “Continue,” “Login,” or “Sign-up,”) or by using Kaaphal services, you agree to the Terms &amp; conditions of the Kaaphal.</span></p>
+            <p><span className="font-normal">Do not continue to use Kaaphal’s website if you do not accept all of the terms and conditions stated on this page.</span></p>
+            <p><span className="font-normal">The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and any or all Agreements:</span></p>
+            <p><span className="font-normal">“Users”, “Client”, “You” and “Your” refers to you, the person accessing this website and the people who have made an account on Kaaphal, accepting the Company’s terms and conditions. “The Company ”, “Ourselves”, “We”, “Our” and “Us”, refers to Kaaphal. “Kaaphal services’ ‘ or “services’ ‘ means the information, educational, and articles posts on the Kaaphal sites that Kaaphal offers to the users. “Party”, “Parties”, or “Us”, refers to both the Users and ourselves, or either the Users or ourselves. “Content” means all the things inside www.kaaphal.com. Users’ content means the articles they provide to Kaaphal to post, their images, and personal information.</span></p>
+            <h5 className="text-lg mt-4"><strong>Users Account &amp; Responsibilities</strong></h5>
+            <p><span className="font-normal">Users are responsible for their use of the Kaaphal services and any articles they provide, including compliance with applicable laws. articles on the Kaaphal may be protected by others’ intellectual property rights. Please don’t copy, upload, download, or share content unless you have the right to do so.</span></p>
+            <p><span className="font-normal">Users using the Kaaphal services must comply with our Rules.</span></p>
+            <p><span className="font-normal">Users may need to register for an account to access some or all of our services.&nbsp;</span></p>
+            <p><span className="font-normal">We recommend that you keep your account protected. Safeguard your password to the account, and keep your account information to yourself. We recommend that you do not share your password with others.</span></p>
+            <p><span className="font-normal">If you’re accepting these Terms and using the Kaaphal services on behalf of someone else (such as another person or entity), you represent that you’re authorized to do so, and in that case, the words “you” or “your” in these Terms include that other person or entity.</span></p>
+            <p><span className="font-normal">If you use the kaaphal services to access, collect, or use personal information about other Kaaphal users, you agree to do so in compliance with applicable laws. You further agree not to sell any Personal Information, where the term “sell” has the meaning given to it under applicable laws.</span></p>
+            <h5 className="text-lg mt-4"><strong>User Content on the Services</strong></h5>
+            <p><span className="font-normal">Kaaphal may review your conduct and content for compliance with these Terms and our Rules, and reserves the right to remove any violating content.</span></p>
+            <p><span className="font-normal">Kaaphal reserves the right to delete or disable content alleged to be infringing the intellectual property rights of others, and to terminate accounts of repeat infringers. We respond to notices of alleged copyright infringement if they comply with the law; please report such notices to us.</span></p>
+            <h5 className="text-lg mt-4"><strong>Rights and Ownership</strong></h5>
+            <p><span className="font-normal">You hold your rights to any content you submit, post, or display on or within the Kaaphal.</span></p>
+            <p><span className="font-normal">Unless otherwise agreed in writing, by submitting, posting, or displaying content on or through the Kaaphal services, you grant Kaaphal a nonexclusive, royalty-free, worldwide, fully-paid, and sublicensable license to use, reproduce, modify, adapt, publish, translate,&nbsp;</span></p>
+            <p><span className="font-normal">create derivative works from, distribute, publicly perform and display your content and any name, username, or likeness provided in connection with your content in all media formats and distribution methods now known or later developed on the Kaaphal services.</span></p>
+            <p><span className="font-normal">Kaaphal needs this license because you own your content and Kaaphal therefore can’t display it across its various surfaces (i.e., mobile, web) without your permission.</span></p>
+            <p><span className="font-normal">This type of license also is needed to distribute your content across Kaaphal services.</span></p>
+            <p><span className="font-normal">The Kaaphal services are protected by copyright, trademark, and other Nepalese Government laws and foreign laws. These Terms don’t grant you any right, title, or interest in the Kaaphal services, other users’ content on the Services or Kaaphal trademarks, logos, or other brand features.</span></p>
+            <p><span className="font-normal">Separate and apart from the content you submit, post, or display on Kaaphal services, we welcome feedback, including any comments, ideas, and suggestions you have about our Kaaphal services. We may use this feedback for any purpose, in our sole discretion, without any obligation to you. We may treat Feedback as non-confidential.</span></p>
+            <p><span className="font-normal">We may stop providing the Kaaphal services or any of its features within our sole discretion. We also retain the right to create limits on use and storage and may remove or limit content distribution on the Kaaphal services.</span></p>
+            <h5 className="text-lg mt-4"><strong>Termination</strong></h5>
+            <p><span className="font-normal">You’re free to discontinue using our services at any moment. We reserve the right to suspend or terminate your access to the Services with or without notice.</span></p>
+            <h5 className="text-lg mt-4"><strong>Transfer and Processing Data</strong></h5>
+            <p><span className="font-normal">For us to provide our services, you agree that we may process, transfer and store information about you, where you may not have the same rights and protections as you do under local law.</span></p>
+            <h5 className="text-lg mt-4"><strong>Disclaimers — Service is “As Is”</strong></h5>
+            <p><span className="font-normal">Kaaphal aims to give you great services but there are some things we can’t guarantee. Your use of the kaaphal services is at your sole risk. You agree that our services and any content posted or shared by users on the services are provided “as is” and “as available” without warranties of any kind, either direct or implied, including proposed warranties of merchantability, fitness for a particular purpose, title, and non-infringement. Also, Kaaphal doesn’t represent or warrant that our services are accurate, complete, reliable, current, or error-free. No advice or information obtained from Kaaphal or through the services will create any warranty or representation not expressly made in this paragraph. Kaaphal may provide information about third-party products, services, activities, or events, or we may allow third parties to make their content and information available on or through our services&nbsp;</span><span className="font-normal">(collectively, “Third-Party Content”). We do not control or endorse, and we make no representations or warranties regarding, any Third-Party Content. Your access and use Third-Party Content at your own risk. Some locations don’t allow the disclaimers in this paragraph and so they might not apply to you.</span></p>
+            <h5 className="text-lg mt-4"><strong>User Article rights &amp; responsibilities, &amp; Guidelines</strong></h5>
+            <p><span className="font-normal">Users own the rights to the articles they create and post on Kaaphal.</span></p>
+            <p><span className="font-normal">By posting articles to Kaaphal, Users give us a nonexclusive license to publish it on Kaaphal, including anything reasonably related to publishing it (like storing, displaying, reformatting, and distributing it). In consideration for Kaaphal granting Users access to and use of the Kaaphal services, Users agree that Kaaphal may enable advertising, including in connection with the display of Users article or other information. We may also use Users article to promote Kaaphal, including its products and content. We will never sell User articles to third parties without Users’ explicit permission.</span></p>
+            <p><span className="font-normal">Users are responsible for the articles they post. This means Users assume all risks related to it, including someone else’s reliance on its accuracy, or claims relating to intellectual property or other legal rights.</span></p>
+            <p><span className="font-normal">Users are required to post articles and related images that are original. Users are also welcome to post articles on Kaaphal that they’ve published elsewhere, as long as they have the rights they need to do so. By posting articles to Kaaphal, Users represent that doing so doesn’t conflict with any other agreement they’ve made.</span></p>
+            <p><span className="font-normal">Kaaphal is a private entity, it does not belong, or support any political parties, or other parties. Users are themselves to blame for any articles which may disconcert other people’s beliefs or support. They are themselves responsible for articles that support or humiliate any political parties or entities or organizations.</span></p>
+            <p><span className="font-normal">We can remove any articles Users post for any reason.</span></p>
+            <p><span className="font-normal">Users can delete any of their posts, or their accounts, anytime.&nbsp;</span></p>
+            <h5 className="text-lg mt-4"><strong>Prohibition</strong></h5>
+            <p><span className="font-normal">Users are strictly prohibited&nbsp; while accessing or using the Kaaphal:&nbsp;</span></p>
+            <p><span className="font-normal">(i) access or search or try to access or search the Kaaphal services by any method (automated or differently) other than within our currently accessible, published interfaces that are granted by Kaaphal (and only under the applicable terms and conditions)&nbsp;</span></p>
+            <p><span className="font-normal">(NOTE: crawling and scraping the Kaaphal services without the prior consent of Kaaphal is forbidden);</span></p>
+            <p><span className="font-normal">(ii) probe, scan, or test the vulnerability of any system or network or breach or bypass any security or authentication means;&nbsp;</span></p>
+            <p><span className="font-normal">(iii)copy any TCP/IP packet header or any part of the header data in any email or posting, or in any way use the services to send changed, unreliable, or false source-identifying information; or&nbsp;</span></p>
+            <p><span className="font-normal">(iv) hinder with, or disrupt, (or attempt to do so), the access of any user, host, or network, including, without limitation, sending a virus, overloading, flooding, spamming, mail-bombing the Services, or by scripting content in such a manner as to interfere with or form an unfair hardship on the kaaphal services.&nbsp;</span></p>
+            <h5 className="text-lg mt-4"><strong>Cookies</strong></h5>
+            <p><span className="font-normal">We apply the use of cookies. By using Kaaphal’s website you consent to the use of cookies by Kaaphal’s privacy policy. Cookies are used in some areas of our site to allow the functionality of this area and ease of use for those people visiting. Some of our subsidiary/advertising partners may also use cookies.</span></p>
+            <h5 className="text-lg mt-4"><strong>Hyperlinking to our Content</strong></h5>
+            <p><span className="font-normal">The following organizations may link to our Web site without prior recorded consent:</span></p>
+            <p><span className="font-normal">Government agencies;</span></p>
+            <p><span className="font-normal">Search engines;</span></p>
+            <p><span className="font-normal">News organizations;</span></p>
+            <p><span className="font-normal">Online directory publishers when they list us in the directory may link to our Web site in the same</span></p>
+            <p><span className="font-normal">Other than the above-mentioned organizations, you need to notify us by sending an email to </span><span className="font-normal">ourkaaphal@gmail.com</span><span className="font-normal"> to hyperlink our content. Enable 2-3 weeks for us to respond.</span></p>
+            <p><span className="font-normal">No use of Kaaphal’s logo or other artwork will be provided for linking absent a trademark license agreement.</span></p>
+            <h5 className="text-lg mt-4"><strong>Iframes</strong></h5>
+            <p><span className="font-normal">Without prior consent and express wrote permission, you may not generate frames around our Web pages or use other techniques that change in any way the visual presentation or appearance of our Web site.</span></p>
+            <h5 className="text-lg mt-4"><strong>Reservation of Rights</strong></h5>
+            <p><span className="font-normal">We hold the right at any time and in its sole discretion to request that you remove all links or any particular link to our Web site. You agree to quickly remove all links to our Web site upon such request. We also hold the right to amend these terms and conditions and its linking policy at any time. By continuing to link to our Web site, you consent to be united to and abide by these linking terms and conditions.</span></p>
+            <h5 className="text-lg mt-4"><strong>Removal of links from our website</strong></h5>
+            <p><span className="font-normal">If you find any link on our Web site or any linked web site unacceptable for any reason, you may contact us about this. We will grant requests to remove links but will have no responsibility to do so or to respond directly to you.</span></p>
+            <p>Thank you for reading the Terms &amp; Conditions of Kaaphal.</p>
+        </div >)
+}
+
+TermsAndConditions.getLayout = (page: JSX.Element): React.ReactNode => <DefaultLayout>{page}</DefaultLayout>
+export default TermsAndConditions;

@@ -4,6 +4,7 @@ import 'tailwindcss/tailwind.css'
 import { withApollo } from '../lib/apollo';
 import { ApolloProvider } from '@apollo/client';
 import Head from 'next/head';
+import { StoreProvider } from '../store/storeProvider';
 
 function MyApp({ Component, pageProps, apolloClient }) {
     const getLayout = Component.getLayout || ((page) => page);
@@ -18,9 +19,11 @@ function MyApp({ Component, pageProps, apolloClient }) {
                 />
                 <meta name="description" content="Kaaphal Website -  Articles, Informations, Scholarships and Loksewa" />
             </Head>
-            <ApolloProvider client={apolloClient}>
-                {getLayout(<Component {...pageProps} />)}
-            </ApolloProvider>
+            <StoreProvider {...pageProps}>
+                <ApolloProvider client={apolloClient}>
+                    {getLayout(<Component {...pageProps} />)}
+                </ApolloProvider>
+            </StoreProvider>
         </>
     );
 }
