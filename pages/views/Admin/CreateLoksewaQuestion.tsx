@@ -1,9 +1,11 @@
-import { Button, Col, Form, Input, message, Radio } from 'antd';
+import { Button, Form, Input, message, Radio } from 'antd';
 import React, { useEffect } from 'react';
 import { McqAnswer, useCreateQuestionMutation } from '../../../gql';
 import AdminLayout from '../../layouts/admin';
 import { DifficultyRater } from '../../../lib/components/atomic/DifficultyRater';
 import LoksewaCategoryPicker from '../../../lib/components/atomic/LoksewaCategoryPicker';
+
+
 function CreateArticleCategory(): JSX.Element {
     const [createQuestion, { data, error, loading }] = useCreateQuestionMutation()
     useEffect(() => {
@@ -13,6 +15,7 @@ function CreateArticleCategory(): JSX.Element {
             form.resetFields();
         }
     }, [error, data])
+
     const [form] = Form.useForm();
     return <Form form={form} layout="vertical" name="nest-messages" onFinish={(value) => createQuestion({ variables: { question: value } })}>
         <Form.Item name="title" label="Question" rules={[{ required: true }]}>

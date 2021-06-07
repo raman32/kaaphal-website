@@ -62,7 +62,7 @@ export function withApollo(PageComponent): React.ReactNode {
     return WithApollo;
 }
 
-let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+export let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
 function initApolloClient(initalState: any, accessToken?: string) {
     if (!apolloClient) {

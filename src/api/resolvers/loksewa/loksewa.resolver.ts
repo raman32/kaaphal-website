@@ -13,7 +13,7 @@ import { CreateLoksewaQuestionInput } from '../../../models/inputs/createLoksewa
 import { Roles } from '../../decorators/role.decorator';
 import { UserRole } from '../../../models/user.model';
 import { RolesGuard } from '../auth/guards/role.guard';
-import { CreateLoksewaQuestionCategoryInput } from '../../../models/inputs/createLoksewaCategory.input';
+import { CreateLoksewaQuestionCategoryInput, UpdateLoksewaQuestionCategoryInput } from '../../../models/inputs/loksewaCategory.input';
 @Resolver(of => LoksewaQuestion)
 @UseGuards(GQLGuard)
 export class LoksewaResolver {
@@ -46,6 +46,28 @@ export class LoksewaResolver {
     @UseGuards(RolesGuard)
     async createLoksewaCategory(@Args('category') input: CreateLoksewaQuestionCategoryInput): Promise<LoksewaQuestionCategory_> {
         return this.prisma.loksewaQuestionCategory.create({ data: input })
+    }
+
+
+    @Mutation(returns => LoksewaQuestionCategory)
+    @Roles(UserRole.admin, UserRole.moderator)
+    @UseGuards(RolesGuard)
+    async updateLoksewaCategory(@Args('category') input: UpdateLoksewaQuestionCategoryInput): Promise<LoksewaQuestionCategory_> {
+        return this.prisma.loksewaQuestionCategory.update({ where: { id: input.id }, data: input })
+    }
+
+    @Mutation(returns => Boolean)
+    @Roles(UserRole.admin, UserRole.moderator)
+    @UseGuards(RolesGuard)
+    async deleteLoksewaCategory(@Args('category') input: UpdateLoksewaQuestionCategoryInput): Promise<boolean> {
+        try {
+            await this.prisma.loksewaQuestionCategory.delete({ where: { id: input.id } });
+            return true;
+        }
+        catch {
+            return false;
+        }
+
     }
 
     @Query(returns => [LoksewaQuestionCategory])

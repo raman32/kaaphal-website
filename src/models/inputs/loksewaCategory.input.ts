@@ -7,3 +7,13 @@ export class CreateLoksewaQuestionCategoryInput {
     titleNP: string;
 
 }
+
+@InputType()
+export class UpdateLoksewaQuestionCategoryInput {
+    @Field()
+    id: string;
+    @Field({ nullable: true })
+    title: string;
+    @Field({ nullable: true })
+    titleNP: string;
+}

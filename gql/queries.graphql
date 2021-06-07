@@ -52,6 +52,23 @@ query getUsers ( $after: String, $before: String, $first: Int, $last: Int , $con
   }
 }
 
+query getQuestions ( $after: String, $before: String, $first: Int, $last: Int ){
+    getQuestions ( after: $after, before :$before, first:$first, last:$last){
+    edges {
+      node {
+        id
+        title
+        optionA
+        optionB
+        optionC
+        optionD
+        answer
+        additionalDetails
+      }
+    }
+  }
+}
+
 query	getTags ($after: String, $before: String, $first: Int, $last: Int , $contains:String) {
     getTags ( after: $after, before :$before, first:$first, last:$last, contains:$contains) {
     edges {

@@ -35,6 +35,17 @@ mutation  createLoksewaCategory($category:CreateLoksewaQuestionCategoryInput!){
     titleNP
   }
 }
+mutation  deleteLoksewaCategory($category:UpdateLoksewaQuestionCategoryInput!){
+  deleteLoksewaCategory(category: $category) 
+}
+mutation  updateLoksewaCategory($category:UpdateLoksewaQuestionCategoryInput!){
+  updateLoksewaCategory(category: $category){
+    id
+    title
+    titleNP
+  }
+}
+
 
 mutation createQuestion($question:CreateLoksewaQuestionInput!){
 createQuestion(question:$question){

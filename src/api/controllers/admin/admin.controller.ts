@@ -28,8 +28,16 @@ export class AdminController {
 
     @Get('CreateLoksewaQuestion')
     @Render('Admin/CreateLoksewaQuestion')
-    async CreateLoksewaQuestion() { }
+    async createLoksewaQuestion() { }
 
+
+    @Get('CreateLoksewaCategory')
+    @Render('Admin/CreateLoksewaCategory')
+    async createLoksewaCategory() { }
+
+    @Get('LoksewaQuestionManagement')
+    @Render('Admin/LoksewaQuestionManagement')
+    async loksewaQuestionManagement() { }
 
     @Get('S3Test')
     async getS3test() {

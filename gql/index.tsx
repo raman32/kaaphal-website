@@ -448,7 +448,9 @@ export type Mutation = {
   createSubCategory: Category;
   createTag: Category;
   createUser: User;
+  deleteLoksewaCategory: Scalars['Boolean'];
   sendMagicLink: MagicLink;
+  updateLoksewaCategory: LoksewaQuestionCategory;
 };
 
 
@@ -502,8 +504,18 @@ export type MutationCreateUserArgs = {
 };
 
 
+export type MutationDeleteLoksewaCategoryArgs = {
+  category: UpdateLoksewaQuestionCategoryInput;
+};
+
+
 export type MutationSendMagicLinkArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationUpdateLoksewaCategoryArgs = {
+  category: UpdateLoksewaQuestionCategoryInput;
 };
 
 export type Notification = {
@@ -822,6 +834,12 @@ export type TagEdge = {
   node: Tag;
 };
 
+export type UpdateLoksewaQuestionCategoryInput = {
+  id: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  titleNP?: Maybe<Scalars['String']>;
+};
+
 
 /** User Model */
 export type User = {
@@ -961,6 +979,29 @@ export type CreateLoksewaCategoryMutation = (
   ) }
 );
 
+export type DeleteLoksewaCategoryMutationVariables = Exact<{
+  category: UpdateLoksewaQuestionCategoryInput;
+}>;
+
+
+export type DeleteLoksewaCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteLoksewaCategory'>
+);
+
+export type UpdateLoksewaCategoryMutationVariables = Exact<{
+  category: UpdateLoksewaQuestionCategoryInput;
+}>;
+
+
+export type UpdateLoksewaCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & { updateLoksewaCategory: (
+    { __typename?: 'LoksewaQuestionCategory' }
+    & Pick<LoksewaQuestionCategory, 'id' | 'title' | 'titleNP'>
+  ) }
+);
+
 export type CreateQuestionMutationVariables = Exact<{
   question: CreateLoksewaQuestionInput;
 }>;
@@ -1076,6 +1117,28 @@ export type GetUsersQuery = (
           { __typename?: 'File' }
           & Pick<File, 'source' | 'preview'>
         )> }
+      ) }
+    )>> }
+  ) }
+);
+
+export type GetQuestionsQueryVariables = Exact<{
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetQuestionsQuery = (
+  { __typename?: 'Query' }
+  & { getQuestions: (
+    { __typename?: 'LoksewaQuestionConnection' }
+    & { edges?: Maybe<Array<(
+      { __typename?: 'LoksewaQuestionEdge' }
+      & { node: (
+        { __typename?: 'LoksewaQuestion' }
+        & Pick<LoksewaQuestion, 'id' | 'title' | 'optionA' | 'optionB' | 'optionC' | 'optionD' | 'answer' | 'additionalDetails'>
       ) }
     )>> }
   ) }
@@ -1333,6 +1396,72 @@ export function useCreateLoksewaCategoryMutation(baseOptions?: Apollo.MutationHo
 export type CreateLoksewaCategoryMutationHookResult = ReturnType<typeof useCreateLoksewaCategoryMutation>;
 export type CreateLoksewaCategoryMutationResult = Apollo.MutationResult<CreateLoksewaCategoryMutation>;
 export type CreateLoksewaCategoryMutationOptions = Apollo.BaseMutationOptions<CreateLoksewaCategoryMutation, CreateLoksewaCategoryMutationVariables>;
+export const DeleteLoksewaCategoryDocument = gql`
+    mutation deleteLoksewaCategory($category: UpdateLoksewaQuestionCategoryInput!) {
+  deleteLoksewaCategory(category: $category)
+}
+    `;
+export type DeleteLoksewaCategoryMutationFn = Apollo.MutationFunction<DeleteLoksewaCategoryMutation, DeleteLoksewaCategoryMutationVariables>;
+
+/**
+ * __useDeleteLoksewaCategoryMutation__
+ *
+ * To run a mutation, you first call `useDeleteLoksewaCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLoksewaCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteLoksewaCategoryMutation, { data, loading, error }] = useDeleteLoksewaCategoryMutation({
+ *   variables: {
+ *      category: // value for 'category'
+ *   },
+ * });
+ */
+export function useDeleteLoksewaCategoryMutation(baseOptions?: Apollo.MutationHookOptions<DeleteLoksewaCategoryMutation, DeleteLoksewaCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteLoksewaCategoryMutation, DeleteLoksewaCategoryMutationVariables>(DeleteLoksewaCategoryDocument, options);
+      }
+export type DeleteLoksewaCategoryMutationHookResult = ReturnType<typeof useDeleteLoksewaCategoryMutation>;
+export type DeleteLoksewaCategoryMutationResult = Apollo.MutationResult<DeleteLoksewaCategoryMutation>;
+export type DeleteLoksewaCategoryMutationOptions = Apollo.BaseMutationOptions<DeleteLoksewaCategoryMutation, DeleteLoksewaCategoryMutationVariables>;
+export const UpdateLoksewaCategoryDocument = gql`
+    mutation updateLoksewaCategory($category: UpdateLoksewaQuestionCategoryInput!) {
+  updateLoksewaCategory(category: $category) {
+    id
+    title
+    titleNP
+  }
+}
+    `;
+export type UpdateLoksewaCategoryMutationFn = Apollo.MutationFunction<UpdateLoksewaCategoryMutation, UpdateLoksewaCategoryMutationVariables>;
+
+/**
+ * __useUpdateLoksewaCategoryMutation__
+ *
+ * To run a mutation, you first call `useUpdateLoksewaCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLoksewaCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLoksewaCategoryMutation, { data, loading, error }] = useUpdateLoksewaCategoryMutation({
+ *   variables: {
+ *      category: // value for 'category'
+ *   },
+ * });
+ */
+export function useUpdateLoksewaCategoryMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLoksewaCategoryMutation, UpdateLoksewaCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLoksewaCategoryMutation, UpdateLoksewaCategoryMutationVariables>(UpdateLoksewaCategoryDocument, options);
+      }
+export type UpdateLoksewaCategoryMutationHookResult = ReturnType<typeof useUpdateLoksewaCategoryMutation>;
+export type UpdateLoksewaCategoryMutationResult = Apollo.MutationResult<UpdateLoksewaCategoryMutation>;
+export type UpdateLoksewaCategoryMutationOptions = Apollo.BaseMutationOptions<UpdateLoksewaCategoryMutation, UpdateLoksewaCategoryMutationVariables>;
 export const CreateQuestionDocument = gql`
     mutation createQuestion($question: CreateLoksewaQuestionInput!) {
   createQuestion(question: $question) {
@@ -1641,6 +1770,55 @@ export function useGetUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
 export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
 export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
+export const GetQuestionsDocument = gql`
+    query getQuestions($after: String, $before: String, $first: Int, $last: Int) {
+  getQuestions(after: $after, before: $before, first: $first, last: $last) {
+    edges {
+      node {
+        id
+        title
+        optionA
+        optionB
+        optionC
+        optionD
+        answer
+        additionalDetails
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetQuestionsQuery__
+ *
+ * To run a query within a React component, call `useGetQuestionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetQuestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetQuestionsQuery({
+ *   variables: {
+ *      after: // value for 'after'
+ *      before: // value for 'before'
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *   },
+ * });
+ */
+export function useGetQuestionsQuery(baseOptions?: Apollo.QueryHookOptions<GetQuestionsQuery, GetQuestionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetQuestionsQuery, GetQuestionsQueryVariables>(GetQuestionsDocument, options);
+      }
+export function useGetQuestionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetQuestionsQuery, GetQuestionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetQuestionsQuery, GetQuestionsQueryVariables>(GetQuestionsDocument, options);
+        }
+export type GetQuestionsQueryHookResult = ReturnType<typeof useGetQuestionsQuery>;
+export type GetQuestionsLazyQueryHookResult = ReturnType<typeof useGetQuestionsLazyQuery>;
+export type GetQuestionsQueryResult = Apollo.QueryResult<GetQuestionsQuery, GetQuestionsQueryVariables>;
 export const GetTagsDocument = gql`
     query getTags($after: String, $before: String, $first: Int, $last: Int, $contains: String) {
   getTags(
