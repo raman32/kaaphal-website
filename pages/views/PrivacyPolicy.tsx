@@ -1,13 +1,12 @@
-import { NextPage } from 'next';
 import React from 'react';
 import DefaultLayout from '../layouts/default';
 
 
-const PrivacyPolicy: NextPage<Record<string, never>> = () => {
+const PrivacyPolicy = (): JSX.Element => {
     return (
         <div className="my-4 text-justify tracking-wide mx-4 sm:mx-8">
             <h1 className="text-center text-xl font-bold">Privacy Policy</h1>
-            <p className="font-normal text-lg text-center mb-4 italic"><span >"Your privacy is very important to us.&nbsp;"</span></p>
+            <p className="font-normal text-lg text-center mb-4 italic"><span >&quot;Your privacy is very important to us.&nbsp;&quot;</span></p>
             <h4 className="mt-4 text-lg font-semibold mb-4">The following are the privacy policy of kaaphal: </h4>
             <p><span className="font-normal">By entering this website we assume you accept this Privacy Policy as a whole. By clicking your consent (e.g. “Continue,” “Login,” or “Sign-up,”) or by using Kaaphal services, you agree to the Privacy Policy of the Kaaphal.</span></p>
             <p><span className="font-normal">Please do not continue to use Kaaphal’s website if you do not accept all of the Privacy Policy stated on this page.</span></p>
@@ -55,5 +54,6 @@ const PrivacyPolicy: NextPage<Record<string, never>> = () => {
         </div >)
 }
 
+// eslint-disable-next-line react/display-name
 PrivacyPolicy.getLayout = (page: JSX.Element): React.ReactNode => <DefaultLayout>{page}</DefaultLayout>
 export default PrivacyPolicy;

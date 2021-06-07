@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useGetLoksewaCategoriesQuery } from '../../gql';
 import DefaultLayout from '../layouts/default';
 
-const LoksewaMCQ: NextPage<Record<string, never>> = () => {
+const LoksewaMCQ = (): JSX.Element => {
     const { data, loading, error } = useGetLoksewaCategoriesQuery()
     useEffect(() => {
         if (error) message.error('Something went Wrong')
@@ -18,5 +18,6 @@ const LoksewaMCQ: NextPage<Record<string, never>> = () => {
         </div >)
 }
 
+// eslint-disable-next-line react/display-name
 LoksewaMCQ.getLayout = (page: JSX.Element): React.ReactNode => <DefaultLayout>{page}</DefaultLayout>
 export default LoksewaMCQ;

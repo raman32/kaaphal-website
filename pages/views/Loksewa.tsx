@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Typography } from 'antd';
+import { Button } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import DefaultLayout from '../layouts/default';
 import Texty from 'rc-texty';
@@ -9,8 +9,9 @@ import UserAvatar from '../../lib/components/atomic/UserAvatar';
 import { BlockQuote } from '../../lib/components/atomic/BlockQuote';
 import { ProductCard } from '../../lib/components/atomic/ProductCard';
 import Animate from 'rc-animate';
+import { User } from '../../gql';
 TweenOne.plugins.push(Children);
-const Profile: NextPage<Record<string, never>> = () => {
+const Profile = (): JSX.Element => {
     const [animation, setAnimation] = useState(null)
     const numberAnimatorRef = useRef(null);
     useEffect(() => {
@@ -81,38 +82,38 @@ const Profile: NextPage<Record<string, never>> = () => {
                 <div className="flex flex-row flex-wrap justify-around ">
 
                     <div className="mx-4 my-4 shadow text-center pt-4 rounded-sm w-80">
-                        <UserAvatar user={{ displayName: 'Raman' }} size={50} />
+                        <UserAvatar user={{ displayName: 'Raman' } as User} size={50} />
                         <div className="mb-4 text-lg">Raman</div>
-                        <BlockQuote >"Awesome Interface I really liked the Mock test feature"</BlockQuote>
+                        <BlockQuote >&quot;Awesome Interface I really liked the Mock test feature&quot;</BlockQuote>
                     </div>
                     <div className="mx-4 my-4  shadow  text-center pt-4 rounded-sm w-80">
-                        <UserAvatar user={{ displayName: 'Rajkumar' }} size={50} />
+                        <UserAvatar user={{ displayName: 'Rajkumar' } as User} size={50} />
                         <div className="mb-4 text-lg">Rajkumar</div>
-                        <BlockQuote>"Helped me a lot on preparing"</BlockQuote>
+                        <BlockQuote>&quot;Helped me a lot on preparing&quot;</BlockQuote>
                     </div>
                     <div className="mx-4 my-4  shadow  text-center pt-4 rounded-sm  w-80">
-                        <UserAvatar user={{ displayName: 'Suman' }} size={50} />
+                        <UserAvatar user={{ displayName: 'Suman' } as User} size={50} />
                         <div className="mb-4 text-lg">Suman</div>
-                        <BlockQuote>"I have no words on how much this helped me"</BlockQuote>
+                        <BlockQuote>&quot;I have no words on how much this helped me&quot;</BlockQuote>
                     </div>
                     <div className="mx-4 my-4  shadow  text-center pt-4 rounded-sm  w-80">
-                        <UserAvatar user={{ displayName: 'Guzu' }} size={50} />
+                        <UserAvatar user={{ displayName: 'Guzu' } as User} size={50} />
                         <div className="mb-4 text-lg">Guzu</div>
-                        <BlockQuote>"Good work team"</BlockQuote>
+                        <BlockQuote>&quot;Good work team&quot;</BlockQuote>
                     </div >
                 </div >
             </div >
             <div className="py-4 px-4 sm:px-8 bg-gray-200">
                 <div className="text-lg">Features</div>
                 <div className="flex flex-row justify-around flex-wrap">
-                    <ProductCard className="w-60 my-4 mx-4" title="MCQ" buttonText="Get Started" onButtonClick={() => { }}>
+                    <ProductCard className="w-60 my-4 mx-4" title="MCQ" buttonText="Get Started" onButtonClick={() => { return; }}>
                         <ul>
                             <li>10,000 Question</li>
                             <li>All categories </li>
                             <li>All new question collected from various sources </li>
                         </ul>
                     </ProductCard>
-                    <ProductCard className="w-60 my-4 mx-4" title="Mock Test" buttonText="Get Started" onButtonClick={() => { }}>
+                    <ProductCard className="w-60 my-4 mx-4" title="Mock Test" buttonText="Get Started" onButtonClick={() => { return; }}>
                         <ul>
                             <li>100 Sets</li>
                             <li>All Government positions </li>
@@ -120,7 +121,7 @@ const Profile: NextPage<Record<string, never>> = () => {
                             <li> SOC exam also included </li>
                         </ul>
                     </ProductCard>
-                    <ProductCard className="w-60 my-4 mx-4" title="Materials" buttonText="Get Started" onButtonClick={() => { }}>
+                    <ProductCard className="w-60 my-4 mx-4" title="Materials" buttonText="Get Started" onButtonClick={() => { return; }}>
                         <ul>
                             <li>Weekly new Material</li>
                             <li>All Syllabus</li>
@@ -133,5 +134,6 @@ const Profile: NextPage<Record<string, never>> = () => {
         </div >)
 }
 
+// eslint-disable-next-line react/display-name
 Profile.getLayout = (page: JSX.Element): React.ReactNode => <DefaultLayout>{page}</DefaultLayout>
 export default Profile;

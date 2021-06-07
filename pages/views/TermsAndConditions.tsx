@@ -1,9 +1,8 @@
-import { NextPage } from 'next';
 import React from 'react';
 import DefaultLayout from '../layouts/default';
 
 
-const TermsAndConditions: NextPage<Record<string, never>> = () => {
+const TermsAndConditions = (): JSX.Element => {
     return (
         <div className="mx-4 sm:mx-8 my-4 text-justify tracking-wide">
             <h1 className="font-bold text-xl text-center mb-4">Welcome to Kaaphal</h1>
@@ -72,5 +71,6 @@ const TermsAndConditions: NextPage<Record<string, never>> = () => {
         </div >)
 }
 
+// eslint-disable-next-line react/display-name
 TermsAndConditions.getLayout = (page: JSX.Element): React.ReactNode => <DefaultLayout>{page}</DefaultLayout>
 export default TermsAndConditions;

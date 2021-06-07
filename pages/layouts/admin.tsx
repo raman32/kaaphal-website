@@ -3,7 +3,7 @@ import { UserOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link'
 import useStore from '../../store/storeProvider';
-import { useGetMeQuery } from '../../gql';
+import { useGetMeQuery, User } from '../../gql';
 import { logout, skipper } from '../../lib/accessToken';
 import Router from 'next/router';
 import UserAvatar from '../../lib/components/atomic/UserAvatar';
@@ -42,7 +42,7 @@ function AdminLayout({ children }: Props): JSX.Element {
                 className="min-h-screen h-full"
             >
                 <div className="text-center my-4">
-                    <UserAvatar user={data.me} size={60} />
+                    <UserAvatar user={data.me as User} size={60} />
                     <div className="text-lg text-white">Howdy Admin!</div>
                 </div>
                 <Menu theme="dark" mode="inline" defaultSelectedKeys={['10']}>
