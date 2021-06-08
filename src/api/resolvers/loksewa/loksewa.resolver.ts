@@ -14,6 +14,7 @@ import { Roles } from '../../decorators/role.decorator';
 import { UserRole } from '../../../models/user.model';
 import { RolesGuard } from '../auth/guards/role.guard';
 import { CreateLoksewaQuestionCategoryInput, UpdateLoksewaQuestionCategoryInput } from '../../../models/inputs/loksewaCategory.input';
+import { Category } from '../../../models/category.model';
 @Resolver(of => LoksewaQuestion)
 @UseGuards(GQLGuard)
 export class LoksewaResolver {
@@ -22,12 +23,14 @@ export class LoksewaResolver {
 
     @Query(returns => LoksewaQuestionConnection)
     @UseGuards(AuthenticatedSessionGuard)
-    async getQuestions(@Args() { after, before, first, last }: PaginationArgs): Promise<Connection<LoksewaQuestion_, Edge<LoksewaQuestion_>>> {
-
+    async getQuestions(@Args() { after, before, first, last, skip }: PaginationArgs,
+        @Args({ name: 'categoryId', type: () => String, nullable: true }) catergoryId: string
+    ): Promise<Connection<LoksewaQuestion_, Edge<LoksewaQuestion_>>> {
+        const categoryFilter = catergoryId ? { categoryId: catergoryId } : undefined
         const questionConnection = findManyCursorConnection(
             (args) =>
-                this.prisma.loksewaQuestion.findMany({ ...args }),
-            () => this.prisma.post.count(),
+                this.prisma.loksewaQuestion.findMany({ where: categoryFilter, ...args, skip: skip ? skip : 0 }),
+            () => this.prisma.loksewaQuestion.count({ where: categoryFilter }),
             { first, last, before, after },
         );
         return questionConnection;

@@ -1,9 +1,9 @@
 import { Button, Form, Input, message, Radio } from 'antd';
 import React, { useEffect } from 'react';
-import { McqAnswer, useCreateQuestionMutation } from '../../../gql';
-import AdminLayout from '../../layouts/admin';
-import { DifficultyRater } from '../../../lib/components/atomic/DifficultyRater';
-import LoksewaCategoryPicker from '../../../lib/components/atomic/LoksewaCategoryPicker';
+import { McqAnswer, useCreateQuestionMutation } from '../../gql';
+import AdminLayout from '../layouts/admin';
+import { DifficultyRater } from '../../lib/components/atomic/DifficultyRater';
+import LoksewaCategoryPicker from '../../lib/components/atomic/LoksewaCategoryPicker';
 
 
 function CreateArticleCategory(): JSX.Element {

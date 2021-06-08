@@ -1,17 +1,17 @@
 import dynamic from 'next/dynamic'
 import { Button, Input, Spin, Form, DatePicker, Radio, message } from 'antd'
-import { Language, PostStatus, PostType, useCreatePostMutation, UserRole } from '../../../gql'
-import CountryPicker from '../../../lib/components/atomic/CountryPicker'
-import PostTypePicker from '../../../lib/components/atomic/PostTypePicker'
-import ScholarshipLevelPicker from '../../../lib/components/atomic/ScholarshipLevelPicker'
-import CategoryPicker from '../../../lib/components/atomic/CategoryPicker'
-import SubCategoryPicker from '../../../lib/components/atomic/SubCategoryPicker'
-import UserPicker from '../../../lib/components/atomic/UserPicker'
+import { Language, PostStatus, PostType, useCreatePostMutation, UserRole } from '../../gql'
+import CountryPicker from '../../lib/components/atomic/CountryPicker'
+import PostTypePicker from '../../lib/components/atomic/PostTypePicker'
+import ScholarshipLevelPicker from '../../lib/components/atomic/ScholarshipLevelPicker'
+import CategoryPicker from '../../lib/components/atomic/CategoryPicker'
+import SubCategoryPicker from '../../lib/components/atomic/SubCategoryPicker'
+import UserPicker from '../../lib/components/atomic/UserPicker'
 import { useEffect } from 'react'
-import TagPicker from '../../../lib/components/atomic/TagPicker'
-import AdminLayout from '../../layouts/admin'
+import TagPicker from '../../lib/components/atomic/TagPicker'
+import AdminLayout from '../layouts/admin'
 const Editor = dynamic(
-    () => import('../../../lib/components/atomic/Editor'),
+    () => import('../../lib/components/atomic/Editor'),
     // eslint-disable-next-line react/display-name
     { loading: () => <Spin tip="Loading" />, ssr: false }
 )

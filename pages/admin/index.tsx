@@ -1,8 +1,8 @@
 import { Descriptions, Spin } from 'antd';
 import { observer } from 'mobx-react';
 import React from 'react';
-import useStore from '../../../store/storeProvider';
-import AdminLayout from '../../layouts/admin';
+import useStore from '../../store/storeProvider';
+import AdminLayout from '../layouts/admin';
 
 function AdminProfile(): JSX.Element {
     const store = useStore();

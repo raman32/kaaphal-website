@@ -4,10 +4,10 @@ import {
     setAccessToken,
     setCustomExpiry,
     setRefreshToken,
-} from '../../lib/accessToken';
+} from '../lib/accessToken';
 import moment from 'moment';
 import Router from 'next/router';
-import { Auth } from '../../src/api/common/dto/auth.dto';
+import { Auth } from '../src/api/common/dto/auth.dto';
 import { Spin, Typography } from 'antd';
 interface Props {
     data: {
@@ -30,7 +30,7 @@ const MagicLinkValidating: NextPage<Props> = ({ data }) => {
     return (
         <div className="flex flex-col justify-center h-screen w-screen text-center center" >
             <Spin size="large"></Spin>
-            <Typography className="font-bold text-lg my-4">Validating! We will redirect you shortly.</Typography>
+            <Typography className="text-lg my-4">Validating! We will redirect you shortly.</Typography>
         </div>
 
     );

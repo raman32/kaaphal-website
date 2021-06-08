@@ -1,5 +1,5 @@
 import React from 'react';
-import DefaultLayout from '../layouts/default';
+import DefaultLayout from './layouts/default';
 
 
 const PrivacyPolicy = (): JSX.Element => {

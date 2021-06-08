@@ -1,9 +1,9 @@
 import { Button, Form, Input, message, Spin } from 'antd';
 import React, { useState } from 'react';
-import { useCreateLoksewaCategoryMutation, useDeleteLoksewaCategoryMutation, useGetLoksewaCategoriesQuery, useUpdateLoksewaCategoryMutation } from '../../../gql';
-import AdminLayout from '../../layouts/admin';
+import { useCreateLoksewaCategoryMutation, useDeleteLoksewaCategoryMutation, useGetLoksewaCategoriesQuery, useUpdateLoksewaCategoryMutation } from '../../gql';
+import AdminLayout from '../layouts/admin';
 import { PlusOutlined } from '@ant-design/icons';
-import { skipper } from '../../../lib/accessToken';
+import { skipper } from '../../lib/accessToken';
 import { useForm } from 'antd/lib/form/Form';
 function CreateLoksewaCategory(): JSX.Element {
     const { data, refetch } = useGetLoksewaCategoriesQuery({ skip: skipper(), ssr: false })

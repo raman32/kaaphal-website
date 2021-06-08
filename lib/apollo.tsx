@@ -62,7 +62,7 @@ export function withApollo(PageComponent): React.ReactNode {
     return WithApollo;
 }
 
-export let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
 function initApolloClient(initalState: any, accessToken?: string) {
     if (!apolloClient) {
@@ -124,3 +124,8 @@ function createApolloClient(initialState = {}, accessToken?: string) {
         cache: new InMemoryCache().restore(initialState),
     });
 }
+
+export const clientForStaticRendering = new ApolloClient({
+    uri: graphQLEndpoint,
+    cache: new InMemoryCache()
+});

@@ -2,9 +2,9 @@ import { Button, Card, Typography } from 'antd'
 import Meta from 'antd/lib/card/Meta';
 import { NextPage, NextPageContext } from 'next'
 import { useState } from 'react'
-import { useGetPostQuery } from '../../gql'
-import { HotShotIcon } from '../../lib/components/Icons/Index';
-import DefaultLayout from '../layouts/default';
+import { useGetPostQuery } from '../gql'
+import { HotShotIcon } from '../lib/components/Icons/Index';
+import DefaultLayout from './layouts/default';
 // The component's props type
 type PageProps = {
     title: string

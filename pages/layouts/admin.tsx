@@ -45,7 +45,7 @@ function AdminLayout({ children }: Props): JSX.Element {
                     <UserAvatar user={data.me as User} size={60} />
                     <div className="text-lg text-white">Howdy Admin!</div>
                 </div>
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={['10']}>
+                <Menu theme="dark" mode="inline" defaultSelectedKeys={['11']}>
                     <Menu.SubMenu key="sub1" icon={<UserOutlined />} title="Article Management">
                         <Menu.Item key="1"><Link href='/admin/CreateArticle'>Create Article</Link></Menu.Item>
                         <Menu.Item key="2"><Link href='/admin/EditArticle'>Edit Article</Link></Menu.Item>
@@ -64,7 +64,7 @@ function AdminLayout({ children }: Props): JSX.Element {
                         <Menu.Item key="10"><Link href='/admin/EditUser'>Edit User</Link></Menu.Item>
                     </Menu.SubMenu>
                     <Menu.Item key="11" icon={<UserOutlined />}>
-                        <Link href='/admin'>Admin Profile</Link>
+                        <Link href='/admin/'>Admin Profile</Link>
                     </Menu.Item>
                 </Menu>
             </Sider>

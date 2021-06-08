@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import DefaultLayout from '../layouts/default';
+import DefaultLayout, { defualtLayout } from '../layouts/default';
 import Texty from 'rc-texty';
 import QueueAnim from 'rc-queue-anim';
 import TweenOne from 'rc-tween-one';
@@ -134,6 +134,7 @@ const Profile = (): JSX.Element => {
         </div >)
 }
 
-// eslint-disable-next-line react/display-name
-Profile.getLayout = (page: JSX.Element): React.ReactNode => <DefaultLayout>{page}</DefaultLayout>
+
+Profile.getLayout = defualtLayout
+
 export default Profile;

@@ -1,6 +1,6 @@
 import { Form, Table, Space, Button, Popconfirm, Popover, Input, Select } from 'antd';
-import { useGetUsersQuery } from '../../../gql';
-import AdminLayout from '../../layouts/admin';
+import { useGetUsersQuery } from '../../gql';
+import AdminLayout from '../layouts/admin';
 
 export interface User {
     name: string,

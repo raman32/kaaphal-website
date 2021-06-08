@@ -1,7 +1,7 @@
 import { Button, Form, Input } from 'antd/lib/';
 import { NextPage } from 'next';
 import { InfoCircleOutlined, MailOutlined, FacebookFilled, GoogleOutlined } from '@ant-design/icons';
-import { useSendMagicLinkMutation } from '../../gql'
+import { useSendMagicLinkMutation } from '../gql'
 import Router from 'next/router';
 const Login: NextPage<Record<string, never>> = () => {
     const [sendMagicLink, { loading, data, called }] = useSendMagicLinkMutation()

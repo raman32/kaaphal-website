@@ -17,7 +17,7 @@ import config from './config/config'
       isGlobal: true,
       load: [config]
     }),
-    RenderModule.forRootAsync(Next({ dev: process.env.NODE_ENV !== 'production' })),
+    RenderModule.forRootAsync(Next({ dev: process.env.NODE_ENV !== 'production' }), { viewsDir: '' }),
     GraphQLModule.forRoot({
       debug: false,
       playground: true,

@@ -1,6 +1,6 @@
 import { Form } from 'antd';
 import React from 'react';
-import AdminLayout from '../../layouts/admin';
+import AdminLayout from '../layouts/admin';
 
 function CreateArticleCategory(): JSX.Element {
     return <Form>

@@ -678,6 +678,7 @@ export type QueryGetPostsArgs = {
 export type QueryGetQuestionsArgs = {
   after?: Maybe<Scalars['String']>;
   before?: Maybe<Scalars['String']>;
+  categoryId?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
@@ -1099,6 +1100,7 @@ export type GetUsersQueryVariables = Exact<{
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   contains?: Maybe<Scalars['String']>;
   roles?: Maybe<Array<Maybe<UserRole>> | Maybe<UserRole>>;
 }>;
@@ -1127,6 +1129,8 @@ export type GetQuestionsQueryVariables = Exact<{
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  categoryId?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -1134,13 +1138,17 @@ export type GetQuestionsQuery = (
   { __typename?: 'Query' }
   & { getQuestions: (
     { __typename?: 'LoksewaQuestionConnection' }
+    & Pick<LoksewaQuestionConnection, 'totalCount'>
     & { edges?: Maybe<Array<(
       { __typename?: 'LoksewaQuestionEdge' }
       & { node: (
         { __typename?: 'LoksewaQuestion' }
         & Pick<LoksewaQuestion, 'id' | 'title' | 'optionA' | 'optionB' | 'optionC' | 'optionD' | 'answer' | 'additionalDetails'>
       ) }
-    )>> }
+    )>>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage' | 'endCursor' | 'startCursor'>
+    ) }
   ) }
 );
 
@@ -1710,12 +1718,13 @@ export type GetCategoryQueryHookResult = ReturnType<typeof useGetCategoryQuery>;
 export type GetCategoryLazyQueryHookResult = ReturnType<typeof useGetCategoryLazyQuery>;
 export type GetCategoryQueryResult = Apollo.QueryResult<GetCategoryQuery, GetCategoryQueryVariables>;
 export const GetUsersDocument = gql`
-    query getUsers($after: String, $before: String, $first: Int, $last: Int, $contains: String, $roles: [UserRole]) {
+    query getUsers($after: String, $before: String, $first: Int, $last: Int, $skip: Int, $contains: String, $roles: [UserRole]) {
   getUsers(
     after: $after
     before: $before
     first: $first
     last: $last
+    skip: $skip
     contains: $contains
     roles: $roles
   ) {
@@ -1754,6 +1763,7 @@ export const GetUsersDocument = gql`
  *      before: // value for 'before'
  *      first: // value for 'first'
  *      last: // value for 'last'
+ *      skip: // value for 'skip'
  *      contains: // value for 'contains'
  *      roles: // value for 'roles'
  *   },
@@ -1771,8 +1781,15 @@ export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
 export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
 export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
 export const GetQuestionsDocument = gql`
-    query getQuestions($after: String, $before: String, $first: Int, $last: Int) {
-  getQuestions(after: $after, before: $before, first: $first, last: $last) {
+    query getQuestions($after: String, $before: String, $first: Int, $last: Int, $skip: Int, $categoryId: String) {
+  getQuestions(
+    after: $after
+    before: $before
+    first: $first
+    last: $last
+    skip: $skip
+    categoryId: $categoryId
+  ) {
     edges {
       node {
         id
@@ -1784,6 +1801,13 @@ export const GetQuestionsDocument = gql`
         answer
         additionalDetails
       }
+    }
+    totalCount
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      endCursor
+      startCursor
     }
   }
 }
@@ -1805,6 +1829,8 @@ export const GetQuestionsDocument = gql`
  *      before: // value for 'before'
  *      first: // value for 'first'
  *      last: // value for 'last'
+ *      skip: // value for 'skip'
+ *      categoryId: // value for 'categoryId'
  *   },
  * });
  */

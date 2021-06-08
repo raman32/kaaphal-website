@@ -1,10 +1,10 @@
 import { Spin, Typography } from 'antd';
 import { observer } from 'mobx-react';
 import React from 'react';
-import { parseFullName } from '../../lib/common/helpers/parse';
-import UserAvatar from '../../lib/components/atomic/UserAvatar';
-import useStore from '../../store/storeProvider';
-import DefaultLayout from '../layouts/default';
+import { parseFullName } from '../lib/common/helpers/parse';
+import UserAvatar from '../lib/components/atomic/UserAvatar';
+import useStore from '../store/storeProvider';
+import DefaultLayout from './layouts/default';
 
 const Profile = () => {
     const store = useStore();

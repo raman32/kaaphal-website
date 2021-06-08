@@ -32,8 +32,8 @@ getCategory (id: $id){
 }
 }
 
-query getUsers ( $after: String, $before: String, $first: Int, $last: Int , $contains:String, $roles: [UserRole]){
-    getUsers ( after: $after, before :$before, first:$first, last:$last, contains:$contains, roles: $roles){
+query getUsers ( $after: String, $before: String, $first: Int, $last: Int ,$skip: Int,  $contains:String, $roles: [UserRole]){
+    getUsers ( after: $after, before :$before, first:$first, last:$last,skip:$skip, contains:$contains, roles: $roles){
     edges {
       node {
         id
@@ -52,8 +52,8 @@ query getUsers ( $after: String, $before: String, $first: Int, $last: Int , $con
   }
 }
 
-query getQuestions ( $after: String, $before: String, $first: Int, $last: Int ){
-    getQuestions ( after: $after, before :$before, first:$first, last:$last){
+query getQuestions ( $after: String, $before: String, $first: Int, $last: Int, $skip: Int,  $categoryId: String ){
+    getQuestions ( after: $after, before :$before, first:$first, last:$last, skip:$skip , categoryId: $categoryId){
     edges {
       node {
         id
@@ -65,6 +65,13 @@ query getQuestions ( $after: String, $before: String, $first: Int, $last: Int ){
         answer
         additionalDetails
       }
+    }
+     totalCount
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      endCursor
+      startCursor
     }
   }
 }
@@ -81,11 +88,12 @@ query	getTags ($after: String, $before: String, $first: Int, $last: Int , $conta
 }
 
 query getLoksewaCategories{
-  getLoksewaCategories{
+   getLoksewaCategories {
     id
     title
     titleNP
-  }
+   }
+
 }
 
 query getMe {

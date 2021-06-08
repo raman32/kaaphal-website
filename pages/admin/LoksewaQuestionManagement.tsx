@@ -1,6 +1,6 @@
 import { Table, Button, Popconfirm } from 'antd';
-import { useGetQuestionsQuery } from '../../../gql';
-import AdminLayout from '../../layouts/admin';
+import { useGetQuestionsQuery } from '../../gql';
+import AdminLayout from '../layouts/admin';
 
 export interface User {
     name: string,

@@ -30,7 +30,7 @@ function DefaultLayout({ children }: Props): JSX.Element {
         logout();
         Router.push('/');
     };
-    console.log(data)
+    console.log("rerender")
     return (
         <Layout className=" bg-white">
             <Header className=" bg-white flex flex-row px-4">
@@ -154,3 +154,5 @@ function DefaultLayout({ children }: Props): JSX.Element {
         </Layout>)
 }
 export default DefaultLayout;
+
+export const defualtLayout = (page: JSX.Element): React.ReactNode => <DefaultLayout>{page}</DefaultLayout>

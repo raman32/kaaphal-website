@@ -590,7 +590,7 @@ type Query {
   getLoksewaCategories: [LoksewaQuestionCategory!]!
   getPost(id: String!): Post!
   getPosts(after: String, before: String, first: Int, last: Int, skip: Int): PostConnection!
-  getQuestions(after: String, before: String, first: Int, last: Int, skip: Int): LoksewaQuestionConnection!
+  getQuestions(after: String, before: String, categoryId: String, first: Int, last: Int, skip: Int): LoksewaQuestionConnection!
   getTag(id: String!): Category!
   getTags(after: String, before: String, contains: String, first: Int, last: Int, skip: Int): TagConnection!
   getUsers(after: String, before: String, contains: String, first: Int, last: Int, roles: [UserRole], skip: Int): UserConnection!
