@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User, Session } from '@prisma/client';
+import { User, Session, File } from '@prisma/client';
 import { PrismaService } from './prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -12,6 +12,8 @@ import { SessionService } from './session.service';
 import moment from 'moment';
 import { MagicLinkDto } from '../api/common/dto/magicLink.dto';
 import { Auth } from '../api/common/dto/auth.dto';
+import { AssetsService } from './asset.service';
+import { URL } from 'url';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +23,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private eventBus: EventBus,
         private readonly sessionService: SessionService,
+        private readonly assetService: AssetsService
     ) { }
 
     getUserFromToken(token: string): Promise<User> {
@@ -105,7 +108,14 @@ export class AuthService {
         return this.sessionService.createMagicSession(payload);
     }
 
-    async validateGoogleLogin({ email, firstName, lastName, accessToken }: {
+    private async getPictureFromUrl(url: string): Promise<File> {
+        const pathname = new URL(url).pathname;
+        const index = pathname.lastIndexOf('/');
+        const fileName = (-1 !== index) ? pathname.substring(index + 1) : pathname;
+        return this.assetService.createFromExternalLink(url, fileName, 'image/jpeg')
+    }
+
+    async validateGoogleLogin({ email, firstName, image, lastName, accessToken }: {
         email: string,
         firstName: string,
         lastName: string,
@@ -123,6 +133,7 @@ export class AuthService {
                     email: email,
                     firstName: firstName,
                     lastName: lastName,
+                    image: { connect: { id: (await this.getPictureFromUrl(image)).id } }
                 },
             });
         const session = await this.sessionService.authenticate(user, null, accessToken);
@@ -141,7 +152,7 @@ export class AuthService {
         // );
         return deliveryData;
     }
-    async validateFacebookLogin({ email, firstName, lastName, accessToken }: {
+    async validateFacebookLogin({ email, firstName, image, lastName, accessToken }: {
         email: string,
         firstName: string,
         lastName: string,
@@ -159,6 +170,7 @@ export class AuthService {
                     email: email,
                     firstName: firstName,
                     lastName: lastName,
+                    image: { connect: { id: (await this.getPictureFromUrl(image)).id } }
                 },
             });
         const session = await this.sessionService.authenticate(user, accessToken, null);

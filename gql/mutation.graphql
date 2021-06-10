@@ -47,11 +47,86 @@ mutation  updateLoksewaCategory($category:UpdateLoksewaQuestionCategoryInput!){
 }
 
 
+
+mutation  createLoksewaMockCategory($category:CreateLoksewaMockCategoryInput!){
+  createLoksewaMockCategory(category: $category){
+    id
+    title
+    titleNP
+  }
+}
+mutation  deleteLoksewaMockCategory($category:UpdateLoksewaMockCategoryInput!){
+  deleteLoksewaMockCategory(category: $category) 
+}
+mutation  updateLoksewaMockCategory($category:UpdateLoksewaMockCategoryInput!){
+  updateLoksewaMockCategory(category: $category){
+    id
+    title
+    titleNP
+  }
+}
+
+
+
+
+mutation  createMockSet($set:CreateLoksewaMockSetInput!){
+  createMockSet(set: $set){
+    id
+    type
+    status
+    category {
+      id
+      title
+      titleNP
+    }
+  }
+}
+mutation  deleteMockSet($set:UpdateLoksewaMockSetInput!){
+  deleteMockSet(set: $set) 
+}
+mutation  updateMockSet($set:UpdateLoksewaMockSetInput!){
+  updateMockSet(set: $set){
+     id
+    type
+    status
+    category {
+      id
+      title
+      titleNP
+    }
+  }
+}
+
+
+
+
 mutation createQuestion($question:CreateLoksewaQuestionInput!){
 createQuestion(question:$question){
   id
 }
 }
+
+mutation updateQuestion($question:UpdateLoksewaQuestionInput!){
+updateQuestion(question:$question){
+  id
+}
+}
+
+
+
+mutation createSetQuestion($question:CreateSetQuestionInput!){
+createSetQuestion(question:$question){
+  id
+}
+}
+
+mutation updateSetQuestion($question:UpdateSetQuestionInput!){
+updateSetQuestion(question:$question){
+  id
+}
+}
+
+
 mutation createAsset($file: Upload!){
   createAsset(file: $file) {
     id

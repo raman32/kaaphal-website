@@ -57,6 +57,8 @@ function AdminLayout({ children }: Props): JSX.Element {
                         <Menu.Item key="6"><Link href='/admin/CreateLoksewaQuestion'>Create Questions</Link></Menu.Item>
                         <Menu.Item key="12"><Link href='/admin/LoksewaQuestionManagement'>Edit Questions</Link></Menu.Item>
                         <Menu.Item key="7"><Link href='/admin/CreateLoksewaCategory'>Create Category</Link></Menu.Item>
+                        <Menu.Item key="13"><Link href='/admin/CreateLoksewaMockCategory'>Create Mock Category</Link></Menu.Item>
+
                     </Menu.SubMenu>
                     <Menu.SubMenu key="sub3" icon={<UserOutlined />} title="User Management">
                         <Menu.Item key="8"><Link href='/admin/UserManagement'>Show User Statistics</Link></Menu.Item>

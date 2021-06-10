@@ -251,8 +251,8 @@ model Scholarship {
   updatedAt         DateTime                 @updatedAt
   country           String?
   level             ScholarshipLevel
-  startsAt          DateTime
-  deadlineAt        DateTime
+  startsAt          DateTime?
+  deadlineAt        DateTime?
   post              Post?                    @relation(name: "PostOnScholarship", fields:[postId], references:[id])
   postId            String?  
 }
@@ -263,8 +263,7 @@ model LoksewaQuestion {
   updatedAt         DateTime                 @updatedAt
   category          LoksewaQuestionCategory? @relation(name: "CategoryOnLoksewaQuestions", fields: [categoryId], references: [id])
   categoryId        String?
-  set               LoksewaMockSet?          @relation(name: "SetOnLoksewaQuestions", fields: [setId], references: [id])
-  setId             String?
+  edge              MockQuestionEdge?          @relation(name: "QuestionOnMockeQuestionEdge")
   title             String
   optionA           String
   optionB           String
@@ -276,6 +275,7 @@ model LoksewaQuestion {
   metaId            String?
   difficulty        Difficulty               @default(value: medium)
   userAnswer        Answer[]                 @relation(name:"QuestionOnAnswer")
+  showInMCQ         Boolean                   @default(true)
 }
 
 model LoksewaQuestionMeta {
@@ -286,15 +286,27 @@ model LoksewaQuestionMeta {
   LoksewaQuestion LoksewaQuestion[] @relation("MetaOnLoksewaQuestions")
 }
 
+model MockQuestionEdge {
+  id         String               @id @default(cuid())
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+  order      Int
+  weight     Int                  @default(1)
+  question   LoksewaQuestion      @relation(name:"QuestionOnMockeQuestionEdge",fields:[questionId],references:[id])
+  questionId String
+  set        LoksewaMockSet       @relation(name:"SetOnMockeQuestionEdge",fields:[setId],references:[id])
+  setId      String
+}
+
 model LoksewaMockSet {
   id         String               @id @default(cuid())
   createdAt  DateTime             @default(now())
   updatedAt  DateTime             @updatedAt
-  questions  LoksewaQuestion[]    @relation(name: "SetOnLoksewaQuestions")
+  questions  MockQuestionEdge[]    @relation(name: "SetOnMockeQuestionEdge")
   category   LoksewaMockCategory? @relation(name: "CategoryOnLoksewaMockSet", fields: [categoryId], references: [id])
   categoryId String?
   status     MockSetStatus
-  type       MockSetType
+  type       MockSetType        @default(value:free)
   editor     User?                @relation(name: "EditorOnLoksewaMockSet", fields: [editorId], references: [id])
   editorId   String?
   loksewaTest LoksewaTest[]       @relation(name:"SetOnLoksewaTest")
@@ -316,7 +328,9 @@ model LoksewaMockCategory {
   updatedAt    DateTime         @updatedAt
   questionSets LoksewaMockSet[] @relation(name: "CategoryOnLoksewaMockSet")
   title        String?
-  titleNP     String?
+  titleNP      String?
+  totalMins     Int?             @default(90)
+  negativeMarkingRatio Int?      @default(0)
 }
 
 model LoksewaTest {
@@ -461,6 +475,7 @@ enum Difficulty {
 enum MockSetType {
   free
   official
+  trial
   premium
 }
 

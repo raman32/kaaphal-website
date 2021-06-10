@@ -95,6 +95,16 @@ query getLoksewaCategories{
    }
 
 }
+query getLoksewaMockCategories{
+   getLoksewaMockCategories {
+    id
+    title
+    titleNP
+    negativeMarkingRatio
+    totalMins
+   }
+
+}
 
 query getMe {
   me {
@@ -111,4 +121,21 @@ query getMe {
     email
     status
   }
+}
+
+query getMockSets ($categoryId: String!) {
+   getMockSets (categoryId:$categoryId) {
+     id
+     type
+     status
+   }
+}
+
+
+query getMockCategory ($categoryId: String!) {
+   getMockCategory (categoryId:$categoryId) {
+     id
+     title
+     titleNP
+   }
 }

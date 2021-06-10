@@ -4,7 +4,7 @@ import { Comment } from './comment.model';
 import { File } from './file.model';
 import { Flag } from './flag.model';
 import { Follow } from './follow.model';
-import { LoksewaMockSet } from './loksewaMockSet';
+import { LoksewaMockSet } from './loksewaMockSet.model';
 import { LoksewaTest } from './loksewaTest.model';
 import { Membership } from './membership.model';
 import { Notification } from './notification.model';

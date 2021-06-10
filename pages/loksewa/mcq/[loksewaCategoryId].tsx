@@ -29,7 +29,7 @@ const LoksewaMCQQuestions = ({ params }: InferGetStaticPropsType<typeof getStati
                 {data && <Pagination defaultCurrent={1} total={data.getQuestions.totalCount} pageSize={10} showSizeChanger={false} current={page + 1} onChange={(page_) => {
                     gotoPage(page_ - 1);
                 }} />}
-                <h4>Page: {typeof page === 'number' ? page + 1 : null} / {data ? Math.ceil(data.getQuestions.totalCount / 10) : null}</h4></div>
+            </div>
         </div >)
 }
 

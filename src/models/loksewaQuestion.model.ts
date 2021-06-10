@@ -1,9 +1,9 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Answer, MCQAnswer } from './answer.model';
 import { BaseModel } from './base.model';
-import { LoksewaMockSet } from './loksewaMockSet';
 import { LoksewaQuestionCategory } from './loksewaQuestionCategory.model';
 import { LoksewaQuestionMeta } from './loksewaQuestionMeta.model';
+import { MockQuestionEdge } from './mockQuestionEdge.model';
 
 export enum Difficulty {
     veryEasy = 'veryEasy',
@@ -22,10 +22,10 @@ export class LoksewaQuestion extends BaseModel {
     category?: LoksewaQuestionCategory
     @Field()
     categoryId?: string
-    @Field(type => LoksewaMockSet)
-    set?: LoksewaMockSet
+    @Field(type => MockQuestionEdge)
+    edge?: MockQuestionEdge
     @Field()
-    setId?: string
+    edgeId?: string
     @Field()
     title: string
     @Field()

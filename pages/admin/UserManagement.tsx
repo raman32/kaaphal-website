@@ -1,5 +1,7 @@
 import { Form, Table, Space, Button, Popconfirm, Popover, Input, Select } from 'antd';
-import { useGetUsersQuery } from '../../gql';
+import { useState } from 'react';
+import { useGetUsersQuery, UserRole, UserStatus } from '../../gql';
+import MembershipPicker from '../../lib/components/atomic/MembershipPicker';
 import AdminLayout from '../layouts/admin';
 
 export interface User {
@@ -151,11 +153,39 @@ const content = (
 );
 
 const UserManagement = (): JSX.Element => {
-    const { data, loading, error } = useGetUsersQuery({ variables: { first: 20 } })
-
+    const { data, loading, error, refetch } = useGetUsersQuery({ variables: { first: 20 } })
+    const [searchText, setSearchText] = useState(null);
     return (
+        <>
+            <div className="shadow-sm bg-white my-4 text-base text-center px-4 py-2">
+                Filter
+            <div className="flex flex-row flex-wrap mx-4">
+                    <div className="my-4 mx-4">
+                        <Input className="w-56" value={searchText} onChange={({ target: { value } }) => setSearchText(value)}></Input>
+                        <Button type="primary" className="mx-4" onClick={() => refetch({ first: 20, })}>Search</Button>
+                    </div>
+                    <div className=" my-4 mx-4">
+                        <MembershipPicker onChange={(value) => { }} allowClear className="w-80" />
+                    </div>
+                    <div className="min-w-max my-4 mx-4">
+                        <Select placeholder="Select status" allowClear>
+                            <Select.Option value={UserStatus.Active}>Active</Select.Option>
+                            <Select.Option value={UserStatus.Inactive}>Inactive</Select.Option>
+                            <Select.Option value={UserStatus.Blocked}>Blocked</Select.Option>
+                        </Select>
+                    </div>
+                    <div className="min-w-max my-4 mx-4">
+                        <Select placeholder="Select role" allowClear>
+                            <Select.Option value={UserRole.User}>User</Select.Option>
+                            <Select.Option value={UserRole.Moderator}>Moderator</Select.Option>
+                            <Select.Option value={UserRole.Admin}>Admin</Select.Option>
 
-        <Table columns={columns} dataSource={data ? data.getUsers.edges.map(edge => edge.node) : []} />);
+                        </Select>
+                    </div>
+                </div>
+            </div>
+            <Table columns={columns} dataSource={data ? data.getUsers.edges.map(edge => edge.node) : []} />
+        </>);
 }
 // eslint-disable-next-line react/display-name
 UserManagement.getLayout = (page: JSX.Element): React.ReactNode => <AdminLayout>{page}</AdminLayout>

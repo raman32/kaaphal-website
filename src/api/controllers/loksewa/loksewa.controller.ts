@@ -14,5 +14,11 @@ export class LoksewaContorller {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     async loksewaMCQ() { }
 
+    @Get('mock*')
+    @Render('loksewa/mock')
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    async loksewaMock() { }
+
+
 
 }

@@ -148,7 +148,9 @@ export class SessionService {
                 invalidate: false,
             },
             include: {
-                user: true,
+                user: {
+                    include: { image: { select: { preview: true, source: true } } }
+                },
             },
         });
         if (existSession && existSession.expires > new Date()) {

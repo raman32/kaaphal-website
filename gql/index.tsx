@@ -126,6 +126,21 @@ export type CreateCategoryInput = {
   name: Scalars['String'];
 };
 
+export type CreateLoksewaMockCategoryInput = {
+  negativeMarkingRatio?: Maybe<Scalars['Int']>;
+  title: Scalars['String'];
+  titleNP?: Maybe<Scalars['String']>;
+  totalMins?: Maybe<Scalars['Int']>;
+};
+
+export type CreateLoksewaMockSetInput = {
+  /** Category for Mock */
+  categoryId?: Maybe<Scalars['String']>;
+  editorId?: Maybe<Scalars['String']>;
+  status: MockSetStatus;
+  type: MockSetType;
+};
+
 export type CreateLoksewaQuestionCategoryInput = {
   title: Scalars['String'];
   titleNP?: Maybe<Scalars['String']>;
@@ -136,12 +151,12 @@ export type CreateLoksewaQuestionInput = {
   answer: McqAnswer;
   categoryId?: Maybe<Scalars['String']>;
   difficulty?: Maybe<Difficulty>;
+  edgeId?: Maybe<Scalars['String']>;
   metaId?: Maybe<Scalars['String']>;
   optionA?: Maybe<Scalars['String']>;
   optionB?: Maybe<Scalars['String']>;
   optionC?: Maybe<Scalars['String']>;
   optionD?: Maybe<Scalars['String']>;
-  setId?: Maybe<Scalars['String']>;
   title: Scalars['String'];
 };
 
@@ -158,6 +173,22 @@ export type CreatePostInput = {
   type?: Maybe<PostType>;
   url?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
+};
+
+export type CreateSetQuestionInput = {
+  additionalDetails?: Maybe<Scalars['String']>;
+  answer: McqAnswer;
+  categoryId?: Maybe<Scalars['String']>;
+  difficulty?: Maybe<Difficulty>;
+  metaId?: Maybe<Scalars['String']>;
+  optionA?: Maybe<Scalars['String']>;
+  optionB?: Maybe<Scalars['String']>;
+  optionC?: Maybe<Scalars['String']>;
+  optionD?: Maybe<Scalars['String']>;
+  order?: Maybe<Scalars['Int']>;
+  setId: Scalars['String'];
+  title: Scalars['String'];
+  weight: Scalars['Int'];
 };
 
 export type CreateSubCategoryInput = {
@@ -284,26 +315,28 @@ export type LoksewaMockCategory = {
   createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
-  questionSets: Array<LoksewaMockSet>;
+  negativeMarkingRatio?: Maybe<Scalars['Int']>;
+  questionSets?: Maybe<Array<Maybe<LoksewaMockSet>>>;
   title?: Maybe<Scalars['String']>;
   titleNP?: Maybe<Scalars['String']>;
+  totalMins?: Maybe<Scalars['Int']>;
   /** Identifies the date and time when the object was last updated. */
   updatedAt: Scalars['Date'];
 };
 
 export type LoksewaMockSet = {
   __typename?: 'LoksewaMockSet';
-  category: LoksewaMockCategory;
-  categoryId: Scalars['String'];
+  category?: Maybe<LoksewaMockCategory>;
+  categoryId?: Maybe<Scalars['String']>;
   /** Identifies the date and time when the object was created. */
   createdAt: Scalars['Date'];
-  editor: User;
-  editorId: Scalars['String'];
+  editor?: Maybe<User>;
+  editorId?: Maybe<Scalars['String']>;
   /** Unique UUID string */
   id: Scalars['ID'];
   loksewaTest: Array<LoksewaTest>;
   orders: Array<Order>;
-  questions: Array<LoksewaQuestion>;
+  questions: Array<MockQuestionEdge>;
   status: MockSetStatus;
   type: MockSetType;
   /** Identifies the date and time when the object was last updated. */
@@ -319,6 +352,9 @@ export type LoksewaQuestion = {
   /** Identifies the date and time when the object was created. */
   createdAt: Scalars['Date'];
   difficulty: Difficulty;
+  edge: MockQuestionEdge;
+  edgeId: Scalars['String'];
+  getMockCategoryFromSet: LoksewaMockCategory;
   /** Unique UUID string */
   id: Scalars['ID'];
   meta: LoksewaQuestionMeta;
@@ -327,8 +363,6 @@ export type LoksewaQuestion = {
   optionB: Scalars['String'];
   optionC: Scalars['String'];
   optionD: Scalars['String'];
-  set: LoksewaMockSet;
-  setId: Scalars['String'];
   title: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
   updatedAt: Scalars['Date'];
@@ -424,6 +458,22 @@ export enum MembershipType {
   Silver = 'silver'
 }
 
+export type MockQuestionEdge = {
+  __typename?: 'MockQuestionEdge';
+  LoksewaMockSet: LoksewaMockSet;
+  /** Identifies the date and time when the object was created. */
+  createdAt: Scalars['Date'];
+  /** Unique UUID string */
+  id: Scalars['ID'];
+  order: Scalars['Int'];
+  question: LoksewaQuestion;
+  questionId: Scalars['String'];
+  setId: Scalars['String'];
+  /** Identifies the date and time when the object was last updated. */
+  updatedAt: Scalars['Date'];
+  weight: Scalars['Int'];
+};
+
 export enum MockSetStatus {
   Draft = 'draft',
   Hidden = 'hidden',
@@ -433,7 +483,8 @@ export enum MockSetStatus {
 export enum MockSetType {
   Free = 'free',
   Official = 'official',
-  Premium = 'premium'
+  Premium = 'premium',
+  Trial = 'trial'
 }
 
 export type Mutation = {
@@ -442,15 +493,24 @@ export type Mutation = {
   createAssetOnServer: Scalars['Boolean'];
   createCategory: Category;
   createLoksewaCategory: LoksewaQuestionCategory;
+  createLoksewaMockCategory: LoksewaMockCategory;
   createMePost: Post;
+  createMockSet: LoksewaMockSet;
   createPost: Post;
   createQuestion: LoksewaQuestion;
+  createSetQuestion: MockQuestionEdge;
   createSubCategory: Category;
   createTag: Category;
   createUser: User;
   deleteLoksewaCategory: Scalars['Boolean'];
+  deleteLoksewaMockCategory: Scalars['Boolean'];
+  deleteMockSet: Scalars['Boolean'];
   sendMagicLink: MagicLink;
   updateLoksewaCategory: LoksewaQuestionCategory;
+  updateLoksewaMockCategory: LoksewaMockCategory;
+  updateMockSet: LoksewaMockSet;
+  updateQuestion: LoksewaQuestion;
+  updateSetQuestion: MockQuestionEdge;
 };
 
 
@@ -474,8 +534,18 @@ export type MutationCreateLoksewaCategoryArgs = {
 };
 
 
+export type MutationCreateLoksewaMockCategoryArgs = {
+  category: CreateLoksewaMockCategoryInput;
+};
+
+
 export type MutationCreateMePostArgs = {
   post: CreatePostInput;
+};
+
+
+export type MutationCreateMockSetArgs = {
+  set: CreateLoksewaMockSetInput;
 };
 
 
@@ -486,6 +556,11 @@ export type MutationCreatePostArgs = {
 
 export type MutationCreateQuestionArgs = {
   question: CreateLoksewaQuestionInput;
+};
+
+
+export type MutationCreateSetQuestionArgs = {
+  question: CreateSetQuestionInput;
 };
 
 
@@ -509,6 +584,16 @@ export type MutationDeleteLoksewaCategoryArgs = {
 };
 
 
+export type MutationDeleteLoksewaMockCategoryArgs = {
+  category: UpdateLoksewaMockCategoryInput;
+};
+
+
+export type MutationDeleteMockSetArgs = {
+  set: UpdateLoksewaMockSetInput;
+};
+
+
 export type MutationSendMagicLinkArgs = {
   email: Scalars['String'];
 };
@@ -516,6 +601,26 @@ export type MutationSendMagicLinkArgs = {
 
 export type MutationUpdateLoksewaCategoryArgs = {
   category: UpdateLoksewaQuestionCategoryInput;
+};
+
+
+export type MutationUpdateLoksewaMockCategoryArgs = {
+  category: UpdateLoksewaMockCategoryInput;
+};
+
+
+export type MutationUpdateMockSetArgs = {
+  set: UpdateLoksewaMockSetInput;
+};
+
+
+export type MutationUpdateQuestionArgs = {
+  question: UpdateLoksewaQuestionInput;
+};
+
+
+export type MutationUpdateSetQuestionArgs = {
+  question: UpdateSetQuestionInput;
 };
 
 export type Notification = {
@@ -646,6 +751,9 @@ export type Query = {
   getCategories: Array<Category>;
   getCategory: Category;
   getLoksewaCategories: Array<LoksewaQuestionCategory>;
+  getLoksewaMockCategories: Array<LoksewaMockCategory>;
+  getMockCategory: LoksewaMockCategory;
+  getMockSets: Array<LoksewaMockSet>;
   getPost: Post;
   getPosts: PostConnection;
   getQuestions: LoksewaQuestionConnection;
@@ -658,6 +766,16 @@ export type Query = {
 
 export type QueryGetCategoryArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryGetMockCategoryArgs = {
+  categoryId: Scalars['String'];
+};
+
+
+export type QueryGetMockSetsArgs = {
+  categoryId: Scalars['String'];
 };
 
 
@@ -835,10 +953,60 @@ export type TagEdge = {
   node: Tag;
 };
 
+export type UpdateLoksewaMockCategoryInput = {
+  id: Scalars['String'];
+  negativeMarkingRatio?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  titleNP?: Maybe<Scalars['String']>;
+  totalMins?: Maybe<Scalars['Int']>;
+};
+
+export type UpdateLoksewaMockSetInput = {
+  /** Category for Mock */
+  categoryId?: Maybe<Scalars['String']>;
+  editorId?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  status: MockSetStatus;
+  type: MockSetType;
+};
+
 export type UpdateLoksewaQuestionCategoryInput = {
   id: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   titleNP?: Maybe<Scalars['String']>;
+};
+
+export type UpdateLoksewaQuestionInput = {
+  additionalDetails?: Maybe<Scalars['String']>;
+  answer: McqAnswer;
+  categoryId?: Maybe<Scalars['String']>;
+  difficulty?: Maybe<Difficulty>;
+  edgeId?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  metaId?: Maybe<Scalars['String']>;
+  optionA?: Maybe<Scalars['String']>;
+  optionB?: Maybe<Scalars['String']>;
+  optionC?: Maybe<Scalars['String']>;
+  optionD?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+};
+
+export type UpdateSetQuestionInput = {
+  additionalDetails?: Maybe<Scalars['String']>;
+  answer: McqAnswer;
+  categoryId?: Maybe<Scalars['String']>;
+  difficulty?: Maybe<Difficulty>;
+  id: Scalars['String'];
+  metaId?: Maybe<Scalars['String']>;
+  optionA?: Maybe<Scalars['String']>;
+  optionB?: Maybe<Scalars['String']>;
+  optionC?: Maybe<Scalars['String']>;
+  optionD?: Maybe<Scalars['String']>;
+  order?: Maybe<Scalars['Int']>;
+  questionId: Scalars['String'];
+  setId: Scalars['String'];
+  title: Scalars['String'];
+  weight: Scalars['Int'];
 };
 
 
@@ -1003,6 +1171,86 @@ export type UpdateLoksewaCategoryMutation = (
   ) }
 );
 
+export type CreateLoksewaMockCategoryMutationVariables = Exact<{
+  category: CreateLoksewaMockCategoryInput;
+}>;
+
+
+export type CreateLoksewaMockCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & { createLoksewaMockCategory: (
+    { __typename?: 'LoksewaMockCategory' }
+    & Pick<LoksewaMockCategory, 'id' | 'title' | 'titleNP'>
+  ) }
+);
+
+export type DeleteLoksewaMockCategoryMutationVariables = Exact<{
+  category: UpdateLoksewaMockCategoryInput;
+}>;
+
+
+export type DeleteLoksewaMockCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteLoksewaMockCategory'>
+);
+
+export type UpdateLoksewaMockCategoryMutationVariables = Exact<{
+  category: UpdateLoksewaMockCategoryInput;
+}>;
+
+
+export type UpdateLoksewaMockCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & { updateLoksewaMockCategory: (
+    { __typename?: 'LoksewaMockCategory' }
+    & Pick<LoksewaMockCategory, 'id' | 'title' | 'titleNP'>
+  ) }
+);
+
+export type CreateMockSetMutationVariables = Exact<{
+  set: CreateLoksewaMockSetInput;
+}>;
+
+
+export type CreateMockSetMutation = (
+  { __typename?: 'Mutation' }
+  & { createMockSet: (
+    { __typename?: 'LoksewaMockSet' }
+    & Pick<LoksewaMockSet, 'id' | 'type' | 'status'>
+    & { category?: Maybe<(
+      { __typename?: 'LoksewaMockCategory' }
+      & Pick<LoksewaMockCategory, 'id' | 'title' | 'titleNP'>
+    )> }
+  ) }
+);
+
+export type DeleteMockSetMutationVariables = Exact<{
+  set: UpdateLoksewaMockSetInput;
+}>;
+
+
+export type DeleteMockSetMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteMockSet'>
+);
+
+export type UpdateMockSetMutationVariables = Exact<{
+  set: UpdateLoksewaMockSetInput;
+}>;
+
+
+export type UpdateMockSetMutation = (
+  { __typename?: 'Mutation' }
+  & { updateMockSet: (
+    { __typename?: 'LoksewaMockSet' }
+    & Pick<LoksewaMockSet, 'id' | 'type' | 'status'>
+    & { category?: Maybe<(
+      { __typename?: 'LoksewaMockCategory' }
+      & Pick<LoksewaMockCategory, 'id' | 'title' | 'titleNP'>
+    )> }
+  ) }
+);
+
 export type CreateQuestionMutationVariables = Exact<{
   question: CreateLoksewaQuestionInput;
 }>;
@@ -1013,6 +1261,45 @@ export type CreateQuestionMutation = (
   & { createQuestion: (
     { __typename?: 'LoksewaQuestion' }
     & Pick<LoksewaQuestion, 'id'>
+  ) }
+);
+
+export type UpdateQuestionMutationVariables = Exact<{
+  question: UpdateLoksewaQuestionInput;
+}>;
+
+
+export type UpdateQuestionMutation = (
+  { __typename?: 'Mutation' }
+  & { updateQuestion: (
+    { __typename?: 'LoksewaQuestion' }
+    & Pick<LoksewaQuestion, 'id'>
+  ) }
+);
+
+export type CreateSetQuestionMutationVariables = Exact<{
+  question: CreateSetQuestionInput;
+}>;
+
+
+export type CreateSetQuestionMutation = (
+  { __typename?: 'Mutation' }
+  & { createSetQuestion: (
+    { __typename?: 'MockQuestionEdge' }
+    & Pick<MockQuestionEdge, 'id'>
+  ) }
+);
+
+export type UpdateSetQuestionMutationVariables = Exact<{
+  question: UpdateSetQuestionInput;
+}>;
+
+
+export type UpdateSetQuestionMutation = (
+  { __typename?: 'Mutation' }
+  & { updateSetQuestion: (
+    { __typename?: 'MockQuestionEdge' }
+    & Pick<MockQuestionEdge, 'id'>
   ) }
 );
 
@@ -1186,6 +1473,17 @@ export type GetLoksewaCategoriesQuery = (
   )> }
 );
 
+export type GetLoksewaMockCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetLoksewaMockCategoriesQuery = (
+  { __typename?: 'Query' }
+  & { getLoksewaMockCategories: Array<(
+    { __typename?: 'LoksewaMockCategory' }
+    & Pick<LoksewaMockCategory, 'id' | 'title' | 'titleNP' | 'negativeMarkingRatio' | 'totalMins'>
+  )> }
+);
+
 export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1199,6 +1497,32 @@ export type GetMeQuery = (
       & Pick<File, 'source' | 'preview'>
     )> }
   )> }
+);
+
+export type GetMockSetsQueryVariables = Exact<{
+  categoryId: Scalars['String'];
+}>;
+
+
+export type GetMockSetsQuery = (
+  { __typename?: 'Query' }
+  & { getMockSets: Array<(
+    { __typename?: 'LoksewaMockSet' }
+    & Pick<LoksewaMockSet, 'id' | 'type' | 'status'>
+  )> }
+);
+
+export type GetMockCategoryQueryVariables = Exact<{
+  categoryId: Scalars['String'];
+}>;
+
+
+export type GetMockCategoryQuery = (
+  { __typename?: 'Query' }
+  & { getMockCategory: (
+    { __typename?: 'LoksewaMockCategory' }
+    & Pick<LoksewaMockCategory, 'id' | 'title' | 'titleNP'>
+  ) }
 );
 
 
@@ -1470,6 +1794,218 @@ export function useUpdateLoksewaCategoryMutation(baseOptions?: Apollo.MutationHo
 export type UpdateLoksewaCategoryMutationHookResult = ReturnType<typeof useUpdateLoksewaCategoryMutation>;
 export type UpdateLoksewaCategoryMutationResult = Apollo.MutationResult<UpdateLoksewaCategoryMutation>;
 export type UpdateLoksewaCategoryMutationOptions = Apollo.BaseMutationOptions<UpdateLoksewaCategoryMutation, UpdateLoksewaCategoryMutationVariables>;
+export const CreateLoksewaMockCategoryDocument = gql`
+    mutation createLoksewaMockCategory($category: CreateLoksewaMockCategoryInput!) {
+  createLoksewaMockCategory(category: $category) {
+    id
+    title
+    titleNP
+  }
+}
+    `;
+export type CreateLoksewaMockCategoryMutationFn = Apollo.MutationFunction<CreateLoksewaMockCategoryMutation, CreateLoksewaMockCategoryMutationVariables>;
+
+/**
+ * __useCreateLoksewaMockCategoryMutation__
+ *
+ * To run a mutation, you first call `useCreateLoksewaMockCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLoksewaMockCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLoksewaMockCategoryMutation, { data, loading, error }] = useCreateLoksewaMockCategoryMutation({
+ *   variables: {
+ *      category: // value for 'category'
+ *   },
+ * });
+ */
+export function useCreateLoksewaMockCategoryMutation(baseOptions?: Apollo.MutationHookOptions<CreateLoksewaMockCategoryMutation, CreateLoksewaMockCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateLoksewaMockCategoryMutation, CreateLoksewaMockCategoryMutationVariables>(CreateLoksewaMockCategoryDocument, options);
+      }
+export type CreateLoksewaMockCategoryMutationHookResult = ReturnType<typeof useCreateLoksewaMockCategoryMutation>;
+export type CreateLoksewaMockCategoryMutationResult = Apollo.MutationResult<CreateLoksewaMockCategoryMutation>;
+export type CreateLoksewaMockCategoryMutationOptions = Apollo.BaseMutationOptions<CreateLoksewaMockCategoryMutation, CreateLoksewaMockCategoryMutationVariables>;
+export const DeleteLoksewaMockCategoryDocument = gql`
+    mutation deleteLoksewaMockCategory($category: UpdateLoksewaMockCategoryInput!) {
+  deleteLoksewaMockCategory(category: $category)
+}
+    `;
+export type DeleteLoksewaMockCategoryMutationFn = Apollo.MutationFunction<DeleteLoksewaMockCategoryMutation, DeleteLoksewaMockCategoryMutationVariables>;
+
+/**
+ * __useDeleteLoksewaMockCategoryMutation__
+ *
+ * To run a mutation, you first call `useDeleteLoksewaMockCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLoksewaMockCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteLoksewaMockCategoryMutation, { data, loading, error }] = useDeleteLoksewaMockCategoryMutation({
+ *   variables: {
+ *      category: // value for 'category'
+ *   },
+ * });
+ */
+export function useDeleteLoksewaMockCategoryMutation(baseOptions?: Apollo.MutationHookOptions<DeleteLoksewaMockCategoryMutation, DeleteLoksewaMockCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteLoksewaMockCategoryMutation, DeleteLoksewaMockCategoryMutationVariables>(DeleteLoksewaMockCategoryDocument, options);
+      }
+export type DeleteLoksewaMockCategoryMutationHookResult = ReturnType<typeof useDeleteLoksewaMockCategoryMutation>;
+export type DeleteLoksewaMockCategoryMutationResult = Apollo.MutationResult<DeleteLoksewaMockCategoryMutation>;
+export type DeleteLoksewaMockCategoryMutationOptions = Apollo.BaseMutationOptions<DeleteLoksewaMockCategoryMutation, DeleteLoksewaMockCategoryMutationVariables>;
+export const UpdateLoksewaMockCategoryDocument = gql`
+    mutation updateLoksewaMockCategory($category: UpdateLoksewaMockCategoryInput!) {
+  updateLoksewaMockCategory(category: $category) {
+    id
+    title
+    titleNP
+  }
+}
+    `;
+export type UpdateLoksewaMockCategoryMutationFn = Apollo.MutationFunction<UpdateLoksewaMockCategoryMutation, UpdateLoksewaMockCategoryMutationVariables>;
+
+/**
+ * __useUpdateLoksewaMockCategoryMutation__
+ *
+ * To run a mutation, you first call `useUpdateLoksewaMockCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLoksewaMockCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLoksewaMockCategoryMutation, { data, loading, error }] = useUpdateLoksewaMockCategoryMutation({
+ *   variables: {
+ *      category: // value for 'category'
+ *   },
+ * });
+ */
+export function useUpdateLoksewaMockCategoryMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLoksewaMockCategoryMutation, UpdateLoksewaMockCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLoksewaMockCategoryMutation, UpdateLoksewaMockCategoryMutationVariables>(UpdateLoksewaMockCategoryDocument, options);
+      }
+export type UpdateLoksewaMockCategoryMutationHookResult = ReturnType<typeof useUpdateLoksewaMockCategoryMutation>;
+export type UpdateLoksewaMockCategoryMutationResult = Apollo.MutationResult<UpdateLoksewaMockCategoryMutation>;
+export type UpdateLoksewaMockCategoryMutationOptions = Apollo.BaseMutationOptions<UpdateLoksewaMockCategoryMutation, UpdateLoksewaMockCategoryMutationVariables>;
+export const CreateMockSetDocument = gql`
+    mutation createMockSet($set: CreateLoksewaMockSetInput!) {
+  createMockSet(set: $set) {
+    id
+    type
+    status
+    category {
+      id
+      title
+      titleNP
+    }
+  }
+}
+    `;
+export type CreateMockSetMutationFn = Apollo.MutationFunction<CreateMockSetMutation, CreateMockSetMutationVariables>;
+
+/**
+ * __useCreateMockSetMutation__
+ *
+ * To run a mutation, you first call `useCreateMockSetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMockSetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMockSetMutation, { data, loading, error }] = useCreateMockSetMutation({
+ *   variables: {
+ *      set: // value for 'set'
+ *   },
+ * });
+ */
+export function useCreateMockSetMutation(baseOptions?: Apollo.MutationHookOptions<CreateMockSetMutation, CreateMockSetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMockSetMutation, CreateMockSetMutationVariables>(CreateMockSetDocument, options);
+      }
+export type CreateMockSetMutationHookResult = ReturnType<typeof useCreateMockSetMutation>;
+export type CreateMockSetMutationResult = Apollo.MutationResult<CreateMockSetMutation>;
+export type CreateMockSetMutationOptions = Apollo.BaseMutationOptions<CreateMockSetMutation, CreateMockSetMutationVariables>;
+export const DeleteMockSetDocument = gql`
+    mutation deleteMockSet($set: UpdateLoksewaMockSetInput!) {
+  deleteMockSet(set: $set)
+}
+    `;
+export type DeleteMockSetMutationFn = Apollo.MutationFunction<DeleteMockSetMutation, DeleteMockSetMutationVariables>;
+
+/**
+ * __useDeleteMockSetMutation__
+ *
+ * To run a mutation, you first call `useDeleteMockSetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMockSetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMockSetMutation, { data, loading, error }] = useDeleteMockSetMutation({
+ *   variables: {
+ *      set: // value for 'set'
+ *   },
+ * });
+ */
+export function useDeleteMockSetMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMockSetMutation, DeleteMockSetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteMockSetMutation, DeleteMockSetMutationVariables>(DeleteMockSetDocument, options);
+      }
+export type DeleteMockSetMutationHookResult = ReturnType<typeof useDeleteMockSetMutation>;
+export type DeleteMockSetMutationResult = Apollo.MutationResult<DeleteMockSetMutation>;
+export type DeleteMockSetMutationOptions = Apollo.BaseMutationOptions<DeleteMockSetMutation, DeleteMockSetMutationVariables>;
+export const UpdateMockSetDocument = gql`
+    mutation updateMockSet($set: UpdateLoksewaMockSetInput!) {
+  updateMockSet(set: $set) {
+    id
+    type
+    status
+    category {
+      id
+      title
+      titleNP
+    }
+  }
+}
+    `;
+export type UpdateMockSetMutationFn = Apollo.MutationFunction<UpdateMockSetMutation, UpdateMockSetMutationVariables>;
+
+/**
+ * __useUpdateMockSetMutation__
+ *
+ * To run a mutation, you first call `useUpdateMockSetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMockSetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMockSetMutation, { data, loading, error }] = useUpdateMockSetMutation({
+ *   variables: {
+ *      set: // value for 'set'
+ *   },
+ * });
+ */
+export function useUpdateMockSetMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMockSetMutation, UpdateMockSetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMockSetMutation, UpdateMockSetMutationVariables>(UpdateMockSetDocument, options);
+      }
+export type UpdateMockSetMutationHookResult = ReturnType<typeof useUpdateMockSetMutation>;
+export type UpdateMockSetMutationResult = Apollo.MutationResult<UpdateMockSetMutation>;
+export type UpdateMockSetMutationOptions = Apollo.BaseMutationOptions<UpdateMockSetMutation, UpdateMockSetMutationVariables>;
 export const CreateQuestionDocument = gql`
     mutation createQuestion($question: CreateLoksewaQuestionInput!) {
   createQuestion(question: $question) {
@@ -1503,6 +2039,105 @@ export function useCreateQuestionMutation(baseOptions?: Apollo.MutationHookOptio
 export type CreateQuestionMutationHookResult = ReturnType<typeof useCreateQuestionMutation>;
 export type CreateQuestionMutationResult = Apollo.MutationResult<CreateQuestionMutation>;
 export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<CreateQuestionMutation, CreateQuestionMutationVariables>;
+export const UpdateQuestionDocument = gql`
+    mutation updateQuestion($question: UpdateLoksewaQuestionInput!) {
+  updateQuestion(question: $question) {
+    id
+  }
+}
+    `;
+export type UpdateQuestionMutationFn = Apollo.MutationFunction<UpdateQuestionMutation, UpdateQuestionMutationVariables>;
+
+/**
+ * __useUpdateQuestionMutation__
+ *
+ * To run a mutation, you first call `useUpdateQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateQuestionMutation, { data, loading, error }] = useUpdateQuestionMutation({
+ *   variables: {
+ *      question: // value for 'question'
+ *   },
+ * });
+ */
+export function useUpdateQuestionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateQuestionMutation, UpdateQuestionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateQuestionMutation, UpdateQuestionMutationVariables>(UpdateQuestionDocument, options);
+      }
+export type UpdateQuestionMutationHookResult = ReturnType<typeof useUpdateQuestionMutation>;
+export type UpdateQuestionMutationResult = Apollo.MutationResult<UpdateQuestionMutation>;
+export type UpdateQuestionMutationOptions = Apollo.BaseMutationOptions<UpdateQuestionMutation, UpdateQuestionMutationVariables>;
+export const CreateSetQuestionDocument = gql`
+    mutation createSetQuestion($question: CreateSetQuestionInput!) {
+  createSetQuestion(question: $question) {
+    id
+  }
+}
+    `;
+export type CreateSetQuestionMutationFn = Apollo.MutationFunction<CreateSetQuestionMutation, CreateSetQuestionMutationVariables>;
+
+/**
+ * __useCreateSetQuestionMutation__
+ *
+ * To run a mutation, you first call `useCreateSetQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetQuestionMutation, { data, loading, error }] = useCreateSetQuestionMutation({
+ *   variables: {
+ *      question: // value for 'question'
+ *   },
+ * });
+ */
+export function useCreateSetQuestionMutation(baseOptions?: Apollo.MutationHookOptions<CreateSetQuestionMutation, CreateSetQuestionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSetQuestionMutation, CreateSetQuestionMutationVariables>(CreateSetQuestionDocument, options);
+      }
+export type CreateSetQuestionMutationHookResult = ReturnType<typeof useCreateSetQuestionMutation>;
+export type CreateSetQuestionMutationResult = Apollo.MutationResult<CreateSetQuestionMutation>;
+export type CreateSetQuestionMutationOptions = Apollo.BaseMutationOptions<CreateSetQuestionMutation, CreateSetQuestionMutationVariables>;
+export const UpdateSetQuestionDocument = gql`
+    mutation updateSetQuestion($question: UpdateSetQuestionInput!) {
+  updateSetQuestion(question: $question) {
+    id
+  }
+}
+    `;
+export type UpdateSetQuestionMutationFn = Apollo.MutationFunction<UpdateSetQuestionMutation, UpdateSetQuestionMutationVariables>;
+
+/**
+ * __useUpdateSetQuestionMutation__
+ *
+ * To run a mutation, you first call `useUpdateSetQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSetQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSetQuestionMutation, { data, loading, error }] = useUpdateSetQuestionMutation({
+ *   variables: {
+ *      question: // value for 'question'
+ *   },
+ * });
+ */
+export function useUpdateSetQuestionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSetQuestionMutation, UpdateSetQuestionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSetQuestionMutation, UpdateSetQuestionMutationVariables>(UpdateSetQuestionDocument, options);
+      }
+export type UpdateSetQuestionMutationHookResult = ReturnType<typeof useUpdateSetQuestionMutation>;
+export type UpdateSetQuestionMutationResult = Apollo.MutationResult<UpdateSetQuestionMutation>;
+export type UpdateSetQuestionMutationOptions = Apollo.BaseMutationOptions<UpdateSetQuestionMutation, UpdateSetQuestionMutationVariables>;
 export const CreateAssetDocument = gql`
     mutation createAsset($file: Upload!) {
   createAsset(file: $file) {
@@ -1931,6 +2566,44 @@ export function useGetLoksewaCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetLoksewaCategoriesQueryHookResult = ReturnType<typeof useGetLoksewaCategoriesQuery>;
 export type GetLoksewaCategoriesLazyQueryHookResult = ReturnType<typeof useGetLoksewaCategoriesLazyQuery>;
 export type GetLoksewaCategoriesQueryResult = Apollo.QueryResult<GetLoksewaCategoriesQuery, GetLoksewaCategoriesQueryVariables>;
+export const GetLoksewaMockCategoriesDocument = gql`
+    query getLoksewaMockCategories {
+  getLoksewaMockCategories {
+    id
+    title
+    titleNP
+    negativeMarkingRatio
+    totalMins
+  }
+}
+    `;
+
+/**
+ * __useGetLoksewaMockCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetLoksewaMockCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLoksewaMockCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLoksewaMockCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLoksewaMockCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetLoksewaMockCategoriesQuery, GetLoksewaMockCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLoksewaMockCategoriesQuery, GetLoksewaMockCategoriesQueryVariables>(GetLoksewaMockCategoriesDocument, options);
+      }
+export function useGetLoksewaMockCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLoksewaMockCategoriesQuery, GetLoksewaMockCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLoksewaMockCategoriesQuery, GetLoksewaMockCategoriesQueryVariables>(GetLoksewaMockCategoriesDocument, options);
+        }
+export type GetLoksewaMockCategoriesQueryHookResult = ReturnType<typeof useGetLoksewaMockCategoriesQuery>;
+export type GetLoksewaMockCategoriesLazyQueryHookResult = ReturnType<typeof useGetLoksewaMockCategoriesLazyQuery>;
+export type GetLoksewaMockCategoriesQueryResult = Apollo.QueryResult<GetLoksewaMockCategoriesQuery, GetLoksewaMockCategoriesQueryVariables>;
 export const GetMeDocument = gql`
     query getMe {
   me {
@@ -1976,3 +2649,77 @@ export function useGetMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetM
 export type GetMeQueryHookResult = ReturnType<typeof useGetMeQuery>;
 export type GetMeLazyQueryHookResult = ReturnType<typeof useGetMeLazyQuery>;
 export type GetMeQueryResult = Apollo.QueryResult<GetMeQuery, GetMeQueryVariables>;
+export const GetMockSetsDocument = gql`
+    query getMockSets($categoryId: String!) {
+  getMockSets(categoryId: $categoryId) {
+    id
+    type
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetMockSetsQuery__
+ *
+ * To run a query within a React component, call `useGetMockSetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMockSetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMockSetsQuery({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useGetMockSetsQuery(baseOptions: Apollo.QueryHookOptions<GetMockSetsQuery, GetMockSetsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMockSetsQuery, GetMockSetsQueryVariables>(GetMockSetsDocument, options);
+      }
+export function useGetMockSetsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMockSetsQuery, GetMockSetsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMockSetsQuery, GetMockSetsQueryVariables>(GetMockSetsDocument, options);
+        }
+export type GetMockSetsQueryHookResult = ReturnType<typeof useGetMockSetsQuery>;
+export type GetMockSetsLazyQueryHookResult = ReturnType<typeof useGetMockSetsLazyQuery>;
+export type GetMockSetsQueryResult = Apollo.QueryResult<GetMockSetsQuery, GetMockSetsQueryVariables>;
+export const GetMockCategoryDocument = gql`
+    query getMockCategory($categoryId: String!) {
+  getMockCategory(categoryId: $categoryId) {
+    id
+    title
+    titleNP
+  }
+}
+    `;
+
+/**
+ * __useGetMockCategoryQuery__
+ *
+ * To run a query within a React component, call `useGetMockCategoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMockCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMockCategoryQuery({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useGetMockCategoryQuery(baseOptions: Apollo.QueryHookOptions<GetMockCategoryQuery, GetMockCategoryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMockCategoryQuery, GetMockCategoryQueryVariables>(GetMockCategoryDocument, options);
+      }
+export function useGetMockCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMockCategoryQuery, GetMockCategoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMockCategoryQuery, GetMockCategoryQueryVariables>(GetMockCategoryDocument, options);
+        }
+export type GetMockCategoryQueryHookResult = ReturnType<typeof useGetMockCategoryQuery>;
+export type GetMockCategoryLazyQueryHookResult = ReturnType<typeof useGetMockCategoryLazyQuery>;
+export type GetMockCategoryQueryResult = Apollo.QueryResult<GetMockCategoryQuery, GetMockCategoryQueryVariables>;

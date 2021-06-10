@@ -1,4 +1,4 @@
-import { Divider, Layout, Menu } from 'antd';
+import { BackTop, Divider, Layout, Menu } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import React, { useEffect, useState } from 'react';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
@@ -54,7 +54,7 @@ function DefaultLayout({ children }: Props): JSX.Element {
                     </Menu.Item>
                     <SubMenu icon={<LoksewaIcon />} title="Loksewa" className="mx-2" onTitleClick={() => Router.push('/loksewa')}>
                         <Menu.Item ><Link href="/loksewa/mcq">MCQ</Link></Menu.Item>
-                        <Menu.Item >Mock Test</Menu.Item>
+                        <Menu.Item ><Link href="/loksewa/mock">Mock Test</Link></Menu.Item>
                         <Menu.Item >Notices and Reading Materials</Menu.Item>
                         <Menu.Item >Syllabus and Other</Menu.Item>
                     </SubMenu>
@@ -151,6 +151,7 @@ function DefaultLayout({ children }: Props): JSX.Element {
                     Copyright ©2020 by <Link href="https://kaaphal.com">Kaaphal.</Link> All Rights  Reserved.
                     </div>
             </Footer>
+            <BackTop />
         </Layout>)
 }
 export default DefaultLayout;

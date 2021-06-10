@@ -10,6 +10,7 @@ import { PrismaService } from './prisma.service';
 import { getAssetType } from '../common/sharedUtils';
 import { AssetType } from '../common';
 import { File } from '.prisma/client';
+import fetch from 'node-fetch';
 import * as fs from 'fs';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const sizeOf = promisify(require('image-size'));
@@ -34,6 +35,62 @@ export class AssetsService {
         // TODO asset creation event
         return asset;
     }
+
+    async createFromExternalLink(url: string, fileName: string, mimeType: string): Promise<File> {
+        const response = await fetch(url);
+        const buffer = await response.buffer();
+        const asset = await this.createAssestInternalFromBuffer(buffer, fileName, mimeType);
+        // TODO asset creation event
+        return asset;
+    }
+
+    private async createAssestInternalFromBuffer(
+        buffer: Buffer,
+        filename: string,
+        mimeType: string
+    ): Promise<File> {
+        const sourceFileName = await this.generateSourceFileName(filename);
+        const previewFileName = await this.generatePreviewFileName(filename);
+        const sourceFileIdentifier = await this.s3storageService.writeFileFromBuffer(
+            sourceFileName,
+            buffer,
+        );
+
+        const sourceFile = await this.s3storageService.readFileToBuffer(
+            sourceFileIdentifier,
+        );
+        let preview: Buffer;
+        try {
+            preview = await this.previewService.generatePreviewImage(
+                mimeType,
+                sourceFile,
+                200,
+                200,
+            );
+        } catch (e) {
+            console.log(`Could not create Asset preview image: ${e.message}`);
+            throw e;
+        }
+        const previewFileIdentifier = await this.s3storageService.writeFileFromBuffer(
+            previewFileName,
+            preview,
+        );
+        const type = getAssetType(mimeType);
+        const { width, height } = this.getDimensions(
+            type === AssetType.IMAGE ? sourceFile : preview,
+        );
+        return this.prisma.file.create({
+            data: {
+                preview: previewFileIdentifier,
+                source: sourceFileIdentifier,
+                width,
+                height,
+                name: path.basename(sourceFileName),
+                size: sourceFile.byteLength,
+            },
+        });
+    }
+
 
     private async createAssetsInternal(
         stream: Stream,

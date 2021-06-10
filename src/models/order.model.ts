@@ -1,7 +1,7 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Advertisement } from './advertisement.model';
 import { BaseModel } from './base.model';
-import { LoksewaMockSet } from './loksewaMockSet';
+import { LoksewaMockSet } from './loksewaMockSet.model';
 import { Membership } from './membership.model';
 import { User } from './user.model';
 

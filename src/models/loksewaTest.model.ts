@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Answer } from './answer.model';
 import { BaseModel } from './base.model';
-import { LoksewaMockSet } from './loksewaMockSet';
+import { LoksewaMockSet } from './loksewaMockSet.model';
 import { User } from './user.model';
 
 @ObjectType()

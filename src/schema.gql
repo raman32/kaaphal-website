@@ -117,6 +117,21 @@ input CreateCategoryInput {
   name: String!
 }
 
+input CreateLoksewaMockCategoryInput {
+  negativeMarkingRatio: Int = 0
+  title: String!
+  titleNP: String
+  totalMins: Int = 90
+}
+
+input CreateLoksewaMockSetInput {
+  """Category for Mock"""
+  categoryId: String
+  editorId: String
+  status: MockSetStatus!
+  type: MockSetType!
+}
+
 input CreateLoksewaQuestionCategoryInput {
   title: String!
   titleNP: String
@@ -127,12 +142,12 @@ input CreateLoksewaQuestionInput {
   answer: MCQAnswer!
   categoryId: String
   difficulty: Difficulty = medium
+  edgeId: String
   metaId: String
   optionA: String
   optionB: String
   optionC: String
   optionD: String
-  setId: String
   title: String!
 }
 
@@ -149,6 +164,22 @@ input CreatePostInput {
   type: PostType = articles
   url: String
   userId: String
+}
+
+input CreateSetQuestionInput {
+  additionalDetails: String
+  answer: MCQAnswer!
+  categoryId: String
+  difficulty: Difficulty = medium
+  metaId: String
+  optionA: String
+  optionB: String
+  optionC: String
+  optionD: String
+  order: Int
+  setId: String!
+  title: String!
+  weight: Int!
 }
 
 input CreateSubCategoryInput {
@@ -282,28 +313,30 @@ type LoksewaMockCategory {
 
   """Unique UUID string"""
   id: ID!
-  questionSets: [LoksewaMockSet!]!
+  negativeMarkingRatio: Int
+  questionSets: [LoksewaMockSet]
   title: String
   titleNP: String
+  totalMins: Int
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: Date!
 }
 
 type LoksewaMockSet {
-  category: LoksewaMockCategory!
-  categoryId: String!
+  category: LoksewaMockCategory
+  categoryId: String
 
   """Identifies the date and time when the object was created."""
   createdAt: Date!
-  editor: User!
-  editorId: String!
+  editor: User
+  editorId: String
 
   """Unique UUID string"""
   id: ID!
   loksewaTest: [LoksewaTest!]!
   orders: [Order!]!
-  questions: [LoksewaQuestion!]!
+  questions: [MockQuestionEdge!]!
   status: MockSetStatus!
   type: MockSetType!
 
@@ -320,6 +353,9 @@ type LoksewaQuestion {
   """Identifies the date and time when the object was created."""
   createdAt: Date!
   difficulty: Difficulty!
+  edge: MockQuestionEdge!
+  edgeId: String!
+  getMockCategoryFromSet: LoksewaMockCategory!
 
   """Unique UUID string"""
   id: ID!
@@ -329,8 +365,6 @@ type LoksewaQuestion {
   optionB: String!
   optionC: String!
   optionD: String!
-  set: LoksewaMockSet!
-  setId: String!
   title: String!
 
   """Identifies the date and time when the object was last updated."""
@@ -430,6 +464,24 @@ enum MembershipType {
   silver
 }
 
+type MockQuestionEdge {
+  LoksewaMockSet: LoksewaMockSet!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: Date!
+
+  """Unique UUID string"""
+  id: ID!
+  order: Int!
+  question: LoksewaQuestion!
+  questionId: String!
+  setId: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: Date!
+  weight: Int!
+}
+
 enum MockSetStatus {
   draft
   hidden
@@ -440,6 +492,7 @@ enum MockSetType {
   free
   official
   premium
+  trial
 }
 
 type Mutation {
@@ -447,15 +500,24 @@ type Mutation {
   createAssetOnServer(file: Upload!): Boolean!
   createCategory(category: CreateCategoryInput!): Category!
   createLoksewaCategory(category: CreateLoksewaQuestionCategoryInput!): LoksewaQuestionCategory!
+  createLoksewaMockCategory(category: CreateLoksewaMockCategoryInput!): LoksewaMockCategory!
   createMePost(post: CreatePostInput!): Post!
+  createMockSet(set: CreateLoksewaMockSetInput!): LoksewaMockSet!
   createPost(post: CreatePostInput!): Post!
   createQuestion(question: CreateLoksewaQuestionInput!): LoksewaQuestion!
+  createSetQuestion(question: CreateSetQuestionInput!): MockQuestionEdge!
   createSubCategory(subCategory: CreateSubCategoryInput!): Category!
   createTag(tag: CreateTagInput!): Category!
   createUser(user: CreateUserInput!): User!
   deleteLoksewaCategory(category: UpdateLoksewaQuestionCategoryInput!): Boolean!
+  deleteLoksewaMockCategory(category: UpdateLoksewaMockCategoryInput!): Boolean!
+  deleteMockSet(set: UpdateLoksewaMockSetInput!): Boolean!
   sendMagicLink(email: String!): MagicLink!
   updateLoksewaCategory(category: UpdateLoksewaQuestionCategoryInput!): LoksewaQuestionCategory!
+  updateLoksewaMockCategory(category: UpdateLoksewaMockCategoryInput!): LoksewaMockCategory!
+  updateMockSet(set: UpdateLoksewaMockSetInput!): LoksewaMockSet!
+  updateQuestion(question: UpdateLoksewaQuestionInput!): LoksewaQuestion!
+  updateSetQuestion(question: UpdateSetQuestionInput!): MockQuestionEdge!
 }
 
 type Notification {
@@ -588,6 +650,9 @@ type Query {
   getCategories: [Category!]!
   getCategory(id: String!): Category!
   getLoksewaCategories: [LoksewaQuestionCategory!]!
+  getLoksewaMockCategories: [LoksewaMockCategory!]!
+  getMockCategory(categoryId: String!): LoksewaMockCategory!
+  getMockSets(categoryId: String!): [LoksewaMockSet!]!
   getPost(id: String!): Post!
   getPosts(after: String, before: String, first: Int, last: Int, skip: Int): PostConnection!
   getQuestions(after: String, before: String, categoryId: String, first: Int, last: Int, skip: Int): LoksewaQuestionConnection!
@@ -728,10 +793,60 @@ type TagEdge {
   node: Tag!
 }
 
+input UpdateLoksewaMockCategoryInput {
+  id: String!
+  negativeMarkingRatio: Int = 0
+  title: String
+  titleNP: String
+  totalMins: Int = 90
+}
+
+input UpdateLoksewaMockSetInput {
+  """Category for Mock"""
+  categoryId: String
+  editorId: String
+  id: String!
+  status: MockSetStatus!
+  type: MockSetType!
+}
+
 input UpdateLoksewaQuestionCategoryInput {
   id: String!
   title: String
   titleNP: String
+}
+
+input UpdateLoksewaQuestionInput {
+  additionalDetails: String
+  answer: MCQAnswer!
+  categoryId: String
+  difficulty: Difficulty = medium
+  edgeId: String
+  id: String!
+  metaId: String
+  optionA: String
+  optionB: String
+  optionC: String
+  optionD: String
+  title: String!
+}
+
+input UpdateSetQuestionInput {
+  additionalDetails: String
+  answer: MCQAnswer!
+  categoryId: String
+  difficulty: Difficulty = medium
+  id: String!
+  metaId: String
+  optionA: String
+  optionB: String
+  optionC: String
+  optionD: String
+  order: Int
+  questionId: String!
+  setId: String!
+  title: String!
+  weight: Int!
 }
 
 """The `Upload` scalar type represents a file upload."""
