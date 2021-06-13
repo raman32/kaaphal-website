@@ -20,11 +20,12 @@ import { AssetsModule } from './resolvers/asset/asset.module';
 import { AssetsController } from './controllers/asset/assest.controller';
 import { LoksewaContorller } from './controllers/loksewa/loksewa.controller';
 import { AboutUsController, PrivacyPolicyController, TermsAndConditionsController } from './controllers/other/other.controller';
+import { PostController } from './controllers/post/post.controller';
 
 
 @Module({
     imports: [PostModule, AuthModule, ServicesModule, CategoryModule, UserModule, TagModule, LoksewaModule, EventBusModule, AssetsModule],
-    controllers: [AuthController, UserController, AdminController, AssetsController, LoksewaContorller, PrivacyPolicyController, TermsAndConditionsController, AboutUsController],
+    controllers: [AuthController, UserController, AdminController, AssetsController, LoksewaContorller, PrivacyPolicyController, TermsAndConditionsController, AboutUsController, PostController],
     providers: [RequestContextService,
         SessionService,
         ConfigService,

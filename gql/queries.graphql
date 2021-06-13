@@ -9,12 +9,15 @@ query getCategories {
   getCategories {
     id
     name
+    parentType
   }
 }
+
 query getCategoriesWithSubCategories {
   getCategories {
     id
     name
+    parentType
     subCategories {
       id 
       name 
@@ -25,6 +28,7 @@ query getCategoriesWithSubCategories {
 query getCategory ($id : String!) {
 getCategory (id: $id){
   name 
+  parentType
   subCategories {
     id
     name
@@ -138,4 +142,27 @@ query getMockCategory ($categoryId: String!) {
      title
      titleNP
    }
+}
+
+query getMockSet ($setId:String!) {
+ getMockSet (setId:$setId){
+  category{
+    id
+    negativeMarkingRatio
+    totalMins
+    title
+    titleNP
+  }
+  questions{
+  order
+  weight
+  question {
+     title
+      optionA
+      optionB
+      optionC
+      optionD
+    }
+  }
+}
 }

@@ -86,6 +86,7 @@ type Category {
   """Unique UUID string"""
   id: ID!
   name: String!
+  parentType: PostType!
   post: [Post!]!
   posts: [Post!]!
   subCategories: [SubCategory!]!
@@ -115,6 +116,7 @@ type Comment {
 
 input CreateCategoryInput {
   name: String!
+  parentType: PostType!
 }
 
 input CreateLoksewaMockCategoryInput {
@@ -154,7 +156,7 @@ input CreateLoksewaQuestionInput {
 input CreatePostInput {
   body: String
   categoryId: String
-  image: String
+  imageId: String
   language: Language = en
   slug: String
   status: PostStatus = unverified
@@ -509,15 +511,19 @@ type Mutation {
   createSubCategory(subCategory: CreateSubCategoryInput!): Category!
   createTag(tag: CreateTagInput!): Category!
   createUser(user: CreateUserInput!): User!
+  deleteCategory(category: UpdateCategoryInput!): Boolean!
   deleteLoksewaCategory(category: UpdateLoksewaQuestionCategoryInput!): Boolean!
   deleteLoksewaMockCategory(category: UpdateLoksewaMockCategoryInput!): Boolean!
   deleteMockSet(set: UpdateLoksewaMockSetInput!): Boolean!
+  deleteSubCategory(subCategory: UpdateSubCategoryInput!): Boolean!
   sendMagicLink(email: String!): MagicLink!
+  updateCategory(category: UpdateCategoryInput!): Category!
   updateLoksewaCategory(category: UpdateLoksewaQuestionCategoryInput!): LoksewaQuestionCategory!
   updateLoksewaMockCategory(category: UpdateLoksewaMockCategoryInput!): LoksewaMockCategory!
   updateMockSet(set: UpdateLoksewaMockSetInput!): LoksewaMockSet!
   updateQuestion(question: UpdateLoksewaQuestionInput!): LoksewaQuestion!
   updateSetQuestion(question: UpdateSetQuestionInput!): MockQuestionEdge!
+  updateSubCategory(subCategory: UpdateSubCategoryInput!): Category!
 }
 
 type Notification {
@@ -652,6 +658,7 @@ type Query {
   getLoksewaCategories: [LoksewaQuestionCategory!]!
   getLoksewaMockCategories: [LoksewaMockCategory!]!
   getMockCategory(categoryId: String!): LoksewaMockCategory!
+  getMockSet(setId: String!): LoksewaMockSet!
   getMockSets(categoryId: String!): [LoksewaMockSet!]!
   getPost(id: String!): Post!
   getPosts(after: String, before: String, first: Int, last: Int, skip: Int): PostConnection!
@@ -793,6 +800,12 @@ type TagEdge {
   node: Tag!
 }
 
+input UpdateCategoryInput {
+  id: String!
+  name: String
+  parentType: PostType
+}
+
 input UpdateLoksewaMockCategoryInput {
   id: String!
   negativeMarkingRatio: Int = 0
@@ -849,11 +862,18 @@ input UpdateSetQuestionInput {
   weight: Int!
 }
 
+input UpdateSubCategoryInput {
+  id: String!
+  name: String
+  parentId: String
+}
+
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 """User Model"""
 type User {
+  bio: String
   comments: Comment
 
   """Identifies the date and time when the object was created."""

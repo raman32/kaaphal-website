@@ -47,23 +47,23 @@ function AdminLayout({ children }: Props): JSX.Element {
                 </div>
                 <Menu theme="dark" mode="inline" defaultSelectedKeys={['11']}>
                     <Menu.SubMenu key="sub1" icon={<UserOutlined />} title="Article Management">
-                        <Menu.Item key="1"><Link href='/admin/CreateArticle'>Create Article</Link></Menu.Item>
-                        <Menu.Item key="2"><Link href='/admin/EditArticle'>Edit Article</Link></Menu.Item>
-                        <Menu.Item key="3"><Link href='/admin/VerifyArticle'>Verify Article</Link></Menu.Item>
-                        <Menu.Item key="4"><Link href='/admin/CreateArticleCategory'>Create Category</Link></Menu.Item>
+                        <Menu.Item key="1"><Link href='/admin/article/create'>Create Article</Link></Menu.Item>
+                        <Menu.Item key="2"><Link href='/admin/article/manage'>Edit Article</Link></Menu.Item>
+                        <Menu.Item key="3"><Link href='/admin/article/VerifyArticle'>Verify Article</Link></Menu.Item>
+                        <Menu.Item key="4"><Link href='/admin/article/category'>Create Category</Link></Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key="sub2" icon={<UserOutlined />} title="Loksewa">
-                        <Menu.Item key="5"><Link href='/admin/CreateLoksewaSet'>Create Set</Link></Menu.Item>
-                        <Menu.Item key="6"><Link href='/admin/CreateLoksewaQuestion'>Create Questions</Link></Menu.Item>
-                        <Menu.Item key="12"><Link href='/admin/LoksewaQuestionManagement'>Edit Questions</Link></Menu.Item>
-                        <Menu.Item key="7"><Link href='/admin/CreateLoksewaCategory'>Create Category</Link></Menu.Item>
-                        <Menu.Item key="13"><Link href='/admin/CreateLoksewaMockCategory'>Create Mock Category</Link></Menu.Item>
+                        <Menu.Item key="5"><Link href='/admin/loksewa/createSet'>Create Set</Link></Menu.Item>
+                        <Menu.Item key="6"><Link href='/admin/loksewa/createQuestion'>Create Questions</Link></Menu.Item>
+                        <Menu.Item key="12"><Link href='/admin/loksewa/manage'>Edit Questions</Link></Menu.Item>
+                        <Menu.Item key="7"><Link href='/admin/loksewa/category'>Create Category</Link></Menu.Item>
+                        <Menu.Item key="13"><Link href='/admin/loksewa/mockCategory'>Create Mock Category</Link></Menu.Item>
 
                     </Menu.SubMenu>
                     <Menu.SubMenu key="sub3" icon={<UserOutlined />} title="User Management">
-                        <Menu.Item key="8"><Link href='/admin/UserManagement'>Show User Statistics</Link></Menu.Item>
-                        <Menu.Item key="9"><Link href='/admin/CreateUser'>Create New User</Link></Menu.Item>
-                        <Menu.Item key="10"><Link href='/admin/EditUser'>Edit User</Link></Menu.Item>
+                        <Menu.Item key="8"><Link href='/admin/user/manage'>Show User Statistics</Link></Menu.Item>
+                        <Menu.Item key="9"><Link href='/admin/user/create'>Create New User</Link></Menu.Item>
+                        <Menu.Item key="10"><Link href='/admin/user/EditUser'>Edit User</Link></Menu.Item>
                     </Menu.SubMenu>
                     <Menu.Item key="11" icon={<UserOutlined />}>
                         <Link href='/admin/'>Admin Profile</Link>

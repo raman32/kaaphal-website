@@ -6,10 +6,8 @@ import { host } from '../../../utils/GlobalConstants'
 export default function UserAvatar(props: React.ComponentProps<typeof Avatar> & { user: User }): JSX.Element {
     const image = props.user && props.user.image ?
         <Image
-            src={host + '/assets/' + props.user.image.source}
-            preview={{
-                src: host + '/assets/' + props.user.image.preview,
-            }}
+            src={host + '/assets/' + props.user.image.preview}
+            preview={false}
         />
         : null
     return (<Avatar

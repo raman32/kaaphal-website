@@ -11,7 +11,7 @@ export class CreatePostInput {
     @Field({ nullable: true })
     slug: string;
     @Field({ nullable: true })
-    image: string;
+    imageId: string;
     @Field(() => PostStatus, { nullable: true, defaultValue: PostStatus.unverified })
     status: PostStatus;
     @Field(() => PostType, { nullable: true, defaultValue: PostType.articles })

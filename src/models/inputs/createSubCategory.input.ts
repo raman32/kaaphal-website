@@ -7,3 +7,13 @@ export class CreateSubCategoryInput {
     @Field()
     parentId: string;
 }
+
+@InputType()
+export class UpdateSubCategoryInput {
+    @Field()
+    id: string;
+    @Field({ nullable: true })
+    name: string;
+    @Field({ nullable: true })
+    parentId: string;
+}

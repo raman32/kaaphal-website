@@ -1,6 +1,6 @@
-import './styles/app.css';
 import '/node_modules/antd/dist/antd.css'
 import 'tailwindcss/tailwind.css'
+import './styles/app.css';
 import { withApollo } from '../lib/apollo';
 import { ApolloProvider } from '@apollo/client';
 import Head from 'next/head';

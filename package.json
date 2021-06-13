@@ -38,6 +38,7 @@
     "aws-sdk": "^2.920.0",
     "braft-editor": "^2.3.9",
     "braft-extensions": "^0.1.1",
+    "clsx": "^1.1.1",
     "cross-env": "^7.0.3",
     "file-type": "^16.5.0",
     "graphql": "^15.5.0",

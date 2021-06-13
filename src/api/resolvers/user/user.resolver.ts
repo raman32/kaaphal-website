@@ -91,7 +91,7 @@ export class UserResolver {
                 middleName: user.middleName,
                 lastName: user.lastName,
                 displayName: user.displayName,
-                image: { connect: { id: user.image } },
+                image: user.image ? { connect: { id: user.image } } : undefined,
                 role: user.role,
                 status: user.status
 

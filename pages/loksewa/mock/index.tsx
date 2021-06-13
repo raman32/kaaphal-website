@@ -20,7 +20,7 @@ const LoksewaMock = ({ categories }: InferGetStaticPropsType<typeof getStaticPro
             <h5 className="text-center mb-4"> Select a type of set:</h5>
             <div className="flex flex-row flex-wrap ">
                 {categories ? categories.map((category) => <Link key={category.id} href="/loksewa/mock/[loksewaCategoryId]" as={'/loksewa/mock/' + category.id} >
-                    <div className="shadow hover:shadow-lg px-8 py-4 my-2 mx-4 w-80 cursor-pointer bg-white text-center">
+                    <div className=" shadow hover:shadow-lg px-8 py-4 my-4 mx-4 w-80 cursor-pointer text-center">
                         <div dangerouslySetInnerHTML={{ __html: category.titleNP }} />
                         <div dangerouslySetInnerHTML={{ __html: category.title }} />
                     </div>

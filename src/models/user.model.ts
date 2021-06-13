@@ -41,6 +41,8 @@ export class User extends BaseModel {
     lastName?: string
     @Field({ nullable: true })
     displayName?: string
+    @Field({ nullable: true })
+    bio?: string
     @Field(type => UserStatus)
     status: UserStatus
     @Field(type => File, { nullable: true })

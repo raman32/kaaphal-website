@@ -98,6 +98,7 @@ export type Category = {
   /** Unique UUID string */
   id: Scalars['ID'];
   name: Scalars['String'];
+  parentType: PostType;
   post: Array<Post>;
   posts: Array<Post>;
   subCategories: Array<SubCategory>;
@@ -124,6 +125,7 @@ export type Comment = {
 
 export type CreateCategoryInput = {
   name: Scalars['String'];
+  parentType: PostType;
 };
 
 export type CreateLoksewaMockCategoryInput = {
@@ -163,7 +165,7 @@ export type CreateLoksewaQuestionInput = {
 export type CreatePostInput = {
   body?: Maybe<Scalars['String']>;
   categoryId?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['String']>;
+  imageId?: Maybe<Scalars['String']>;
   language?: Maybe<Language>;
   slug?: Maybe<Scalars['String']>;
   status?: Maybe<PostStatus>;
@@ -502,15 +504,19 @@ export type Mutation = {
   createSubCategory: Category;
   createTag: Category;
   createUser: User;
+  deleteCategory: Scalars['Boolean'];
   deleteLoksewaCategory: Scalars['Boolean'];
   deleteLoksewaMockCategory: Scalars['Boolean'];
   deleteMockSet: Scalars['Boolean'];
+  deleteSubCategory: Scalars['Boolean'];
   sendMagicLink: MagicLink;
+  updateCategory: Category;
   updateLoksewaCategory: LoksewaQuestionCategory;
   updateLoksewaMockCategory: LoksewaMockCategory;
   updateMockSet: LoksewaMockSet;
   updateQuestion: LoksewaQuestion;
   updateSetQuestion: MockQuestionEdge;
+  updateSubCategory: Category;
 };
 
 
@@ -579,6 +585,11 @@ export type MutationCreateUserArgs = {
 };
 
 
+export type MutationDeleteCategoryArgs = {
+  category: UpdateCategoryInput;
+};
+
+
 export type MutationDeleteLoksewaCategoryArgs = {
   category: UpdateLoksewaQuestionCategoryInput;
 };
@@ -594,8 +605,18 @@ export type MutationDeleteMockSetArgs = {
 };
 
 
+export type MutationDeleteSubCategoryArgs = {
+  subCategory: UpdateSubCategoryInput;
+};
+
+
 export type MutationSendMagicLinkArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationUpdateCategoryArgs = {
+  category: UpdateCategoryInput;
 };
 
 
@@ -621,6 +642,11 @@ export type MutationUpdateQuestionArgs = {
 
 export type MutationUpdateSetQuestionArgs = {
   question: UpdateSetQuestionInput;
+};
+
+
+export type MutationUpdateSubCategoryArgs = {
+  subCategory: UpdateSubCategoryInput;
 };
 
 export type Notification = {
@@ -753,6 +779,7 @@ export type Query = {
   getLoksewaCategories: Array<LoksewaQuestionCategory>;
   getLoksewaMockCategories: Array<LoksewaMockCategory>;
   getMockCategory: LoksewaMockCategory;
+  getMockSet: LoksewaMockSet;
   getMockSets: Array<LoksewaMockSet>;
   getPost: Post;
   getPosts: PostConnection;
@@ -771,6 +798,11 @@ export type QueryGetCategoryArgs = {
 
 export type QueryGetMockCategoryArgs = {
   categoryId: Scalars['String'];
+};
+
+
+export type QueryGetMockSetArgs = {
+  setId: Scalars['String'];
 };
 
 
@@ -953,6 +985,12 @@ export type TagEdge = {
   node: Tag;
 };
 
+export type UpdateCategoryInput = {
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  parentType?: Maybe<PostType>;
+};
+
 export type UpdateLoksewaMockCategoryInput = {
   id: Scalars['String'];
   negativeMarkingRatio?: Maybe<Scalars['Int']>;
@@ -1009,10 +1047,17 @@ export type UpdateSetQuestionInput = {
   weight: Scalars['Int'];
 };
 
+export type UpdateSubCategoryInput = {
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  parentId?: Maybe<Scalars['String']>;
+};
+
 
 /** User Model */
 export type User = {
   __typename?: 'User';
+  bio?: Maybe<Scalars['String']>;
   comments?: Maybe<Comment>;
   /** Identifies the date and time when the object was created. */
   createdAt: Scalars['Date'];
@@ -1133,6 +1178,78 @@ export type CreateTagMutation = (
     { __typename?: 'Category' }
     & Pick<Category, 'id' | 'name'>
   ) }
+);
+
+export type CreateCategoryMutationVariables = Exact<{
+  category: CreateCategoryInput;
+}>;
+
+
+export type CreateCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & { createCategory: (
+    { __typename?: 'Category' }
+    & Pick<Category, 'id' | 'name'>
+  ) }
+);
+
+export type CreateSubCategoryMutationVariables = Exact<{
+  subCategory: CreateSubCategoryInput;
+}>;
+
+
+export type CreateSubCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & { createSubCategory: (
+    { __typename?: 'Category' }
+    & Pick<Category, 'id' | 'name'>
+  ) }
+);
+
+export type UpdateCategoryMutationVariables = Exact<{
+  category: UpdateCategoryInput;
+}>;
+
+
+export type UpdateCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & { updateCategory: (
+    { __typename?: 'Category' }
+    & Pick<Category, 'id' | 'name'>
+  ) }
+);
+
+export type UpdateSubCategoryMutationVariables = Exact<{
+  subCategory: UpdateSubCategoryInput;
+}>;
+
+
+export type UpdateSubCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & { updateSubCategory: (
+    { __typename?: 'Category' }
+    & Pick<Category, 'id' | 'name'>
+  ) }
+);
+
+export type DeleteCategoryMutationVariables = Exact<{
+  category: UpdateCategoryInput;
+}>;
+
+
+export type DeleteCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteCategory'>
+);
+
+export type DeleteSubCategoryMutationVariables = Exact<{
+  subCategory: UpdateSubCategoryInput;
+}>;
+
+
+export type DeleteSubCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteSubCategory'>
 );
 
 export type CreateLoksewaCategoryMutationVariables = Exact<{
@@ -1346,7 +1463,7 @@ export type GetCategoriesQuery = (
   { __typename?: 'Query' }
   & { getCategories: Array<(
     { __typename?: 'Category' }
-    & Pick<Category, 'id' | 'name'>
+    & Pick<Category, 'id' | 'name' | 'parentType'>
   )> }
 );
 
@@ -1357,7 +1474,7 @@ export type GetCategoriesWithSubCategoriesQuery = (
   { __typename?: 'Query' }
   & { getCategories: Array<(
     { __typename?: 'Category' }
-    & Pick<Category, 'id' | 'name'>
+    & Pick<Category, 'id' | 'name' | 'parentType'>
     & { subCategories: Array<(
       { __typename?: 'SubCategory' }
       & Pick<SubCategory, 'id' | 'name'>
@@ -1374,7 +1491,7 @@ export type GetCategoryQuery = (
   { __typename?: 'Query' }
   & { getCategory: (
     { __typename?: 'Category' }
-    & Pick<Category, 'name'>
+    & Pick<Category, 'name' | 'parentType'>
     & { subCategories: Array<(
       { __typename?: 'SubCategory' }
       & Pick<SubCategory, 'id' | 'name'>
@@ -1522,6 +1639,29 @@ export type GetMockCategoryQuery = (
   & { getMockCategory: (
     { __typename?: 'LoksewaMockCategory' }
     & Pick<LoksewaMockCategory, 'id' | 'title' | 'titleNP'>
+  ) }
+);
+
+export type GetMockSetQueryVariables = Exact<{
+  setId: Scalars['String'];
+}>;
+
+
+export type GetMockSetQuery = (
+  { __typename?: 'Query' }
+  & { getMockSet: (
+    { __typename?: 'LoksewaMockSet' }
+    & { category?: Maybe<(
+      { __typename?: 'LoksewaMockCategory' }
+      & Pick<LoksewaMockCategory, 'id' | 'negativeMarkingRatio' | 'totalMins' | 'title' | 'titleNP'>
+    )>, questions: Array<(
+      { __typename?: 'MockQuestionEdge' }
+      & Pick<MockQuestionEdge, 'order' | 'weight'>
+      & { question: (
+        { __typename?: 'LoksewaQuestion' }
+        & Pick<LoksewaQuestion, 'title' | 'optionA' | 'optionB' | 'optionC' | 'optionD'>
+      ) }
+    )> }
   ) }
 );
 
@@ -1693,6 +1833,204 @@ export function useCreateTagMutation(baseOptions?: Apollo.MutationHookOptions<Cr
 export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation>;
 export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
 export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
+export const CreateCategoryDocument = gql`
+    mutation createCategory($category: CreateCategoryInput!) {
+  createCategory(category: $category) {
+    id
+    name
+  }
+}
+    `;
+export type CreateCategoryMutationFn = Apollo.MutationFunction<CreateCategoryMutation, CreateCategoryMutationVariables>;
+
+/**
+ * __useCreateCategoryMutation__
+ *
+ * To run a mutation, you first call `useCreateCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCategoryMutation, { data, loading, error }] = useCreateCategoryMutation({
+ *   variables: {
+ *      category: // value for 'category'
+ *   },
+ * });
+ */
+export function useCreateCategoryMutation(baseOptions?: Apollo.MutationHookOptions<CreateCategoryMutation, CreateCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCategoryMutation, CreateCategoryMutationVariables>(CreateCategoryDocument, options);
+      }
+export type CreateCategoryMutationHookResult = ReturnType<typeof useCreateCategoryMutation>;
+export type CreateCategoryMutationResult = Apollo.MutationResult<CreateCategoryMutation>;
+export type CreateCategoryMutationOptions = Apollo.BaseMutationOptions<CreateCategoryMutation, CreateCategoryMutationVariables>;
+export const CreateSubCategoryDocument = gql`
+    mutation createSubCategory($subCategory: CreateSubCategoryInput!) {
+  createSubCategory(subCategory: $subCategory) {
+    id
+    name
+  }
+}
+    `;
+export type CreateSubCategoryMutationFn = Apollo.MutationFunction<CreateSubCategoryMutation, CreateSubCategoryMutationVariables>;
+
+/**
+ * __useCreateSubCategoryMutation__
+ *
+ * To run a mutation, you first call `useCreateSubCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSubCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSubCategoryMutation, { data, loading, error }] = useCreateSubCategoryMutation({
+ *   variables: {
+ *      subCategory: // value for 'subCategory'
+ *   },
+ * });
+ */
+export function useCreateSubCategoryMutation(baseOptions?: Apollo.MutationHookOptions<CreateSubCategoryMutation, CreateSubCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSubCategoryMutation, CreateSubCategoryMutationVariables>(CreateSubCategoryDocument, options);
+      }
+export type CreateSubCategoryMutationHookResult = ReturnType<typeof useCreateSubCategoryMutation>;
+export type CreateSubCategoryMutationResult = Apollo.MutationResult<CreateSubCategoryMutation>;
+export type CreateSubCategoryMutationOptions = Apollo.BaseMutationOptions<CreateSubCategoryMutation, CreateSubCategoryMutationVariables>;
+export const UpdateCategoryDocument = gql`
+    mutation updateCategory($category: UpdateCategoryInput!) {
+  updateCategory(category: $category) {
+    id
+    name
+  }
+}
+    `;
+export type UpdateCategoryMutationFn = Apollo.MutationFunction<UpdateCategoryMutation, UpdateCategoryMutationVariables>;
+
+/**
+ * __useUpdateCategoryMutation__
+ *
+ * To run a mutation, you first call `useUpdateCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCategoryMutation, { data, loading, error }] = useUpdateCategoryMutation({
+ *   variables: {
+ *      category: // value for 'category'
+ *   },
+ * });
+ */
+export function useUpdateCategoryMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCategoryMutation, UpdateCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCategoryMutation, UpdateCategoryMutationVariables>(UpdateCategoryDocument, options);
+      }
+export type UpdateCategoryMutationHookResult = ReturnType<typeof useUpdateCategoryMutation>;
+export type UpdateCategoryMutationResult = Apollo.MutationResult<UpdateCategoryMutation>;
+export type UpdateCategoryMutationOptions = Apollo.BaseMutationOptions<UpdateCategoryMutation, UpdateCategoryMutationVariables>;
+export const UpdateSubCategoryDocument = gql`
+    mutation updateSubCategory($subCategory: UpdateSubCategoryInput!) {
+  updateSubCategory(subCategory: $subCategory) {
+    id
+    name
+  }
+}
+    `;
+export type UpdateSubCategoryMutationFn = Apollo.MutationFunction<UpdateSubCategoryMutation, UpdateSubCategoryMutationVariables>;
+
+/**
+ * __useUpdateSubCategoryMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubCategoryMutation, { data, loading, error }] = useUpdateSubCategoryMutation({
+ *   variables: {
+ *      subCategory: // value for 'subCategory'
+ *   },
+ * });
+ */
+export function useUpdateSubCategoryMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubCategoryMutation, UpdateSubCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSubCategoryMutation, UpdateSubCategoryMutationVariables>(UpdateSubCategoryDocument, options);
+      }
+export type UpdateSubCategoryMutationHookResult = ReturnType<typeof useUpdateSubCategoryMutation>;
+export type UpdateSubCategoryMutationResult = Apollo.MutationResult<UpdateSubCategoryMutation>;
+export type UpdateSubCategoryMutationOptions = Apollo.BaseMutationOptions<UpdateSubCategoryMutation, UpdateSubCategoryMutationVariables>;
+export const DeleteCategoryDocument = gql`
+    mutation deleteCategory($category: UpdateCategoryInput!) {
+  deleteCategory(category: $category)
+}
+    `;
+export type DeleteCategoryMutationFn = Apollo.MutationFunction<DeleteCategoryMutation, DeleteCategoryMutationVariables>;
+
+/**
+ * __useDeleteCategoryMutation__
+ *
+ * To run a mutation, you first call `useDeleteCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCategoryMutation, { data, loading, error }] = useDeleteCategoryMutation({
+ *   variables: {
+ *      category: // value for 'category'
+ *   },
+ * });
+ */
+export function useDeleteCategoryMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCategoryMutation, DeleteCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCategoryMutation, DeleteCategoryMutationVariables>(DeleteCategoryDocument, options);
+      }
+export type DeleteCategoryMutationHookResult = ReturnType<typeof useDeleteCategoryMutation>;
+export type DeleteCategoryMutationResult = Apollo.MutationResult<DeleteCategoryMutation>;
+export type DeleteCategoryMutationOptions = Apollo.BaseMutationOptions<DeleteCategoryMutation, DeleteCategoryMutationVariables>;
+export const DeleteSubCategoryDocument = gql`
+    mutation deleteSubCategory($subCategory: UpdateSubCategoryInput!) {
+  deleteSubCategory(subCategory: $subCategory)
+}
+    `;
+export type DeleteSubCategoryMutationFn = Apollo.MutationFunction<DeleteSubCategoryMutation, DeleteSubCategoryMutationVariables>;
+
+/**
+ * __useDeleteSubCategoryMutation__
+ *
+ * To run a mutation, you first call `useDeleteSubCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSubCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSubCategoryMutation, { data, loading, error }] = useDeleteSubCategoryMutation({
+ *   variables: {
+ *      subCategory: // value for 'subCategory'
+ *   },
+ * });
+ */
+export function useDeleteSubCategoryMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSubCategoryMutation, DeleteSubCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteSubCategoryMutation, DeleteSubCategoryMutationVariables>(DeleteSubCategoryDocument, options);
+      }
+export type DeleteSubCategoryMutationHookResult = ReturnType<typeof useDeleteSubCategoryMutation>;
+export type DeleteSubCategoryMutationResult = Apollo.MutationResult<DeleteSubCategoryMutation>;
+export type DeleteSubCategoryMutationOptions = Apollo.BaseMutationOptions<DeleteSubCategoryMutation, DeleteSubCategoryMutationVariables>;
 export const CreateLoksewaCategoryDocument = gql`
     mutation createLoksewaCategory($category: CreateLoksewaQuestionCategoryInput!) {
   createLoksewaCategory(category: $category) {
@@ -2244,6 +2582,7 @@ export const GetCategoriesDocument = gql`
   getCategories {
     id
     name
+    parentType
   }
 }
     `;
@@ -2279,6 +2618,7 @@ export const GetCategoriesWithSubCategoriesDocument = gql`
   getCategories {
     id
     name
+    parentType
     subCategories {
       id
       name
@@ -2317,6 +2657,7 @@ export const GetCategoryDocument = gql`
     query getCategory($id: String!) {
   getCategory(id: $id) {
     name
+    parentType
     subCategories {
       id
       name
@@ -2723,3 +3064,55 @@ export function useGetMockCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetMockCategoryQueryHookResult = ReturnType<typeof useGetMockCategoryQuery>;
 export type GetMockCategoryLazyQueryHookResult = ReturnType<typeof useGetMockCategoryLazyQuery>;
 export type GetMockCategoryQueryResult = Apollo.QueryResult<GetMockCategoryQuery, GetMockCategoryQueryVariables>;
+export const GetMockSetDocument = gql`
+    query getMockSet($setId: String!) {
+  getMockSet(setId: $setId) {
+    category {
+      id
+      negativeMarkingRatio
+      totalMins
+      title
+      titleNP
+    }
+    questions {
+      order
+      weight
+      question {
+        title
+        optionA
+        optionB
+        optionC
+        optionD
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMockSetQuery__
+ *
+ * To run a query within a React component, call `useGetMockSetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMockSetQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMockSetQuery({
+ *   variables: {
+ *      setId: // value for 'setId'
+ *   },
+ * });
+ */
+export function useGetMockSetQuery(baseOptions: Apollo.QueryHookOptions<GetMockSetQuery, GetMockSetQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMockSetQuery, GetMockSetQueryVariables>(GetMockSetDocument, options);
+      }
+export function useGetMockSetLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMockSetQuery, GetMockSetQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMockSetQuery, GetMockSetQueryVariables>(GetMockSetDocument, options);
+        }
+export type GetMockSetQueryHookResult = ReturnType<typeof useGetMockSetQuery>;
+export type GetMockSetLazyQueryHookResult = ReturnType<typeof useGetMockSetLazyQuery>;
+export type GetMockSetQueryResult = Apollo.QueryResult<GetMockSetQuery, GetMockSetQueryVariables>;

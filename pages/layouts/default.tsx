@@ -1,4 +1,4 @@
-import { BackTop, Divider, Layout, Menu } from 'antd';
+import { BackTop, Divider, Layout, Menu, Switch } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import React, { useEffect, useState } from 'react';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
@@ -9,6 +9,8 @@ import useStore from '../../store/storeProvider';
 import { useGetMeQuery, User } from '../../gql';
 import UserAvatar from '../../lib/components/atomic/UserAvatar';
 import Link from 'next/link';
+import clsx from 'clsx';
+import { observer } from 'mobx-react';
 const { Header, Content, Footer, Sider } = Layout;
 interface Props {
     children: React.ReactNode
@@ -30,10 +32,10 @@ function DefaultLayout({ children }: Props): JSX.Element {
         logout();
         Router.push('/');
     };
-    console.log("rerender")
+    console.log(store.isDark)
     return (
-        <Layout className=" bg-white">
-            <Header className=" bg-white flex flex-row px-4">
+        <Layout className={clsx(store.isDark ? 'bg-gray-900 text-gray-100' : 'bg-white text-black')}>
+            <Header className={clsx(store.isDark ? 'bg-gray-900 text-gray-100' : 'bg-white text-black border-solid border-gray-100 border-b-2', 'flex flex-row px-4')}  >
                 {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
                     className: 'lg:hidden my-auto  mx-2 text-left min-w-max flex-1',
                     onClick: () => setCollapased(prev => !prev),
@@ -41,9 +43,14 @@ function DefaultLayout({ children }: Props): JSX.Element {
                 <div className="my-auto lg:h-13 text-center min-w-max flex-1" >
                     <img src='https://kaaphal.com/wp-content/uploads/2020/09/cropped-Wide-Kp.png' className="h-9 mx-2" />
                 </div>
-                <Menu mode="horizontal" selectable={false} className="hidden lg:block min-w-max flex-1">
-                    <SubMenu icon={<ArticleIcon />} title="Article" className="mx-2">
-                        <Menu.Item >Article</Menu.Item>
+                <Menu mode="horizontal" selectable={false} className={clsx(store.isDark ? 'bg-gray-900 text-gray-100' : 'bg-white text-black', 'hidden lg:block min-w-max flex-1 border-none')}>
+                    <SubMenu level={1} icon={<ArticleIcon className="w-6 h-6" />} title="Article" className="px-2"  >
+                        <SubMenu level={2} title="Literature"  >
+                            <Menu.Item >Peom</Menu.Item>
+                            <Menu.Item >Story</Menu.Item>
+                            <Menu.Item >Essay</Menu.Item>
+                            <Menu.Item >Gazal</Menu.Item>
+                        </SubMenu>
                         <Menu.Item >Opinions</Menu.Item>
                         <Menu.Item >Science And Technology</Menu.Item>
                         <Menu.Item >Other</Menu.Item>
@@ -65,12 +72,13 @@ function DefaultLayout({ children }: Props): JSX.Element {
                         <Menu.Item >Federal Nepal</Menu.Item>
                     </SubMenu>
                 </Menu>
-                <Menu mode="horizontal" selectable={false} className=" text-right min-w-min mx-2 flex-1 " style={{ marginLeft: 0, marginRight: 0 }}>
+                <Menu mode="horizontal" selectable={false} className={clsx(store.isDark ? 'bg-gray-900 text-gray-100' : 'bg-white text-black', ' text-right min-w-min mx-2 flex-1 border-none ')} style={{ marginLeft: 0, marginRight: 0 }}>
                     {data && data.me ?
                         <>
                             <Menu.Item icon={<NotificationIcon />} style={{ marginLeft: 2, marginRight: 4 }} >
                             </Menu.Item  >
                             <SubMenu icon={<UserAvatar user={data.me as User} />} style={{ marginLeft: 4, marginRight: 2 }} >
+                                <Menu.Item > Dark mode &nbsp;<Switch onChange={(checked) => checked ? store.toggleDark() : store.toggleLight()} /></Menu.Item>
                                 <Menu.Item ><Link href="/user/profile">Profile</Link></Menu.Item>
                                 <Menu.Item >Settings</Menu.Item>
                                 <Menu.Item onClick={onTriggerLogout}>Logout</Menu.Item>
@@ -81,10 +89,10 @@ function DefaultLayout({ children }: Props): JSX.Element {
                 </Menu>
 
             </Header>
-            <Layout>
+            <Layout hasSider={true} className={clsx(store.isDark ? 'bg-black text-gray-100' : 'bg-white text-white')}>
                 <Content >
                     <Sider trigger={null} collapsible={true} collapsed={collapsed} collapsedWidth={0} className="lg:hidden absolute z-50" theme="light"  >
-                        <Menu mode="inline" >
+                        <Menu mode="inline" className={clsx(store.isDark ? 'bg-gray-900 text-gray-100' : 'bg-white text-black')}>
                             <SubMenu key="sub1" icon={<ArticleIcon />} title="Article">
                                 <Menu.Item key="11">Article</Menu.Item>
                                 <Menu.Item key="12">Opinions</Menu.Item>
@@ -109,7 +117,7 @@ function DefaultLayout({ children }: Props): JSX.Element {
                             </SubMenu>
                         </Menu>
                     </Sider>
-                    <Content className="container flex flex-col bg-white mt-4 mx-auto  min-h-screen">
+                    <Content className={clsx(store.isDark ? 'bg-black  text-gray-100' : 'bg-white text-black', 'container flex flex-co mt-4 mx-auto  min-h-screen')}>
                         {children}
                     </Content>
 
@@ -125,6 +133,7 @@ function DefaultLayout({ children }: Props): JSX.Element {
                         <div>Advertise With Us</div>
                         <div>Write For Us</div>
                         <div>Suggestions and Complaint</div>
+                        <div>Kaaphal Events</div>
 
                     </div>
                     <div className="flex-1 min-w-max  my-4 mx-4">
@@ -152,8 +161,10 @@ function DefaultLayout({ children }: Props): JSX.Element {
                     </div>
             </Footer>
             <BackTop />
-        </Layout>)
+        </Layout >)
 }
 export default DefaultLayout;
 
-export const defualtLayout = (page: JSX.Element): React.ReactNode => <DefaultLayout>{page}</DefaultLayout>
+const ObservableDefaultLayout = observer(DefaultLayout);
+
+export const defualtLayout = (page: JSX.Element): React.ReactNode => <ObservableDefaultLayout>{page}</ObservableDefaultLayout>

@@ -28,6 +28,44 @@ createTag(tag: $tag) {
   name
 }
 }
+
+mutation createCategory($category:CreateCategoryInput!) {
+  createCategory(category:$category){
+    id
+    name
+  }
+}
+mutation createSubCategory($subCategory:CreateSubCategoryInput!) {
+  createSubCategory(subCategory:$subCategory){
+    id
+    name
+  }
+}
+
+mutation updateCategory($category:UpdateCategoryInput!) {
+  updateCategory(category:$category){
+    id
+    name
+  }
+}
+mutation updateSubCategory($subCategory:UpdateSubCategoryInput!) {
+  updateSubCategory(subCategory:$subCategory){
+    id
+    name
+  }
+}
+
+
+mutation deleteCategory($category:UpdateCategoryInput!) {
+  deleteCategory(category:$category)
+}
+mutation deleteSubCategory($subCategory:UpdateSubCategoryInput!) {
+  deleteSubCategory(subCategory:$subCategory)
+}
+
+
+
+
 mutation  createLoksewaCategory($category:CreateLoksewaQuestionCategoryInput!){
   createLoksewaCategory(category: $category){
     id

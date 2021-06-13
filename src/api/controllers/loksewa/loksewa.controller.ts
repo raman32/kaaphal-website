@@ -5,7 +5,7 @@ import { PrismaService } from '../../../services/prisma.service';
 export class LoksewaContorller {
     constructor(private readonly prisma: PrismaService) { }
     @Get()
-    @Render('loksewa/Loksewa')
+    @Render('loksewa/index')
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     async loksewaLanding() { }
 
@@ -18,7 +18,5 @@ export class LoksewaContorller {
     @Render('loksewa/mock')
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     async loksewaMock() { }
-
-
 
 }

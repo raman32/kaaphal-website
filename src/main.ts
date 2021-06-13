@@ -4,8 +4,8 @@ import fs from 'fs'
 //TODO MAKE IT A NEST MIDDLEWARE
 import { graphqlUploadExpress } from 'graphql-upload';
 async function bootstrap() {
-  const keyFile = fs.readFileSync(__dirname + '/../../ssl/localhost.key');
-  const certFile = fs.readFileSync(__dirname + '/../../ssl/localhost.crt');
+  const keyFile = fs.readFileSync(__dirname + (process.env.NODE_ENV === 'production' ? '/../../../../ssl/localhost.key' : '/../../ssl/localhost.key'));
+  const certFile = fs.readFileSync(__dirname + (process.env.NODE_ENV === 'production' ? '/../../../../ssl/localhost.crt' : '/../../ssl/localhost.crt'));
   const app = await NestFactory.create(AppModule, {
     // httpsOptions: {
     //   key: keyFile,

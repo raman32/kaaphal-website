@@ -20,7 +20,7 @@ import { RolesGuard } from '../auth/guards/role.guard';
 import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { Category } from '../../../models/category.model';
 import { SubCategory } from '../../../models/subCategory.model';
-import { CreateCategoryInput } from '../../../models/inputs/createCategory.input';
+import { CreateCategoryInput } from '../../../models/inputs/category.input';
 import { CreateSubCategoryInput } from '../../../models/inputs/createSubCategory.input';
 import { TagConnection } from '../../../models/pagination/tag-connection';
 import { CreateTagInput } from '../../../models/inputs/createTag.input';

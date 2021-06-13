@@ -14,6 +14,7 @@ import { MagicLinkDto } from '../api/common/dto/magicLink.dto';
 import { Auth } from '../api/common/dto/auth.dto';
 import { AssetsService } from './asset.service';
 import { URL } from 'url';
+import { parseFullName } from '../../lib/common/helpers/parse';
 
 @Injectable()
 export class AuthService {
@@ -69,7 +70,7 @@ export class AuthService {
         const currentUser = user ? user
             : await this.prisma.user.create({
                 data: {
-                    email: extractedToken.email,
+                    email: extractedToken.email.toLowerCase(),
                     firstName: '',
                 },
             });
@@ -133,7 +134,8 @@ export class AuthService {
                     email: email,
                     firstName: firstName,
                     lastName: lastName,
-                    image: { connect: { id: (await this.getPictureFromUrl(image)).id } }
+                    image: { connect: { id: (await this.getPictureFromUrl(image)).id } },
+                    displayName: parseFullName(firstName, '', lastName)
                 },
             });
         const session = await this.sessionService.authenticate(user, null, accessToken);
@@ -170,7 +172,8 @@ export class AuthService {
                     email: email,
                     firstName: firstName,
                     lastName: lastName,
-                    image: { connect: { id: (await this.getPictureFromUrl(image)).id } }
+                    image: { connect: { id: (await this.getPictureFromUrl(image)).id } },
+                    displayName: parseFullName(firstName, '', lastName)
                 },
             });
         const session = await this.sessionService.authenticate(user, accessToken, null);

@@ -20,8 +20,8 @@ import { RolesGuard } from '../auth/guards/role.guard';
 import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { Category } from '../../../models/category.model';
 import { SubCategory } from '../../../models/subCategory.model';
-import { CreateCategoryInput } from '../../../models/inputs/createCategory.input';
-import { CreateSubCategoryInput } from '../../../models/inputs/createSubCategory.input';
+import { CreateCategoryInput, UpdateCategoryInput } from '../../../models/inputs/category.input';
+import { CreateSubCategoryInput, UpdateSubCategoryInput } from '../../../models/inputs/createSubCategory.input';
 
 @Resolver(of => Category)
 @UseGuards(GQLGuard)
@@ -44,7 +44,7 @@ export class CategoryResolver {
     @Roles(UserRole.admin, UserRole.moderator)
     @UseGuards(RolesGuard)
     async createCategory(@Args('category') input: CreateCategoryInput): Promise<Category_> {
-        return this.prisma.category.create({ data: { name: input.name } })
+        return this.prisma.category.create({ data: { name: input.name, parentType: input.parentType } })
     }
 
 
@@ -54,6 +54,52 @@ export class CategoryResolver {
     async createSubCategory(@Args('subCategory') input: CreateSubCategoryInput): Promise<SubCategory_> {
         return this.prisma.subCategory.create({ data: { name: input.name, parentId: input.parentId } })
     }
+
+    @Mutation(returns => Category)
+    @Roles(UserRole.admin, UserRole.moderator)
+    @UseGuards(RolesGuard)
+    async updateCategory(@Args('category') input: UpdateCategoryInput): Promise<Category_> {
+        return this.prisma.category.update({ where: { id: input.id }, data: { name: input.name, parentType: input.parentType } })
+    }
+
+
+    @Mutation(returns => Category)
+    @Roles(UserRole.admin, UserRole.moderator)
+    @UseGuards(RolesGuard)
+    async updateSubCategory(@Args('subCategory') input: UpdateSubCategoryInput): Promise<SubCategory_> {
+        return this.prisma.subCategory.update({ where: { id: input.id }, data: { name: input.name, parentId: input.parentId } })
+    }
+
+
+    @Mutation(returns => Boolean)
+    @Roles(UserRole.admin, UserRole.moderator)
+    @UseGuards(RolesGuard)
+    async deleteCategory(@Args('category') input: UpdateCategoryInput): Promise<boolean> {
+        try {
+            await this.prisma.category.delete({ where: { id: input.id } })
+            return true;
+        }
+        catch {
+            return false;
+        }
+    }
+
+
+    @Mutation(returns => Boolean)
+    @Roles(UserRole.admin, UserRole.moderator)
+    @UseGuards(RolesGuard)
+    async deleteSubCategory(@Args('subCategory') input: UpdateSubCategoryInput): Promise<boolean> {
+        try {
+            await this.prisma.subCategory.delete({ where: { id: input.id } })
+            return true;
+        }
+        catch {
+            return false;
+        }
+    }
+
+
+
 
 
 

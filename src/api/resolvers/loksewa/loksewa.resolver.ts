@@ -186,6 +186,29 @@ export class LoksewaResolver {
 
 
 
+    @Query(() => LoksewaMockSet)
+    async getMockSet(@Args('setId') setId: string): Promise<LoksewaMockSet_> {
+        return this.prisma.loksewaMockSet.findUnique({
+            where: { id: setId }, include: {
+                category: true,
+                questions: {
+                    select: {
+                        order: true,
+                        weight: true,
+                        question: true
+                    },
+                    orderBy: {
+                        order: 'asc',
+                    }
+
+                }
+
+            }
+        })
+    }
+
+
+
     @Mutation(() => MockQuestionEdge)
     @Roles(UserRole.admin, UserRole.moderator)
     @UseGuards(RolesGuard)
