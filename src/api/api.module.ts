@@ -23,10 +23,11 @@ import { AboutUsController, PrivacyPolicyController, TermsAndConditionsControlle
 import { PostController } from './controllers/post/post.controller';
 import { CommentModule } from './resolvers/comment/comment.module';
 import { NotificationModule } from './resolvers/notification/notification.module';
+import { ReactionModule } from './resolvers/reaction/reaciton.module';
 
 
 @Module({
-    imports: [PostModule, AuthModule, ServicesModule, CategoryModule, UserModule, TagModule, LoksewaModule, EventBusModule, AssetsModule, CommentModule, NotificationModule],
+    imports: [PostModule, AuthModule, ServicesModule, CategoryModule, UserModule, TagModule, LoksewaModule, EventBusModule, AssetsModule, CommentModule, NotificationModule, ReactionModule],
     controllers: [AuthController, UserController, AdminController, AssetsController, LoksewaContorller, PrivacyPolicyController, TermsAndConditionsController, AboutUsController, PostController],
     providers: [RequestContextService,
         SessionService,

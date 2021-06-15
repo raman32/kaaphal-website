@@ -187,6 +187,11 @@ input CreatePostInput {
   userId: String
 }
 
+input CreateReactionInput {
+  postId: String!
+  type: ReactionType
+}
+
 input CreateSetQuestionInput {
   additionalDetails: String
   answer: MCQAnswer!
@@ -537,6 +542,8 @@ type Mutation {
   deleteMeComment(comment: UpdateCommentInput!): Boolean!
   deleteMockSet(set: UpdateLoksewaMockSetInput!): Boolean!
   deleteSubCategory(subCategory: UpdateSubCategoryInput!): Boolean!
+  increaseView(postId: String!): Boolean!
+  reactToPost(reaction: CreateReactionInput!): Boolean!
   sendMagicLink(email: String!): MagicLink!
   updateCategory(category: UpdateCategoryInput!): Category!
   updateLoksewaCategory(category: UpdateLoksewaQuestionCategoryInput!): LoksewaQuestionCategory!
@@ -685,10 +692,11 @@ type Query {
   getLoksewaCategories: [LoksewaQuestionCategory!]!
   getLoksewaMockCategories: [LoksewaMockCategory!]!
   getMeNotification: [Notification!]!
+  getMeReaction(postId: String!): Reaction
   getMockCategory(categoryId: String!): LoksewaMockCategory!
   getMockSet(setId: String!): LoksewaMockSet!
   getMockSets(categoryId: String!): [LoksewaMockSet!]!
-  getPost(id: String!): Post!
+  getPost(id: String!): Post
   getPosts(after: String, before: String, categoryId: String, contains: String, editorId: String, first: Int, last: Int, skip: Int, status: PostStatus, subCategoryId: String, type: PostType, userId: String): PostConnection!
   getQuestions(after: String, before: String, categoryId: String, first: Int, last: Int, skip: Int): LoksewaQuestionConnection!
   getTag(id: String!): Category!
@@ -704,14 +712,14 @@ type Reaction {
 
   """Unique UUID string"""
   id: ID!
-  post: Post
-  postId: String
+  post: Post!
+  postId: String!
   type: ReactionType!
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: Date!
-  user: User
-  userId: String
+  user: User!
+  userId: String!
 }
 
 enum ReactionType {

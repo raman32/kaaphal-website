@@ -26,7 +26,16 @@ query getPosts ( $after: String, $before: String, $first: Int, $last: Int ,$skip
        user {
          id
          displayName
+         email
+         firstName
+         middleName
+         lastName
+      
+         image {
+           preview
+         }
        }
+          views
        flag{
          id
        }
@@ -259,3 +268,8 @@ query	getMeNotification  {
       read
   }
 }
+ query getMeReaction($postId: String!) {
+ getMeReaction (postId:$postId){
+   type
+ }
+ }

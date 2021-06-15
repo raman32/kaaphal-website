@@ -4,11 +4,11 @@ import { Post } from './post.model';
 import { User } from './user.model';
 
 export enum ReactionType {
-    like,
-    happy,
-    dislike,
-    sad,
-    angry,
+    like = 'like',
+    happy = 'happy',
+    dislike = 'dislike',
+    sad = 'sad',
+    angry = 'angry',
 }
 
 registerEnumType(ReactionType, { name: 'ReactionType' })
@@ -17,12 +17,12 @@ registerEnumType(ReactionType, { name: 'ReactionType' })
 export class Reaction extends BaseModel {
     @Field(type => ReactionType)
     type: ReactionType
-    @Field(type => Post, { nullable: true })
-    post?: Post
-    @Field({ nullable: true })
-    postId?: string
-    @Field(type => User, { nullable: true })
-    user?: User
-    @Field({ nullable: true })
-    userId?: string
+    @Field(type => Post)
+    post: Post
+    @Field()
+    postId: string
+    @Field(type => User)
+    user: User
+    @Field()
+    userId: string
 }

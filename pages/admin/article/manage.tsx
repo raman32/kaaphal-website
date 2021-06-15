@@ -1,12 +1,13 @@
 import { Form, Table, Space, Button, Popconfirm, Popover, Input, Select } from 'antd';
 import Link from 'next/link';
 import { useState } from 'react';
-import { PostStatus, PostType, useGetPostsQuery, UserRole, UserStatus } from '../../../gql';
+import { PostStatus, PostType, useGetPostsQuery, User, UserRole, UserStatus } from '../../../gql';
 import CategoryPicker from '../../../lib/components/atomic/CategoryPicker';
 import MembershipPicker from '../../../lib/components/atomic/MembershipPicker';
 import { PostStatusPicker } from '../../../lib/components/atomic/PostStatusPicker';
 import PostTypePicker from '../../../lib/components/atomic/PostTypePicker';
 import SubCategoryPicker from '../../../lib/components/atomic/SubCategoryPicker';
+import { UserPopover } from '../../../lib/components/atomic/UserPopover';
 import AdminLayout from '../../layouts/admin';
 
 const columns = [
@@ -18,8 +19,9 @@ const columns = [
     },
     {
         title: 'Author',
-        dataIndex: 'author',
-        key: 'author',
+        dataIndex: 'user',
+        key: 'user',
+        render: (value, record,): JSX.Element => <UserPopover user={value as User}>{value.displayName}</UserPopover>
     },
 
     {
@@ -113,7 +115,7 @@ const ArticleManagement = (): JSX.Element => {
 
                 </div>
             </div>
-            <Table columns={columns} dataSource={data ? data.getPosts.edges.map(edge => ({ ...edge.node, flags: edge.node.flag ? edge.node.flag.length : 0, author: edge.node.user.displayName, editor: (edge.node.editor ? edge.node.editor.displayName : 'No Editor'), })) : []} />
+            <Table columns={columns} dataSource={data ? data.getPosts.edges.map(edge => ({ ...edge.node, flags: edge.node.flag ? edge.node.flag.length : 0, editor: (edge.node.editor ? edge.node.editor.displayName : 'No Editor'), })) : []} />
         </>);
 }
 // eslint-disable-next-line react/display-name

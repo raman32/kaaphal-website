@@ -198,6 +198,11 @@ export type CreatePostInput = {
   userId?: Maybe<Scalars['String']>;
 };
 
+export type CreateReactionInput = {
+  postId: Scalars['String'];
+  type?: Maybe<ReactionType>;
+};
+
 export type CreateSetQuestionInput = {
   additionalDetails?: Maybe<Scalars['String']>;
   answer: McqAnswer;
@@ -532,6 +537,8 @@ export type Mutation = {
   deleteMeComment: Scalars['Boolean'];
   deleteMockSet: Scalars['Boolean'];
   deleteSubCategory: Scalars['Boolean'];
+  increaseView: Scalars['Boolean'];
+  reactToPost: Scalars['Boolean'];
   sendMagicLink: MagicLink;
   updateCategory: Category;
   updateLoksewaCategory: LoksewaQuestionCategory;
@@ -644,6 +651,16 @@ export type MutationDeleteMockSetArgs = {
 
 export type MutationDeleteSubCategoryArgs = {
   subCategory: UpdateSubCategoryInput;
+};
+
+
+export type MutationIncreaseViewArgs = {
+  postId: Scalars['String'];
+};
+
+
+export type MutationReactToPostArgs = {
+  reaction: CreateReactionInput;
 };
 
 
@@ -838,10 +855,11 @@ export type Query = {
   getLoksewaCategories: Array<LoksewaQuestionCategory>;
   getLoksewaMockCategories: Array<LoksewaMockCategory>;
   getMeNotification: Array<Notification>;
+  getMeReaction?: Maybe<Reaction>;
   getMockCategory: LoksewaMockCategory;
   getMockSet: LoksewaMockSet;
   getMockSets: Array<LoksewaMockSet>;
-  getPost: Post;
+  getPost?: Maybe<Post>;
   getPosts: PostConnection;
   getQuestions: LoksewaQuestionConnection;
   getTag: Category;
@@ -863,6 +881,11 @@ export type QueryGetCommentsArgs = {
   last?: Maybe<Scalars['Int']>;
   postId: Scalars['String'];
   skip?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryGetMeReactionArgs = {
+  postId: Scalars['String'];
 };
 
 
@@ -944,13 +967,13 @@ export type Reaction = {
   createdAt: Scalars['Date'];
   /** Unique UUID string */
   id: Scalars['ID'];
-  post?: Maybe<Post>;
-  postId?: Maybe<Scalars['String']>;
+  post: Post;
+  postId: Scalars['String'];
   type: ReactionType;
   /** Identifies the date and time when the object was last updated. */
   updatedAt: Scalars['Date'];
-  user?: Maybe<User>;
-  userId?: Maybe<Scalars['String']>;
+  user: User;
+  userId: Scalars['String'];
 };
 
 export enum ReactionType {
@@ -1616,6 +1639,16 @@ export type UpdateMeNotificationMutation = (
   & Pick<Mutation, 'updateMeNotification'>
 );
 
+export type ReactToPostMutationVariables = Exact<{
+  reaction: CreateReactionInput;
+}>;
+
+
+export type ReactToPostMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'reactToPost'>
+);
+
 export type GetPostQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -1623,14 +1656,14 @@ export type GetPostQueryVariables = Exact<{
 
 export type GetPostQuery = (
   { __typename?: 'Query' }
-  & { getPost: (
+  & { getPost?: Maybe<(
     { __typename?: 'Post' }
     & Pick<Post, 'userId' | 'title' | 'body' | 'categoryId' | 'subCategoryId' | 'language' | 'status'>
     & { tags: Array<(
       { __typename?: 'Tag' }
       & Pick<Tag, 'id' | 'name'>
     )> }
-  ) }
+  )> }
 );
 
 export type GetPostsQueryVariables = Exact<{
@@ -1658,10 +1691,14 @@ export type GetPostsQuery = (
       { __typename?: 'PostEdge' }
       & { node: (
         { __typename?: 'Post' }
-        & Pick<Post, 'id' | 'slug' | 'title' | 'body' | 'categoryId' | 'subCategoryId' | 'language' | 'status'>
+        & Pick<Post, 'id' | 'views' | 'slug' | 'title' | 'body' | 'categoryId' | 'subCategoryId' | 'language' | 'status'>
         & { user?: Maybe<(
           { __typename?: 'User' }
-          & Pick<User, 'id' | 'displayName'>
+          & Pick<User, 'id' | 'displayName' | 'email' | 'firstName' | 'middleName' | 'lastName'>
+          & { image?: Maybe<(
+            { __typename?: 'File' }
+            & Pick<File, 'preview'>
+          )> }
         )>, flag?: Maybe<Array<Maybe<(
           { __typename?: 'Flag' }
           & Pick<Flag, 'id'>
@@ -1940,6 +1977,19 @@ export type GetMeNotificationQuery = (
   & { getMeNotification: Array<(
     { __typename?: 'Notification' }
     & Pick<Notification, 'id' | 'body' | 'url' | 'read'>
+  )> }
+);
+
+export type GetMeReactionQueryVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+
+export type GetMeReactionQuery = (
+  { __typename?: 'Query' }
+  & { getMeReaction?: Maybe<(
+    { __typename?: 'Reaction' }
+    & Pick<Reaction, 'type'>
   )> }
 );
 
@@ -3014,6 +3064,37 @@ export function useUpdateMeNotificationMutation(baseOptions?: Apollo.MutationHoo
 export type UpdateMeNotificationMutationHookResult = ReturnType<typeof useUpdateMeNotificationMutation>;
 export type UpdateMeNotificationMutationResult = Apollo.MutationResult<UpdateMeNotificationMutation>;
 export type UpdateMeNotificationMutationOptions = Apollo.BaseMutationOptions<UpdateMeNotificationMutation, UpdateMeNotificationMutationVariables>;
+export const ReactToPostDocument = gql`
+    mutation reactToPost($reaction: CreateReactionInput!) {
+  reactToPost(reaction: $reaction)
+}
+    `;
+export type ReactToPostMutationFn = Apollo.MutationFunction<ReactToPostMutation, ReactToPostMutationVariables>;
+
+/**
+ * __useReactToPostMutation__
+ *
+ * To run a mutation, you first call `useReactToPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReactToPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [reactToPostMutation, { data, loading, error }] = useReactToPostMutation({
+ *   variables: {
+ *      reaction: // value for 'reaction'
+ *   },
+ * });
+ */
+export function useReactToPostMutation(baseOptions?: Apollo.MutationHookOptions<ReactToPostMutation, ReactToPostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ReactToPostMutation, ReactToPostMutationVariables>(ReactToPostDocument, options);
+      }
+export type ReactToPostMutationHookResult = ReturnType<typeof useReactToPostMutation>;
+export type ReactToPostMutationResult = Apollo.MutationResult<ReactToPostMutation>;
+export type ReactToPostMutationOptions = Apollo.BaseMutationOptions<ReactToPostMutation, ReactToPostMutationVariables>;
 export const GetPostDocument = gql`
     query getPost($id: String!) {
   getPost(id: $id) {
@@ -3081,7 +3162,15 @@ export const GetPostsDocument = gql`
         user {
           id
           displayName
+          email
+          firstName
+          middleName
+          lastName
+          image {
+            preview
+          }
         }
+        views
         flag {
           id
         }
@@ -3799,3 +3888,38 @@ export function useGetMeNotificationLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetMeNotificationQueryHookResult = ReturnType<typeof useGetMeNotificationQuery>;
 export type GetMeNotificationLazyQueryHookResult = ReturnType<typeof useGetMeNotificationLazyQuery>;
 export type GetMeNotificationQueryResult = Apollo.QueryResult<GetMeNotificationQuery, GetMeNotificationQueryVariables>;
+export const GetMeReactionDocument = gql`
+    query getMeReaction($postId: String!) {
+  getMeReaction(postId: $postId) {
+    type
+  }
+}
+    `;
+
+/**
+ * __useGetMeReactionQuery__
+ *
+ * To run a query within a React component, call `useGetMeReactionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMeReactionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMeReactionQuery({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useGetMeReactionQuery(baseOptions: Apollo.QueryHookOptions<GetMeReactionQuery, GetMeReactionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMeReactionQuery, GetMeReactionQueryVariables>(GetMeReactionDocument, options);
+      }
+export function useGetMeReactionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMeReactionQuery, GetMeReactionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMeReactionQuery, GetMeReactionQueryVariables>(GetMeReactionDocument, options);
+        }
+export type GetMeReactionQueryHookResult = ReturnType<typeof useGetMeReactionQuery>;
+export type GetMeReactionLazyQueryHookResult = ReturnType<typeof useGetMeReactionLazyQuery>;
+export type GetMeReactionQueryResult = Apollo.QueryResult<GetMeReactionQuery, GetMeReactionQueryVariables>;

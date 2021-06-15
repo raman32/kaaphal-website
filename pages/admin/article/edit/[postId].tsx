@@ -11,6 +11,8 @@ import useStore from '../../../../store/storeProvider'
 import Error from 'next/error'
 import { PostStatusPicker } from '../../../../lib/components/atomic/PostStatusPicker'
 import { useUpdatePostMutation } from '../../../../gql'
+import AdminLayout from '../../../layouts/admin'
+import { observer } from 'mobx-react'
 const Editor = dynamic(
     () => import('../../../../lib/components/atomic/Editor'),
     // eslint-disable-next-line react/display-name
@@ -48,9 +50,9 @@ function EditArticle(): JSX.Element {
     }, [data])
 
     if (!data) return <div className="self-center text-center w-full" ><Spin /> <Typography className="my-4">Loading</Typography></div>
-    if (data && data.getPost.userId !== store.user.id) return <Error statusCode={403} />
+    if (data && store.user && data.getPost.userId !== store.user.id) return <Error statusCode={403} />
 
-    return (<Form form={form} layout="vertical" name="createArticle" onFinish={() => { updatePost({ variables: { post: { ...form.getFieldsValue(), id: router.query.postId as string, userId: data.getPost.userId } } }) }} >
+    return (<Form form={form} layout="vertical" name="createArticle" onFinish={() => { updatePost({ variables: { post: { ...form.getFieldsValue(), id: router.query.postId as string, userId: data.getPost.userId, editorId: store.user ? store.user.id : undefined } } }) }} >
         <div className="flex flex-row flex-wrap">
             <Form.Item name="title" label="Title" rules={[{ required: true }]} className="w-80 mx-4" >
                 <Input />
@@ -102,7 +104,7 @@ function EditArticle(): JSX.Element {
             </Form.Item>
 
 
-            <Form.Item name="status" label="Post status" className="mx-4" rules={[{ required: true }]} >
+            <Form.Item name="status" label="Post status" className=" w-80 mx-4" rules={[{ required: true }]} >
                 <PostStatusPicker />
             </Form.Item>
 
@@ -111,11 +113,6 @@ function EditArticle(): JSX.Element {
             <Form.Item className="max-w-sm">
                 <Button type="text" htmlType="submit" className="mx-4 bg-blue-600 hover:bg-blue-400 text-white" loading={loading}>
                     Submit
-                </Button>
-                <Button type="text" htmlType="button" className="mx-4 bg-green-600 hover:bg-green-400 text-white" loading={loading} onClick={() => {
-                    form.validateFields().then(() => updatePost({ variables: { post: { ...form.getFieldsValue(), status: PostStatus.Draft } } }))
-                }}>
-                    Save
                 </Button>
                 <Button type="primary" htmlType="reset" danger={true} className="mx-4">
                     Reset
@@ -127,6 +124,6 @@ function EditArticle(): JSX.Element {
 }
 
 // eslint-disable-next-line react/display-name
-EditArticle.getLayout = defualtLayout;
+EditArticle.getLayout = (page: JSX.Element): React.ReactNode => <AdminLayout>{page}</AdminLayout>
 
-export default EditArticle;
+export default observer(EditArticle);

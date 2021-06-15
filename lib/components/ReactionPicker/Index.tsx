@@ -1,30 +1,55 @@
 import clsx from 'clsx';
-import { useState } from 'react';
+import { observer } from 'mobx-react';
+import { useEffect, useState } from 'react';
+import { ReactionType, useReactToPostMutation } from '../../../gql';
+import { ReactionDto } from '../../../src/api/common/dto/reaction.dto';
+import useStore from '../../../store/storeProvider';
 import { DislikeFilledIcon, DislikeIcon, FireFilledIcon, FireIcon, HappyFilledIcon, HappyIcon, LikeFilledIcon, LikeIcon, SadFilledIcon, SadIcon } from '../Icons/Index';
 
+const reactionsComponents = [
+    { label: ReactionType.Angry, icon: <FireIcon className="align-text-top" />, filledIcon: <FireFilledIcon className="align-text-top" />, class: 'text-red-500' },
+    { label: ReactionType.Like, icon: <LikeIcon className="align-text-top" />, filledIcon: <LikeFilledIcon className="align-text-top" />, class: 'text-blue-500' },
+    { label: ReactionType.Dislike, icon: <DislikeIcon className="align-text-top" />, filledIcon: <DislikeFilledIcon className="align-text-top" />, class: 'text-purple-500' },
+    { label: ReactionType.Happy, icon: <HappyIcon className="align-text-top" />, filledIcon: <HappyFilledIcon className="align-text-top" />, class: 'text-yellow-500' },
+    { label: ReactionType.Sad, icon: <SadIcon className="align-text-top" />, filledIcon: <SadFilledIcon className="align-text-top" />, class: 'text-green-500' }
+]
 
-export default function ReactionPicker({ fire, like, dislike, happy, sad, selected_, onChange }) {
-    const [selected, setSelected] = useState(selected_)
-    const handleSelect = (value) => {
-        value === selected ?
-            setSelected('') :
-            setSelected(value);
+function ReactionPicker({ reactions, postId }: { reactions: ReactionDto[], postId: string }): JSX.Element {
+    const store = useStore();
+    const [createReaction] = useReactToPostMutation();
+    const [selected, setSelected] = useState(-1);
+    const [reactions_, setReaction] = useState(reactions ? [
+        reactions.filter(reaction => reaction.type == ReactionType.Angry).length,
+        reactions.filter(reaction => reaction.type == ReactionType.Like).length,
+        reactions.filter(reaction => reaction.type == ReactionType.Dislike).length,
+        reactions.filter(reaction => reaction.type == ReactionType.Happy).length,
+        reactions.filter(reaction => reaction.type == ReactionType.Sad).length,
+    ] : [0, 0, 0, 0, 0])
+    const handleSelect = (index) => {
+        setReaction(prev => prev.map((reaction, index_) => index_ === selected ? reaction - 1 : reaction))
+        if (index === selected) {
+            setSelected('')
+        } else {
+            setReaction(prev => prev.map((reaction, index_) => index_ === index ? reaction + 1 : reaction))
+            setSelected(index);
+        }
+        createReaction({ variables: { reaction: { type: reactionsComponents[index].label, postId: postId } } })
     }
-    const reactions = [
-        { label: 'fire', icon: <FireIcon className="align-text-top" />, filledIcon: <FireFilledIcon className="align-text-top" />, value: fire, class: 'text-red-500' },
-        { label: 'like', icon: <LikeIcon className="align-text-top" />, filledIcon: <LikeFilledIcon className="align-text-top" />, value: like, class: 'text-blue-500' },
-        { label: 'dislike', icon: <DislikeIcon className="align-text-top" />, filledIcon: <DislikeFilledIcon className="align-text-top" />, value: dislike, class: 'text-purple-500' },
-        { label: 'happy', icon: <HappyIcon className="align-text-top" />, filledIcon: <HappyFilledIcon className="align-text-top" />, value: happy, class: 'text-yellow-500' },
-        { label: 'sad', icon: <SadIcon className="align-text-top" />, filledIcon: <SadFilledIcon className="align-text-top" />, value: sad, class: 'text-green-500' }
-    ]
+    useEffect(() => {
+        if (store.user)
+            setSelected(reactionsComponents.findIndex(reaction => reaction.label === reactions.find(reaction => reaction.userId === store.user.id).type))
+    }, [store.user])
+
     return <div className="align-text-top flex flex-row flex-shrink mt-4 justify-center">
         {
-            reactions.map(reaction => <div key={reaction.label} className={clsx('mx-2', reaction.class)}>
-                {reaction.value}
-                <span className="cursor-pointer hover:opacity-70" onClick={() => handleSelect(reaction.label)}>
-                    {selected === reaction.label ? reaction.filledIcon : reaction.icon}
+            reactionsComponents.map((reaction, index) => <div key={reaction.label} className={clsx('mx-2', reaction.class)}>
+                {reactions_[index]}
+                <span className="cursor-pointer hover:opacity-70" onClick={() => handleSelect(index)}>
+                    {selected === index ? reaction.filledIcon : reaction.icon}
                 </span>
             </div>)
         }
     </div>
 }
+
+export default observer(ReactionPicker)

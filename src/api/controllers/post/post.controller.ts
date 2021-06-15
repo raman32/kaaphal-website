@@ -26,7 +26,8 @@ export class PostController {
                 user: { include: { image: true } }, comments: {
                     include: { user: true }
                 },
-                tags: true
+                tags: true,
+                reactions: true
             }
         })
         if (post)

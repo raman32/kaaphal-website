@@ -207,3 +207,8 @@ mutation deleteMeComment ($comment: UpdateCommentInput!){
 mutation updateMeNotification ($notificationId: String!){
   updateMeNotification (notificationId:$notificationId)
 }
+
+mutation reactToPost($reaction: CreateReactionInput!){
+reactToPost(reaction:$reaction)
+}
+       

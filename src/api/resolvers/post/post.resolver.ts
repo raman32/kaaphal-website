@@ -25,7 +25,7 @@ export class PostResolver {
         private readonly postService: PostService,
         private readonly prisma: PrismaService) { }
 
-    @Query(returns => Post)
+    @Query(returns => Post, { nullable: true })
     async getPost(@Args('id', { type: () => String }) id: string): Promise<Post_> {
         return this.postService.getSinglePost(id)
     }
@@ -70,6 +70,7 @@ export class PostResolver {
                     include: {
                         tags: true,
                         flags: true,
+                        editor: true,
                         _count: {
                             select: {
                                 comments: true,
@@ -93,6 +94,14 @@ export class PostResolver {
 
     }
 
+    @Mutation(returns => Boolean)
+    async increaseView(@Args('postId') postId: string): Promise<boolean> {
+        const post = await this.prisma.post.findUnique({ where: { id: postId } });
+        if (!post)
+            return false;
+        await this.prisma.post.update({ where: { id: postId }, data: { views: post.views + 1 } })
+        return true;
+    }
 
     @Mutation(returns => Post)
     @Roles(UserRole.admin, UserRole.moderator)
@@ -130,7 +139,7 @@ export class PostResolver {
     @ResolveField('user', returns => User)
     async user(@Parent() post: Post): Promise<User_> {
         const { userId } = post;
-        return this.prisma.user.findUnique({ where: { id: userId } })
+        return this.prisma.user.findUnique({ where: { id: userId }, include: { image: true } })
     }
 
 }

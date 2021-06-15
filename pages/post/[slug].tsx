@@ -1,4 +1,4 @@
-import { Comment, Post, Tag as TagModel, } from '.prisma/client';
+import { Comment as Comment_, Post, Tag as Tag_, User as User_ } from '.prisma/client';
 import { Tooltip, Tag, Alert, Divider } from 'antd';
 import { InferGetServerSidePropsType } from 'next';
 import UserAvatar from '../../lib/components/atomic/UserAvatar';
@@ -9,19 +9,11 @@ import { defualtLayout } from '../layouts/default';
 import Comments from '../../lib/components/Comments/Index';
 import { User } from 'gql/index'
 import moment from 'moment';
-const tagColors = ['magenta',
-    'red',
-    'volcano',
-    'orange',
-    'gold',
-    'lime',
-    'green',
-    'cyan',
-    'blue',
-    'geekblue',
-    'purple']
+import { tagColors } from '../../lib/common/constants';
+import { PostDto } from '../../src/api/common/dto/post.dto';
+
 const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-    const postParsed = JSON.parse(post) as Post & { user: User, comments: Comment, tags: TagModel[] };
+    const postParsed = JSON.parse(post) as PostDto
     return (<div className="mx-4 sm:mx-8 w-full">
         <div className="w-full shadow h-80 sm:h-96 text-center flex flex-col justify-center items-center bg-indigo-500 bg-gradient-to-br text-white"><UserAvatar user={postParsed.user} size={96} className="border-gray-500 border-solid border-2" />
             <h1 className="text-xl font-bold">
@@ -54,13 +46,13 @@ const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProp
             </div>
             <Divider />
             <div className="text-center block text-lg ">
-                <ReactionPicker like={10} dislike={0} happy={10} sad={0} fire={50} onChange={() => { }} selected_={'happy'} />
+                <ReactionPicker reactions={postParsed.reactions} postId={postParsed.id} />
             </div>
             <div className="my-4">
                 <AuthorCard user={postParsed.user as User} />
             </div>
             <div className="my-4">
-                <Comments postId={postParsed.id} comments={postParsed.comments as Comment & { body: string; createdAt: Date; user: { displayName: string; image: { preview: string; }; }; }[]} />
+                <Comments postId={postParsed.id} comments={postParsed.comments} />
             </div>
         </div>
     </div>)
