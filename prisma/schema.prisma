@@ -234,6 +234,7 @@ model Notification {
   user      User     @relation(name: "UserOnNotification", fields: [userId], references: [id])
   userId    String
   body      String?
+  url       String?
   read      Boolean  @default(false)
 }
 

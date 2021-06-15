@@ -105,6 +105,7 @@ type Comment {
   """Unique UUID string"""
   id: ID!
   parent: Comment
+  parentId: String
   post: Post
   postId: String!
 
@@ -114,9 +115,27 @@ type Comment {
   userId: String!
 }
 
+type CommentConnection {
+  edges: [CommentEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type CommentEdge {
+  cursor: String!
+  node: Comment!
+}
+
 input CreateCategoryInput {
   name: String!
   parentType: PostType!
+}
+
+input CreateCommentInput {
+  body: String!
+  parentId: String
+  postId: String!
+  userId: String!
 }
 
 input CreateLoksewaMockCategoryInput {
@@ -503,6 +522,7 @@ type Mutation {
   createCategory(category: CreateCategoryInput!): Category!
   createLoksewaCategory(category: CreateLoksewaQuestionCategoryInput!): LoksewaQuestionCategory!
   createLoksewaMockCategory(category: CreateLoksewaMockCategoryInput!): LoksewaMockCategory!
+  createMeComment(comment: CreateCommentInput!): Comment!
   createMePost(post: CreatePostInput!): Post!
   createMockSet(set: CreateLoksewaMockSetInput!): LoksewaMockSet!
   createPost(post: CreatePostInput!): Post!
@@ -514,12 +534,16 @@ type Mutation {
   deleteCategory(category: UpdateCategoryInput!): Boolean!
   deleteLoksewaCategory(category: UpdateLoksewaQuestionCategoryInput!): Boolean!
   deleteLoksewaMockCategory(category: UpdateLoksewaMockCategoryInput!): Boolean!
+  deleteMeComment(comment: UpdateCommentInput!): Boolean!
   deleteMockSet(set: UpdateLoksewaMockSetInput!): Boolean!
   deleteSubCategory(subCategory: UpdateSubCategoryInput!): Boolean!
   sendMagicLink(email: String!): MagicLink!
   updateCategory(category: UpdateCategoryInput!): Category!
   updateLoksewaCategory(category: UpdateLoksewaQuestionCategoryInput!): LoksewaQuestionCategory!
   updateLoksewaMockCategory(category: UpdateLoksewaMockCategoryInput!): LoksewaMockCategory!
+  updateMeComment(comment: UpdateCommentInput!): Comment!
+  updateMeNotification(notificationId: String!): Boolean!
+  updateMePost(post: UpdatePostInput!): Post!
   updateMockSet(set: UpdateLoksewaMockSetInput!): LoksewaMockSet!
   updateQuestion(question: UpdateLoksewaQuestionInput!): LoksewaQuestion!
   updateSetQuestion(question: UpdateSetQuestionInput!): MockQuestionEdge!
@@ -540,6 +564,7 @@ type Notification {
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: Date!
+  url: String
   user: User!
   userId: String!
 }
@@ -655,8 +680,10 @@ enum PostType {
 type Query {
   getCategories: [Category!]!
   getCategory(id: String!): Category!
+  getComments(after: String, before: String, first: Int, last: Int, postId: String!, skip: Int): CommentConnection!
   getLoksewaCategories: [LoksewaQuestionCategory!]!
   getLoksewaMockCategories: [LoksewaMockCategory!]!
+  getMeNotification: [Notification!]!
   getMockCategory(categoryId: String!): LoksewaMockCategory!
   getMockSet(setId: String!): LoksewaMockSet!
   getMockSets(categoryId: String!): [LoksewaMockSet!]!
@@ -806,6 +833,14 @@ input UpdateCategoryInput {
   parentType: PostType
 }
 
+input UpdateCommentInput {
+  body: String!
+  id: String!
+  parentId: String
+  postId: String!
+  userId: String!
+}
+
 input UpdateLoksewaMockCategoryInput {
   id: String!
   negativeMarkingRatio: Int = 0
@@ -842,6 +877,22 @@ input UpdateLoksewaQuestionInput {
   optionC: String
   optionD: String
   title: String!
+}
+
+input UpdatePostInput {
+  body: String
+  categoryId: String
+  id: String!
+  imageId: String
+  language: Language = en
+  slug: String
+  status: PostStatus = unverified
+  subCategoryId: String
+  tags: [String]
+  title: String!
+  type: PostType = articles
+  url: String
+  userId: String
 }
 
 input UpdateSetQuestionInput {

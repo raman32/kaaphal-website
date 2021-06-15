@@ -3,6 +3,14 @@ query getPost ($id: String!) {
     userId
     title
     body
+    categoryId
+    subCategoryId
+    language
+    tags {
+      id
+      name
+    }
+
   }
 }
 query getCategories {
@@ -165,4 +173,30 @@ query getMockSet ($setId:String!) {
     }
   }
 }
+}
+
+query	getComments ($after: String, $before: String, $first: Int, $last: Int ,$skip: Int, $postId:String!) {
+    getComments ( after: $after, before :$before, first:$first, last:$last,skip:$skip, postId:$postId) {
+    edges {
+      node {
+        id
+        createdAt
+        body
+        user {
+          displayName
+          image {
+            preview
+          }
+        }
+      }
+    }
+  }
+}
+query	getMeNotification  {
+    getMeNotification {
+      id
+      body
+      url
+      read
+  }
 }

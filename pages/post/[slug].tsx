@@ -1,14 +1,13 @@
-import { Comment, Post, Tag as TagModel, User } from '.prisma/client';
-import { Head } from '@nestjs/common';
+import { Comment, Post, Tag as TagModel, } from '.prisma/client';
 import { Tooltip, Tag, Alert, Divider } from 'antd';
-import { InferGetServerSidePropsType, NextPage } from 'next';
+import { InferGetServerSidePropsType } from 'next';
 import UserAvatar from '../../lib/components/atomic/UserAvatar';
 import { PenIcon } from '../../lib/components/Icons/Index';
 import ReactionPicker from '../../lib/components/ReactionPicker/Index';
 import AuthorCard from '../../lib/components/AuthorCard/Index';
 import { defualtLayout } from '../layouts/default';
 import Comments from '../../lib/components/Comments/Index';
-
+import { User } from 'gql/index'
 const tagColors = ['magenta',
     'red',
     'volcano',
@@ -54,13 +53,13 @@ const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProp
             </div>
             <Divider />
             <div className="text-center block text-lg ">
-                <ReactionPicker like={10} dislike={0} happy={10} sad={0} fire={50} onChange={() => { }} selected={"happy"} />
+                <ReactionPicker like={10} dislike={0} happy={10} sad={0} fire={50} onChange={() => { }} selected_={'happy'} />
             </div>
             <div className="my-4">
-                <AuthorCard user={postParsed.user} />
+                <AuthorCard user={postParsed.user as User} />
             </div>
             <div className="my-4">
-                <Comments />
+                <Comments postId={postParsed.id} comments={postParsed.comments} />
             </div>
         </div>
     </div>)

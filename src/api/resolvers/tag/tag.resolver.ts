@@ -5,7 +5,7 @@ import { SubCategory as SubCategory_ } from '.prisma/client';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { PaginationArgs } from '../../../common/pagination/pagination.args';
-import { CreatePostInput } from '../../../models/inputs/createPost.input';
+import { CreatePostInput } from '../../../models/inputs/post.input';
 import { PostConnection } from '../../../models/pagination/post-connection';
 import { Post } from '../../../models/post.model';
 import { User, UserRole } from '../../../models/user.model';

@@ -1,4 +1,4 @@
-import { BackTop, Divider, Layout, Menu, Switch } from 'antd';
+import { BackTop, Badge, Divider, Layout, Menu, Switch } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import React, { useEffect, useState } from 'react';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
@@ -11,6 +11,7 @@ import UserAvatar from '../../lib/components/atomic/UserAvatar';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
+import Notification from '../../lib/components/Notification/Index';
 const { Header, Content, Footer, Sider } = Layout;
 interface Props {
     children: React.ReactNode
@@ -75,8 +76,7 @@ function DefaultLayout({ children }: Props): JSX.Element {
                 <Menu mode="horizontal" selectable={false} className={clsx(store.isDark ? 'bg-gray-900 text-gray-100' : 'bg-white text-black', ' text-right min-w-min mx-2 flex-1 border-none ')} style={{ marginLeft: 0, marginRight: 0 }}>
                     {data && data.me ?
                         <>
-                            <Menu.Item icon={<NotificationIcon />} style={{ marginLeft: 2, marginRight: 4 }} >
-                            </Menu.Item  >
+                            <Notification />
                             <SubMenu icon={<UserAvatar user={data.me as User} />} style={{ marginLeft: 4, marginRight: 2 }} >
                                 <Menu.Item > Dark mode &nbsp;<Switch onChange={(checked) => checked ? store.toggleDark() : store.toggleLight()} /></Menu.Item>
                                 <Menu.Item ><Link href="/user/profile">Profile</Link></Menu.Item>
@@ -128,7 +128,7 @@ function DefaultLayout({ children }: Props): JSX.Element {
             <Footer style={{ textAlign: 'center' }} className="bg-gray-600 text-white mx-0 ">
                 <div className="flex flex-row flex-wrap">
                     <div className="flex-1 min-w-max my-4 mx-4">
-                        <div>Send Articles</div>
+                        <div><Link href="/post/create">Send Articles</Link></div>
                         <div>Donate</div>
                         <div>Advertise With Us</div>
                         <div>Write For Us</div>

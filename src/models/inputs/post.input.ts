@@ -29,3 +29,9 @@ export class CreatePostInput {
 
 
 }
+
+@InputType()
+export class UpdatePostInput extends CreatePostInput {
+    @Field()
+    id: string;
+}

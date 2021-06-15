@@ -115,6 +115,7 @@ export type Comment = {
   /** Unique UUID string */
   id: Scalars['ID'];
   parent?: Maybe<Comment>;
+  parentId?: Maybe<Scalars['String']>;
   post?: Maybe<Post>;
   postId: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
@@ -123,9 +124,29 @@ export type Comment = {
   userId: Scalars['String'];
 };
 
+export type CommentConnection = {
+  __typename?: 'CommentConnection';
+  edges?: Maybe<Array<CommentEdge>>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type CommentEdge = {
+  __typename?: 'CommentEdge';
+  cursor: Scalars['String'];
+  node: Comment;
+};
+
 export type CreateCategoryInput = {
   name: Scalars['String'];
   parentType: PostType;
+};
+
+export type CreateCommentInput = {
+  body: Scalars['String'];
+  parentId?: Maybe<Scalars['String']>;
+  postId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type CreateLoksewaMockCategoryInput = {
@@ -496,6 +517,7 @@ export type Mutation = {
   createCategory: Category;
   createLoksewaCategory: LoksewaQuestionCategory;
   createLoksewaMockCategory: LoksewaMockCategory;
+  createMeComment: Comment;
   createMePost: Post;
   createMockSet: LoksewaMockSet;
   createPost: Post;
@@ -507,12 +529,16 @@ export type Mutation = {
   deleteCategory: Scalars['Boolean'];
   deleteLoksewaCategory: Scalars['Boolean'];
   deleteLoksewaMockCategory: Scalars['Boolean'];
+  deleteMeComment: Scalars['Boolean'];
   deleteMockSet: Scalars['Boolean'];
   deleteSubCategory: Scalars['Boolean'];
   sendMagicLink: MagicLink;
   updateCategory: Category;
   updateLoksewaCategory: LoksewaQuestionCategory;
   updateLoksewaMockCategory: LoksewaMockCategory;
+  updateMeComment: Comment;
+  updateMeNotification: Scalars['Boolean'];
+  updateMePost: Post;
   updateMockSet: LoksewaMockSet;
   updateQuestion: LoksewaQuestion;
   updateSetQuestion: MockQuestionEdge;
@@ -542,6 +568,11 @@ export type MutationCreateLoksewaCategoryArgs = {
 
 export type MutationCreateLoksewaMockCategoryArgs = {
   category: CreateLoksewaMockCategoryInput;
+};
+
+
+export type MutationCreateMeCommentArgs = {
+  comment: CreateCommentInput;
 };
 
 
@@ -600,6 +631,11 @@ export type MutationDeleteLoksewaMockCategoryArgs = {
 };
 
 
+export type MutationDeleteMeCommentArgs = {
+  comment: UpdateCommentInput;
+};
+
+
 export type MutationDeleteMockSetArgs = {
   set: UpdateLoksewaMockSetInput;
 };
@@ -627,6 +663,21 @@ export type MutationUpdateLoksewaCategoryArgs = {
 
 export type MutationUpdateLoksewaMockCategoryArgs = {
   category: UpdateLoksewaMockCategoryInput;
+};
+
+
+export type MutationUpdateMeCommentArgs = {
+  comment: UpdateCommentInput;
+};
+
+
+export type MutationUpdateMeNotificationArgs = {
+  notificationId: Scalars['String'];
+};
+
+
+export type MutationUpdateMePostArgs = {
+  post: UpdatePostInput;
 };
 
 
@@ -661,6 +712,7 @@ export type Notification = {
   read: Scalars['Boolean'];
   /** Identifies the date and time when the object was last updated. */
   updatedAt: Scalars['Date'];
+  url?: Maybe<Scalars['String']>;
   user: User;
   userId: Scalars['String'];
 };
@@ -776,8 +828,10 @@ export type Query = {
   __typename?: 'Query';
   getCategories: Array<Category>;
   getCategory: Category;
+  getComments: CommentConnection;
   getLoksewaCategories: Array<LoksewaQuestionCategory>;
   getLoksewaMockCategories: Array<LoksewaMockCategory>;
+  getMeNotification: Array<Notification>;
   getMockCategory: LoksewaMockCategory;
   getMockSet: LoksewaMockSet;
   getMockSets: Array<LoksewaMockSet>;
@@ -793,6 +847,16 @@ export type Query = {
 
 export type QueryGetCategoryArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryGetCommentsArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  postId: Scalars['String'];
+  skip?: Maybe<Scalars['Int']>;
 };
 
 
@@ -991,6 +1055,14 @@ export type UpdateCategoryInput = {
   parentType?: Maybe<PostType>;
 };
 
+export type UpdateCommentInput = {
+  body: Scalars['String'];
+  id: Scalars['String'];
+  parentId?: Maybe<Scalars['String']>;
+  postId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
 export type UpdateLoksewaMockCategoryInput = {
   id: Scalars['String'];
   negativeMarkingRatio?: Maybe<Scalars['Int']>;
@@ -1027,6 +1099,22 @@ export type UpdateLoksewaQuestionInput = {
   optionC?: Maybe<Scalars['String']>;
   optionD?: Maybe<Scalars['String']>;
   title: Scalars['String'];
+};
+
+export type UpdatePostInput = {
+  body?: Maybe<Scalars['String']>;
+  categoryId?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  imageId?: Maybe<Scalars['String']>;
+  language?: Maybe<Language>;
+  slug?: Maybe<Scalars['String']>;
+  status?: Maybe<PostStatus>;
+  subCategoryId?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  title: Scalars['String'];
+  type?: Maybe<PostType>;
+  url?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
 };
 
 export type UpdateSetQuestionInput = {
@@ -1162,6 +1250,19 @@ export type CreateMePostMutationVariables = Exact<{
 export type CreateMePostMutation = (
   { __typename?: 'Mutation' }
   & { createMePost: (
+    { __typename?: 'Post' }
+    & Pick<Post, 'id'>
+  ) }
+);
+
+export type UpdateMePostMutationVariables = Exact<{
+  post: UpdatePostInput;
+}>;
+
+
+export type UpdateMePostMutation = (
+  { __typename?: 'Mutation' }
+  & { updateMePost: (
     { __typename?: 'Post' }
     & Pick<Post, 'id'>
   ) }
@@ -1443,6 +1544,52 @@ export type CreateAssetOnServerMutation = (
   & Pick<Mutation, 'createAssetOnServer'>
 );
 
+export type CreateMeCommentMutationVariables = Exact<{
+  comment: CreateCommentInput;
+}>;
+
+
+export type CreateMeCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { createMeComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id' | 'body'>
+  ) }
+);
+
+export type UpdateMeCommentMutationVariables = Exact<{
+  comment: UpdateCommentInput;
+}>;
+
+
+export type UpdateMeCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { updateMeComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id' | 'body'>
+  ) }
+);
+
+export type DeleteMeCommentMutationVariables = Exact<{
+  comment: UpdateCommentInput;
+}>;
+
+
+export type DeleteMeCommentMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteMeComment'>
+);
+
+export type UpdateMeNotificationMutationVariables = Exact<{
+  notificationId: Scalars['String'];
+}>;
+
+
+export type UpdateMeNotificationMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'updateMeNotification'>
+);
+
 export type GetPostQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -1452,7 +1599,11 @@ export type GetPostQuery = (
   { __typename?: 'Query' }
   & { getPost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'userId' | 'title' | 'body'>
+    & Pick<Post, 'userId' | 'title' | 'body' | 'categoryId' | 'subCategoryId' | 'language'>
+    & { tags: Array<(
+      { __typename?: 'Tag' }
+      & Pick<Tag, 'id' | 'name'>
+    )> }
   ) }
 );
 
@@ -1665,6 +1816,49 @@ export type GetMockSetQuery = (
   ) }
 );
 
+export type GetCommentsQueryVariables = Exact<{
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  postId: Scalars['String'];
+}>;
+
+
+export type GetCommentsQuery = (
+  { __typename?: 'Query' }
+  & { getComments: (
+    { __typename?: 'CommentConnection' }
+    & { edges?: Maybe<Array<(
+      { __typename?: 'CommentEdge' }
+      & { node: (
+        { __typename?: 'Comment' }
+        & Pick<Comment, 'id' | 'createdAt' | 'body'>
+        & { user?: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'displayName'>
+          & { image?: Maybe<(
+            { __typename?: 'File' }
+            & Pick<File, 'preview'>
+          )> }
+        )> }
+      ) }
+    )>> }
+  ) }
+);
+
+export type GetMeNotificationQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMeNotificationQuery = (
+  { __typename?: 'Query' }
+  & { getMeNotification: Array<(
+    { __typename?: 'Notification' }
+    & Pick<Notification, 'id' | 'body' | 'url' | 'read'>
+  )> }
+);
+
 
 export const SendMagicLinkDocument = gql`
     mutation sendMagicLink($email: String!) {
@@ -1799,6 +1993,39 @@ export function useCreateMePostMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateMePostMutationHookResult = ReturnType<typeof useCreateMePostMutation>;
 export type CreateMePostMutationResult = Apollo.MutationResult<CreateMePostMutation>;
 export type CreateMePostMutationOptions = Apollo.BaseMutationOptions<CreateMePostMutation, CreateMePostMutationVariables>;
+export const UpdateMePostDocument = gql`
+    mutation updateMePost($post: UpdatePostInput!) {
+  updateMePost(post: $post) {
+    id
+  }
+}
+    `;
+export type UpdateMePostMutationFn = Apollo.MutationFunction<UpdateMePostMutation, UpdateMePostMutationVariables>;
+
+/**
+ * __useUpdateMePostMutation__
+ *
+ * To run a mutation, you first call `useUpdateMePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMePostMutation, { data, loading, error }] = useUpdateMePostMutation({
+ *   variables: {
+ *      post: // value for 'post'
+ *   },
+ * });
+ */
+export function useUpdateMePostMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMePostMutation, UpdateMePostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMePostMutation, UpdateMePostMutationVariables>(UpdateMePostDocument, options);
+      }
+export type UpdateMePostMutationHookResult = ReturnType<typeof useUpdateMePostMutation>;
+export type UpdateMePostMutationResult = Apollo.MutationResult<UpdateMePostMutation>;
+export type UpdateMePostMutationOptions = Apollo.BaseMutationOptions<UpdateMePostMutation, UpdateMePostMutationVariables>;
 export const CreateTagDocument = gql`
     mutation createTag($tag: CreateTagInput!) {
   createTag(tag: $tag) {
@@ -2540,12 +2767,149 @@ export function useCreateAssetOnServerMutation(baseOptions?: Apollo.MutationHook
 export type CreateAssetOnServerMutationHookResult = ReturnType<typeof useCreateAssetOnServerMutation>;
 export type CreateAssetOnServerMutationResult = Apollo.MutationResult<CreateAssetOnServerMutation>;
 export type CreateAssetOnServerMutationOptions = Apollo.BaseMutationOptions<CreateAssetOnServerMutation, CreateAssetOnServerMutationVariables>;
+export const CreateMeCommentDocument = gql`
+    mutation createMeComment($comment: CreateCommentInput!) {
+  createMeComment(comment: $comment) {
+    id
+    body
+  }
+}
+    `;
+export type CreateMeCommentMutationFn = Apollo.MutationFunction<CreateMeCommentMutation, CreateMeCommentMutationVariables>;
+
+/**
+ * __useCreateMeCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateMeCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMeCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMeCommentMutation, { data, loading, error }] = useCreateMeCommentMutation({
+ *   variables: {
+ *      comment: // value for 'comment'
+ *   },
+ * });
+ */
+export function useCreateMeCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreateMeCommentMutation, CreateMeCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMeCommentMutation, CreateMeCommentMutationVariables>(CreateMeCommentDocument, options);
+      }
+export type CreateMeCommentMutationHookResult = ReturnType<typeof useCreateMeCommentMutation>;
+export type CreateMeCommentMutationResult = Apollo.MutationResult<CreateMeCommentMutation>;
+export type CreateMeCommentMutationOptions = Apollo.BaseMutationOptions<CreateMeCommentMutation, CreateMeCommentMutationVariables>;
+export const UpdateMeCommentDocument = gql`
+    mutation updateMeComment($comment: UpdateCommentInput!) {
+  updateMeComment(comment: $comment) {
+    id
+    body
+  }
+}
+    `;
+export type UpdateMeCommentMutationFn = Apollo.MutationFunction<UpdateMeCommentMutation, UpdateMeCommentMutationVariables>;
+
+/**
+ * __useUpdateMeCommentMutation__
+ *
+ * To run a mutation, you first call `useUpdateMeCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMeCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMeCommentMutation, { data, loading, error }] = useUpdateMeCommentMutation({
+ *   variables: {
+ *      comment: // value for 'comment'
+ *   },
+ * });
+ */
+export function useUpdateMeCommentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMeCommentMutation, UpdateMeCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMeCommentMutation, UpdateMeCommentMutationVariables>(UpdateMeCommentDocument, options);
+      }
+export type UpdateMeCommentMutationHookResult = ReturnType<typeof useUpdateMeCommentMutation>;
+export type UpdateMeCommentMutationResult = Apollo.MutationResult<UpdateMeCommentMutation>;
+export type UpdateMeCommentMutationOptions = Apollo.BaseMutationOptions<UpdateMeCommentMutation, UpdateMeCommentMutationVariables>;
+export const DeleteMeCommentDocument = gql`
+    mutation deleteMeComment($comment: UpdateCommentInput!) {
+  deleteMeComment(comment: $comment)
+}
+    `;
+export type DeleteMeCommentMutationFn = Apollo.MutationFunction<DeleteMeCommentMutation, DeleteMeCommentMutationVariables>;
+
+/**
+ * __useDeleteMeCommentMutation__
+ *
+ * To run a mutation, you first call `useDeleteMeCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMeCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMeCommentMutation, { data, loading, error }] = useDeleteMeCommentMutation({
+ *   variables: {
+ *      comment: // value for 'comment'
+ *   },
+ * });
+ */
+export function useDeleteMeCommentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMeCommentMutation, DeleteMeCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteMeCommentMutation, DeleteMeCommentMutationVariables>(DeleteMeCommentDocument, options);
+      }
+export type DeleteMeCommentMutationHookResult = ReturnType<typeof useDeleteMeCommentMutation>;
+export type DeleteMeCommentMutationResult = Apollo.MutationResult<DeleteMeCommentMutation>;
+export type DeleteMeCommentMutationOptions = Apollo.BaseMutationOptions<DeleteMeCommentMutation, DeleteMeCommentMutationVariables>;
+export const UpdateMeNotificationDocument = gql`
+    mutation updateMeNotification($notificationId: String!) {
+  updateMeNotification(notificationId: $notificationId)
+}
+    `;
+export type UpdateMeNotificationMutationFn = Apollo.MutationFunction<UpdateMeNotificationMutation, UpdateMeNotificationMutationVariables>;
+
+/**
+ * __useUpdateMeNotificationMutation__
+ *
+ * To run a mutation, you first call `useUpdateMeNotificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMeNotificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMeNotificationMutation, { data, loading, error }] = useUpdateMeNotificationMutation({
+ *   variables: {
+ *      notificationId: // value for 'notificationId'
+ *   },
+ * });
+ */
+export function useUpdateMeNotificationMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMeNotificationMutation, UpdateMeNotificationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMeNotificationMutation, UpdateMeNotificationMutationVariables>(UpdateMeNotificationDocument, options);
+      }
+export type UpdateMeNotificationMutationHookResult = ReturnType<typeof useUpdateMeNotificationMutation>;
+export type UpdateMeNotificationMutationResult = Apollo.MutationResult<UpdateMeNotificationMutation>;
+export type UpdateMeNotificationMutationOptions = Apollo.BaseMutationOptions<UpdateMeNotificationMutation, UpdateMeNotificationMutationVariables>;
 export const GetPostDocument = gql`
     query getPost($id: String!) {
   getPost(id: $id) {
     userId
     title
     body
+    categoryId
+    subCategoryId
+    language
+    tags {
+      id
+      name
+    }
   }
 }
     `;
@@ -3116,3 +3480,99 @@ export function useGetMockSetLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type GetMockSetQueryHookResult = ReturnType<typeof useGetMockSetQuery>;
 export type GetMockSetLazyQueryHookResult = ReturnType<typeof useGetMockSetLazyQuery>;
 export type GetMockSetQueryResult = Apollo.QueryResult<GetMockSetQuery, GetMockSetQueryVariables>;
+export const GetCommentsDocument = gql`
+    query getComments($after: String, $before: String, $first: Int, $last: Int, $skip: Int, $postId: String!) {
+  getComments(
+    after: $after
+    before: $before
+    first: $first
+    last: $last
+    skip: $skip
+    postId: $postId
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        body
+        user {
+          displayName
+          image {
+            preview
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCommentsQuery__
+ *
+ * To run a query within a React component, call `useGetCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentsQuery({
+ *   variables: {
+ *      after: // value for 'after'
+ *      before: // value for 'before'
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *      skip: // value for 'skip'
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useGetCommentsQuery(baseOptions: Apollo.QueryHookOptions<GetCommentsQuery, GetCommentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCommentsQuery, GetCommentsQueryVariables>(GetCommentsDocument, options);
+      }
+export function useGetCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommentsQuery, GetCommentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCommentsQuery, GetCommentsQueryVariables>(GetCommentsDocument, options);
+        }
+export type GetCommentsQueryHookResult = ReturnType<typeof useGetCommentsQuery>;
+export type GetCommentsLazyQueryHookResult = ReturnType<typeof useGetCommentsLazyQuery>;
+export type GetCommentsQueryResult = Apollo.QueryResult<GetCommentsQuery, GetCommentsQueryVariables>;
+export const GetMeNotificationDocument = gql`
+    query getMeNotification {
+  getMeNotification {
+    id
+    body
+    url
+    read
+  }
+}
+    `;
+
+/**
+ * __useGetMeNotificationQuery__
+ *
+ * To run a query within a React component, call `useGetMeNotificationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMeNotificationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMeNotificationQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMeNotificationQuery(baseOptions?: Apollo.QueryHookOptions<GetMeNotificationQuery, GetMeNotificationQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMeNotificationQuery, GetMeNotificationQueryVariables>(GetMeNotificationDocument, options);
+      }
+export function useGetMeNotificationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMeNotificationQuery, GetMeNotificationQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMeNotificationQuery, GetMeNotificationQueryVariables>(GetMeNotificationDocument, options);
+        }
+export type GetMeNotificationQueryHookResult = ReturnType<typeof useGetMeNotificationQuery>;
+export type GetMeNotificationLazyQueryHookResult = ReturnType<typeof useGetMeNotificationLazyQuery>;
+export type GetMeNotificationQueryResult = Apollo.QueryResult<GetMeNotificationQuery, GetMeNotificationQueryVariables>;

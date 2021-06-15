@@ -90,7 +90,7 @@ const Page = ({ title }: PageProps): JSX.Element => {
                         reactions={{ dislike: 10, fire: 12, happy: 10, like: 10, sad: 2 }}
                         comments={10}
                         flags={0}
-                        image="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" className="w-full h-full object-cover"
+                        image="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
                     />
                     <PostCard
                         title="This is a very long Title for a general post of this type"
@@ -111,7 +111,7 @@ const Page = ({ title }: PageProps): JSX.Element => {
                         reactions={{ dislike: 10, fire: 12, happy: 10, like: 10, sad: 2 }}
                         comments={10}
                         flags={0}
-                        image="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" className="w-full h-full object-cover"
+                        image="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
                     />
                     <PostCard
                         title="This is a very long Title for a general post of this type"
@@ -132,7 +132,7 @@ const Page = ({ title }: PageProps): JSX.Element => {
                         reactions={{ dislike: 10, fire: 12, happy: 10, like: 10, sad: 2 }}
                         comments={10}
                         flags={0}
-                        image="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" className="w-full h-full object-cover"
+                        image="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
                     />
                     <PostCard
                         title="This is a very long Title for a general post of this type"
@@ -153,7 +153,7 @@ const Page = ({ title }: PageProps): JSX.Element => {
                         reactions={{ dislike: 10, fire: 12, happy: 10, like: 10, sad: 2 }}
                         comments={10}
                         flags={0}
-                        image="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" className="w-full h-full object-cover"
+                        image="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
                     />
 
                 </div>

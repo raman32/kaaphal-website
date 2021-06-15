@@ -21,6 +21,11 @@ mutation createMePost($post: CreatePostInput!){
     id
   }
 }
+mutation updateMePost($post: UpdatePostInput!){
+  updateMePost(post: $post){
+    id
+  }
+}
 
 mutation createTag($tag:CreateTagInput!) {
 createTag(tag: $tag) {
@@ -173,4 +178,27 @@ mutation createAsset($file: Upload!){
 
 mutation createAssetOnServer($file: Upload!){
   createAssetOnServer(file: $file) 
+}
+
+mutation createMeComment ($comment: CreateCommentInput!){
+  createMeComment (comment:$comment){
+    id
+    body
+  }
+}
+
+
+mutation updateMeComment ($comment: UpdateCommentInput!){
+  updateMeComment (comment:$comment){
+    id
+    body
+  }
+}
+
+mutation deleteMeComment ($comment: UpdateCommentInput!){
+  deleteMeComment (comment:$comment)
+}
+
+mutation updateMeNotification ($notificationId: String!){
+  updateMeNotification (notificationId:$notificationId)
 }

@@ -13,7 +13,7 @@ interface props {
     comments: number;
     flags: number;
     image: string;
-    loading: boolean;
+    loading?: boolean;
     author: User
 }
 function PostCard({ title, reactions, excerpt, comments, flags, image, loading, author }: props): JSX.Element {

@@ -1,31 +1,53 @@
 import dynamic from 'next/dynamic'
-import { Button, Input, Spin, Form, Radio, message } from 'antd'
-import { Language, PostStatus, PostType, useCreateMePostMutation, useCreatePostMutation, } from '../../gql'
-import CategoryPicker from '../../lib/components/atomic/CategoryPicker'
-import SubCategoryPicker from '../../lib/components/atomic/SubCategoryPicker'
+import { Button, Input, Spin, Form, Radio, message, Typography } from 'antd'
+import { Language, PostStatus, PostType, useUpdateMePostMutation, useCreatePostMutation, useGetPostQuery, } from '../../../gql'
+import CategoryPicker from '../../../lib/components/atomic/CategoryPicker'
+import SubCategoryPicker from '../../../lib/components/atomic/SubCategoryPicker'
 import { useEffect } from 'react'
-import TagPicker from '../../lib/components/atomic/TagPicker'
-import { defualtLayout } from '../layouts/default'
+import TagPicker from '../../../lib/components/atomic/TagPicker'
+import { defualtLayout } from '../../layouts/default'
+import { useRouter } from 'next/router'
+import useStore from '../../../store/storeProvider'
+import Error from 'next/error'
 const Editor = dynamic(
-    () => import('../../lib/components/atomic/Editor'),
+    () => import('../../../lib/components/atomic/Editor'),
     // eslint-disable-next-line react/display-name
     { loading: () => <Spin tip="Loading" />, ssr: false }
 )
-function CreateArticle(): JSX.Element {
-    const [createPost, { data, loading, error }] = useCreateMePostMutation()
+function EditArticle(): JSX.Element {
+    const store = useStore();
+    const router = useRouter();
+    console.log(router.query)
+    const { data, error, loading } = useGetPostQuery({ variables: { id: router.query.postId as string } })
+    const [updatePost, { data: data_, error: error_, loading: loading_ }] = useUpdateMePostMutation()
     useEffect(() => {
-        if (data) {
-            message.success('Succesfully created post of id: ' + data.createMePost.id);
+        if (data_) {
+            message.success('Succesfully edited post of id: ' + data_.updateMePost.id);
             form.resetFields();
         }
-        if (error) {
-            message.error('Something went wrong while creating post');
-            console.log(error.message)
+        if (error_) {
+            message.error('Something went wrong while editing post');
+            console.log(error_.message)
         }
-    }, [data, error])
-
+    }, [data_, error_])
     const [form] = Form.useForm();
-    return (<Form form={form} layout="vertical" name="createArticle" onFinish={() => { createPost({ variables: { post: { ...form.getFieldsValue(), status: PostStatus.Unverified, } } }) }} >
+    useEffect(() => {
+        if (data) {
+            form.setFieldsValue({
+                title: data.getPost.title,
+                categoryId: data.getPost.categoryId,
+                subCategoryId: data.getPost.subCategoryId,
+                language: data.getPost.language,
+                body: data.getPost.body,
+                tags: data.getPost.tags.map(tag => tag.id)
+            })
+        }
+    }, [data])
+
+    if (!data) return <div className="self-center text-center w-full" ><Spin /> <Typography className="my-4">Loading</Typography></div>
+    if (data && data.getPost.userId !== store.user.id) return <Error statusCode={403} />
+
+    return (<Form form={form} layout="vertical" name="createArticle" onFinish={() => { updatePost({ variables: { post: { ...form.getFieldsValue(), id: router.query.postId as string, status: PostStatus.Unverified, } } }) }} >
         <div className="flex flex-row flex-wrap">
             <Form.Item name="title" label="Title" rules={[{ required: true }]} className="w-80 mx-4" >
                 <Input />
@@ -77,7 +99,7 @@ function CreateArticle(): JSX.Element {
                     Submit
                 </Button>
                 <Button type="text" htmlType="button" className="mx-4 bg-green-600 hover:bg-green-400 text-white" loading={loading} onClick={() => {
-                    form.validateFields().then(() => createPost({ variables: { post: { ...form.getFieldsValue(), status: PostStatus.Draft } } }))
+                    form.validateFields().then(() => updatePost({ variables: { post: { ...form.getFieldsValue(), status: PostStatus.Draft } } }))
                 }}>
                     Save
                 </Button>
@@ -91,6 +113,6 @@ function CreateArticle(): JSX.Element {
 }
 
 // eslint-disable-next-line react/display-name
-CreateArticle.getLayout = defualtLayout;
+EditArticle.getLayout = defualtLayout;
 
-export default CreateArticle;
+export default EditArticle;

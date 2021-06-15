@@ -17,6 +17,7 @@ import { S3, Credentials } from 'aws-sdk';
 import { AssetsService } from './asset.service';
 import { SharpAssetPreviewService } from './sharp.service';
 import { DefaultAssetsNamingService } from './assetNaming.service';
+import { NotificationService } from './notification.service';
 
 @Module({
     imports: [
@@ -48,7 +49,7 @@ import { DefaultAssetsNamingService } from './assetNaming.service';
             inject: [ConfigService],
         }), EventBusModule,],
     controllers: [],
-    providers: [PrismaService, AuthService, EmailService, EmailGeneratorService, SessionService, UserService, PostService, S3StorageServive, AssetsService, SharpAssetPreviewService, DefaultAssetsNamingService],
-    exports: [PrismaService, AuthService, SessionService, UserService, EmailService, PostService, S3StorageServive, AssetsService,],
+    providers: [PrismaService, AuthService, EmailService, EmailGeneratorService, SessionService, UserService, PostService, S3StorageServive, AssetsService, SharpAssetPreviewService, DefaultAssetsNamingService, NotificationService],
+    exports: [PrismaService, AuthService, SessionService, UserService, EmailService, PostService, S3StorageServive, AssetsService, NotificationService],
 })
 export class ServicesModule { }

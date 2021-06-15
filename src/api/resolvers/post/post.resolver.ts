@@ -3,7 +3,7 @@ import { User as User_ } from '.prisma/client';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { PaginationArgs } from '../../../common/pagination/pagination.args';
-import { CreatePostInput } from '../../../models/inputs/createPost.input';
+import { CreatePostInput, UpdatePostInput } from '../../../models/inputs/post.input';
 import { PostConnection } from '../../../models/pagination/post-connection';
 import { Post } from '../../../models/post.model';
 import { User, UserRole } from '../../../models/user.model';
@@ -62,6 +62,22 @@ export class PostResolver {
         }
         return this.postService.createPost({ ...input, userId: context.user.id })
     }
+
+
+    @Mutation(returns => Post)
+    @UseGuards(AuthenticatedSessionGuard)
+    async updateMePost(@Args('post') input: UpdatePostInput, @Ctx() context: RequestContext): Promise<Post_> {
+        if (context.user === undefined) {
+            throw new UnauthorizedException();
+        }
+        const { userId } = await this.prisma.post.findUnique({ where: { id: input.id } })
+        if (context.user.id !== userId) {
+            throw new UnauthorizedException();
+        }
+        return this.postService.updatePost({ ...input })
+    }
+
+
 
     @ResolveField('user', returns => User)
     async user(@Parent() post: Post): Promise<User_> {

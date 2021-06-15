@@ -1,16 +1,27 @@
-import { PostType } from '.prisma/client';
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateCommentInput {
     @Field()
-    title: string;
-    @Field({ nullable: true })
     body: string;
+    @Field()
+    userId: string;
+    @Field()
+    postId: string;
     @Field({ nullable: true })
-    url: string;
+    parentId: string;
+}
+
+@InputType()
+export class UpdateCommentInput {
+    @Field()
+    id: string;
+    @Field()
+    body: string;
+    @Field()
+    userId: string;
+    @Field()
+    postId: string;
     @Field({ nullable: true })
-    image: string;
-    @Field(() => PostType, { nullable: true, defaultValue: 'article' })
-    type: PostType;
+    parentId: string;
 }

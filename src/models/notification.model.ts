@@ -15,6 +15,8 @@ export class Notification extends BaseModel {
     userId: string
     @Field()
     body?: string
+    @Field({ nullable: true })
+    url?: string
     @Field()
     read: boolean
 }

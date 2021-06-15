@@ -47,6 +47,7 @@
     "image-size": "^1.0.0",
     "isomorphic-unfetch": "^3.1.0",
     "mobx": "^6.3.2",
+    "mobx-persist-store": "^1.0.3",
     "mobx-react": "^7.2.0",
     "nest-aws-sdk": "^1.1.1",
     "nest-next": "^9.4.0",
