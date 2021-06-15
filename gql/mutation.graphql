@@ -26,6 +26,11 @@ mutation updateMePost($post: UpdatePostInput!){
     id
   }
 }
+mutation updatePost($post: UpdatePostInput!){
+  updatePost(post: $post){
+    id
+  }
+}
 
 mutation createTag($tag:CreateTagInput!) {
 createTag(tag: $tag) {

@@ -16,11 +16,11 @@ export class CreateCommentInput {
 export class UpdateCommentInput {
     @Field()
     id: string;
-    @Field()
+    @Field({ nullable: true })
     body: string;
-    @Field()
+    @Field({ nullable: true })
     userId: string;
-    @Field()
+    @Field({ nullable: true })
     postId: string;
     @Field({ nullable: true })
     parentId: string;

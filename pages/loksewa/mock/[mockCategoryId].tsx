@@ -44,7 +44,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     const paths = data.data.getLoksewaMockCategories.map((categories) => ({
         params: { mockCategoryId: categories.id },
     }))
-    return { paths, fallback: 'blocking' }
+    return { paths, fallback: false }
 }
 export default LoksewaMCQQuestions;
 

@@ -6,6 +6,7 @@ query getPost ($id: String!) {
     categoryId
     subCategoryId
     language
+    status
     tags {
       id
       name
@@ -13,6 +14,51 @@ query getPost ($id: String!) {
 
   }
 }
+
+
+
+
+query getPosts ( $after: String, $before: String, $first: Int, $last: Int ,$skip: Int,  $contains:String ,$status: PostStatus , $type:PostType, $categoryId: String, $subCategoryId:String , $userId:String , $editorId:String   ){
+    getPosts ( after: $after, before :$before, first:$first, last:$last,skip:$skip, contains:$contains , status: $status,type: $type, categoryId:  $categoryId,subCategoryId: $subCategoryId , userId: $userId ,editorId: $editorId ){
+    edges {
+      node {
+        id
+       user {
+         id
+         displayName
+       }
+       flag{
+         id
+       }
+       slug
+       editor {
+         id
+         displayName
+       }
+       title
+        body
+       categoryId
+       subCategoryId
+       language
+      status
+      tags {
+         id
+       name
+         }
+      }
+    }
+
+     totalCount
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      endCursor
+      startCursor
+    }
+  }
+}
+
+
 query getCategories {
   getCategories {
     id
@@ -182,7 +228,20 @@ query	getComments ($after: String, $before: String, $first: Int, $last: Int ,$sk
         id
         createdAt
         body
+        children {
+          id
+          createdAt
+          body
+          user {
+            id
+          displayName
+          image {
+            preview
+          }
+        }
+        }
         user {
+          id
           displayName
           image {
             preview

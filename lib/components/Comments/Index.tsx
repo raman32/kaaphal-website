@@ -4,48 +4,54 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { Comment as CommentModel, useCreateMeCommentMutation, useGetCommentsQuery } from '../../../gql';
+import { Comment as CommentModel, useCreateMeCommentMutation, useDeleteMeCommentMutation, useGetCommentsQuery, User } from '../../../gql';
 import useStore from '../../../store/storeProvider';
 import { defaultPollingInterval } from '../../../utils/GlobalConstants';
 import { skipper } from '../../accessToken';
 import UserAvatar from '../atomic/UserAvatar';
 import { CommentIcon, UserSvg } from '../Icons/Index';
+import { CommentInput } from './input';
 
-const Comments = ({ postId, comments }: { postId: string, comments: CommentModel & { user: { displayName: string, image: { preview: string } } }[] }) => {
+//TODO Refractor the code 
+const Comments = ({ postId, comments }: { postId: string, comments: CommentModel & { id: string, parentId: string, children: any, body: string, createdAt: Date, userId: string, user: { id: string, displayName: string, image: { preview: string } } }[] }) => {
     const store = useStore();
-    const { data: data_, loading, error, refetch } = useGetCommentsQuery({ variables: { postId: postId, first: 10 }, skip: skipper(), ssr: false, pollInterval: defaultPollingInterval })
-    const [createComment] = useCreateMeCommentMutation()
+    const { data: data_, loading, error, refetch } = useGetCommentsQuery({ variables: { postId: postId, first: 20 }, skip: skipper(), ssr: false, pollInterval: defaultPollingInterval })
+    const [deleteComment] = useDeleteMeCommentMutation();
+    const [parentId, setParentId] = useState('');
     const [data, setData] = useState(comments.map(comment => ({
-        actions: [<span key="comment-list-reply-to-0" className={clsx(store.isDark ? 'text-gray-200' : 'text-gray-800')}>Reply to</span>],
+        id: comment.id,
+        actions: [<span key="comment-list-reply-to-0" onClick={() => setParentId(comment.id)}>Replies</span>,
+        ],
         author: comment.user.displayName,
-        avatar: <UserAvatar user={comment.user} />,
+        avatar: <UserAvatar user={comment.user as User} />,
         content: comment.body,
+        children: comment.children,
         datetime: (
             <Tooltip title={moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss')}>
                 <span>{moment(comment.createdAt).fromNow()}</span>
             </Tooltip>
         ),
-
     })))
-    const [form] = Form.useForm();
+
     useEffect(() => {
         if (data_) {
-            setData(data_.getComments.edges.map(edge => (
-                {
-                    actions: [<span key="comment-list-reply-to-0" className={clsx(store.isDark ? 'text-gray-200' : 'text-gray-800')}>Reply to</span>],
-                    author: edge.node.user.displayName,
-                    avatar: <UserAvatar user={edge.node.user} />,
-                    content: edge.node.body,
-                    datetime: (
-                        <Tooltip title={moment(edge.node.createdAt).format('YYYY-MM-DD HH:mm:ss')}>
-                            <span>{moment(edge.node.createdAt).fromNow()}</span>
-                        </Tooltip>
-                    ),
-
-
-                }
+            setData(data_.getComments.edges.map(edge => ({
+                id: edge.node.id,
+                actions: [<span key="comment-list-reply-to-0" onClick={() => setParentId(edge.node.id)}>Reply to</span>,
+                store.user && store.user.id === edge.node.user.id ? <span key="comment-list-reply-to-0" onClick={() => deleteComment({ variables: { comment: { id: edge.node.id } } }).then(() => refetch()).then(() => message.success('Comment deleted Succesfully'))}>Delete</span> : <></>],
+                author: edge.node.user.displayName,
+                avatar: <UserAvatar user={edge.node.user as User} />,
+                content: edge.node.body,
+                children: edge.node.children,
+                datetime: (
+                    <Tooltip title={moment(edge.node.createdAt).format('YYYY-MM-DD HH:mm:ss')}>
+                        <span>{moment(edge.node.createdAt).fromNow()}</span>
+                    </Tooltip>
+                ),
+            }
             )))
         }
+        console.log(data_)
     }, [data_])
     return <>
 
@@ -54,7 +60,7 @@ const Comments = ({ postId, comments }: { postId: string, comments: CommentModel
             header={< div > {data.length} Comments < CommentIcon className="align-top" /></div >}
             itemLayout="horizontal"
             dataSource={data}
-            loading={loading}
+            // loading={loading}
             loadMore={<div className="cursor-pointer hover:opacity-70" >Load more Comments</div>}
             renderItem={item => (
                 <li>
@@ -65,39 +71,16 @@ const Comments = ({ postId, comments }: { postId: string, comments: CommentModel
                         content={item.content}
                         datetime={item.datetime}
 
-                    />
+                    >
+                        {item.children && parentId === item.id && item.children.map(comment => <Comment key={comment.id} actions={item.actions} author={comment.user.displayName} avatar={<UserAvatar user={comment.user as User} />} content={comment.body} datetime={<Tooltip title={moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss')}>
+                            <span>{moment(comment.createdAt).fromNow()}</span>
+                        </Tooltip>} />)}
+                        {parentId === item.id && < CommentInput onSuccess={() => refetch()} onError={() => { }} postId={postId} parentId={item.id} />}
+                    </Comment>
                 </li>
             )}
         />
-        <Comment
-            avatar={
-                <UserAvatar user={store.user} />
-            }
-            content={
-                <Form form={form} onFinish={(value) => createComment({ variables: { comment: { ...value, postId: postId, userId: store.user.id } } })
-                    .then(data_ => {
-                        if (data_.data) {
-                            message.success('Commented Sucsessfully')
-                            refetch({ first: 10 });
-                            form.resetFields();
-                        }
-                        else
-                            message.error('Could Not Comment Please try again Later'
-
-                            )
-                    })}>
-                    <Form.Item name="body" rules={[{ required: true, message: 'Please input your comment' }]}>
-                        <TextArea rows={1} autoSize />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button htmlType="submit" type="primary">
-                            Add Comment
-                </Button>
-                    </Form.Item>
-                </Form>
-            }
-        />
-
+        <CommentInput onSuccess={() => refetch()} onError={() => { }} postId={postId} />
     </>
 
 }

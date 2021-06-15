@@ -1,8 +1,10 @@
 import { Form, Table, Space, Button, Popconfirm, Popover, Input, Select } from 'antd';
+import Link from 'next/link';
 import { useState } from 'react';
-import { PostStatus, PostType, useGetUsersQuery, UserRole, UserStatus } from '../../../gql';
+import { PostStatus, PostType, useGetPostsQuery, UserRole, UserStatus } from '../../../gql';
 import CategoryPicker from '../../../lib/components/atomic/CategoryPicker';
 import MembershipPicker from '../../../lib/components/atomic/MembershipPicker';
+import { PostStatusPicker } from '../../../lib/components/atomic/PostStatusPicker';
 import PostTypePicker from '../../../lib/components/atomic/PostTypePicker';
 import SubCategoryPicker from '../../../lib/components/atomic/SubCategoryPicker';
 import AdminLayout from '../../layouts/admin';
@@ -64,7 +66,7 @@ const columns = [
         title: 'Action',
         key: 'action',
         // eslint-disable-next-line react/display-name
-        render: (record: { key: React.Key }): JSX.Element =>
+        render: (value, record,): JSX.Element =>
         (<div className="flex flex-row flex-wrap ">
             <Popconfirm title="Sure to delete?" >
                 <Button type="primary" danger className="mx-2 my-2">Delete</Button>
@@ -72,17 +74,21 @@ const columns = [
             <Popconfirm title="Sure to Flag?" >
                 <Button type="primary" danger className="mx-2 my-2">Flag</Button>
             </Popconfirm>
-            <Popover title="Edit" destroyTooltipOnHide>
-                <Button type="primary" className="mx-2 my-2">Edit</Button>
-            </Popover>
+            <Button type="primary" className="mx-2 my-2"><Link href="/admin/article/edit/[postId]" as={'/admin/article/edit/' + record.id}>Edit</Link></Button>
             <Button danger className="mx-2 my-2">Block</Button>
-        </div>
+        </div >
         )
 
     },
 ];
 const ArticleManagement = (): JSX.Element => {
     const [searchText, setSearchText] = useState(null);
+    const [type, setType] = useState(null);
+    const [status, setSatus] = useState(null);
+    const [categoryId, setCategoryId] = useState('');
+    const [subCategoryId, setSubCategoryId] = useState('');
+    const { data } = useGetPostsQuery({ variables: { first: 10, type, status, categoryId, subCategoryId } });
+    console.log(data)
     return (
         <>
             <div className="shadow-sm bg-white my-4 text-base text-center px-4 py-2">
@@ -93,29 +99,21 @@ const ArticleManagement = (): JSX.Element => {
                         <Button type="primary" className="mx-4" onClick={() => { }}>Search</Button>
                     </div>
                     <div className=" my-4 mx-4">
-                        <PostTypePicker onChange={(value) => { }} allowClear className="w-80" />
+                        <PostTypePicker onChange={(value) => setType(value as PostType)} allowClear className="w-80" />
                     </div>
                     <div className=" my-4 mx-4">
-                        <CategoryPicker postType={PostType.Articles} onChange={(value) => { }} allowClear className="w-80" />
+                        <CategoryPicker postType={PostType.Articles} onChange={(value) => setCategoryId(value as string)} allowClear className="w-80" />
                     </div>
                     <div className=" my-4 mx-4">
-                        <SubCategoryPicker categoryId="" onChange={(value) => { }} allowClear className="w-80" />
+                        <SubCategoryPicker categoryId={categoryId} onChange={(value) => setSubCategoryId(value as string)} allowClear className="w-80" />
                     </div>
                     <div className="min-w-max my-4 mx-4">
-                        <Select placeholder="Select status" allowClear className="w-52" >
-                            <Select.Option value={PostStatus.Draft}>Draft</Select.Option>
-                            <Select.Option value={PostStatus.Unverified}>Unverified</Select.Option>
-                            <Select.Option value={PostStatus.Verified}>Verified</Select.Option>
-                            <Select.Option value={PostStatus.Published}>Published</Select.Option>
-                            <Select.Option value={PostStatus.Commented}>Commented</Select.Option>
-                            <Select.Option value={PostStatus.Hidden}>Hidden</Select.Option>
-                            <Select.Option value={PostStatus.Blocked}>Blocked</Select.Option>
-                        </Select>
+                        <PostStatusPicker onChange={(value) => setSatus(value)} />
                     </div>
 
                 </div>
             </div>
-            <Table columns={columns} dataSource={[]} />
+            <Table columns={columns} dataSource={data ? data.getPosts.edges.map(edge => ({ ...edge.node, flags: edge.node.flag ? edge.node.flag.length : 0, author: edge.node.user.displayName, editor: (edge.node.editor ? edge.node.editor.displayName : 'No Editor'), })) : []} />
         </>);
 }
 // eslint-disable-next-line react/display-name

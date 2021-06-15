@@ -24,7 +24,15 @@ export class CommentResolver {
         @Args({ name: 'postId', type: () => String }) postId: string): Promise<Connection<Comment_, Edge<Comment_>>> {
         const questionConnection = findManyCursorConnection(
             (args) =>
-                this.prisma.comment.findMany({ where: { postId: postId }, ...args, skip: skip ? skip : 0, include: { user: { include: { image: { select: { preview: true } } } } } }),
+                this.prisma.comment.findMany({
+                    where: { postId: postId, parentId: undefined },
+                    ...args, skip: skip ? skip : 0,
+                    include: {
+                        user: { include: { image: { select: { preview: true } } } },
+                        children: { include: { user: { include: { image: { select: { preview: true } } } } } }
+
+                    }
+                }),
             () => this.prisma.comment.count({ where: { postId: postId } }),
             { first, last, before, after },
         );

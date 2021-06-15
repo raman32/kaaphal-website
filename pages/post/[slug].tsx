@@ -8,6 +8,7 @@ import AuthorCard from '../../lib/components/AuthorCard/Index';
 import { defualtLayout } from '../layouts/default';
 import Comments from '../../lib/components/Comments/Index';
 import { User } from 'gql/index'
+import moment from 'moment';
 const tagColors = ['magenta',
     'red',
     'volcano',
@@ -32,7 +33,7 @@ const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProp
             </h5>
 
         </div>
-        <span className="italic"> {postParsed.status === 'published' ? 'Published On: ' + postParsed.publishedAt :
+        <span className="italic"> {postParsed.status === 'published' ? 'Published On: ' + moment(postParsed.publishedAt).format("MMM-DD-YYYY") :
             <Tooltip title="Kaaphal take articles from the user and verify that the article is not fake, plagarized, misleading, or inappropriate for our users. As a bonus we also optimized our users articles for Search Engines." >
                 {'This article is still in ' + postParsed.status + ' status. If you have recently submitted the post then please be patience while we are working to review the article.'}</Tooltip>}</span>
         <div className="my-4 text-justify ">
@@ -59,7 +60,7 @@ const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProp
                 <AuthorCard user={postParsed.user as User} />
             </div>
             <div className="my-4">
-                <Comments postId={postParsed.id} comments={postParsed.comments} />
+                <Comments postId={postParsed.id} comments={postParsed.comments as Comment & { body: string; createdAt: Date; user: { displayName: string; image: { preview: string; }; }; }[]} />
             </div>
         </div>
     </div>)

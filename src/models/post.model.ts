@@ -72,7 +72,7 @@ export class Post extends BaseModel {
     reactions: Reaction[]
     @Field(type => PostType)
     type: PostType
-    @Field(type => [Flag])
+    @Field(type => [Flag], { nullable: 'itemsAndList' })
     flag: Flag[]
     @Field()
     views: number

@@ -8,6 +8,7 @@ import { randomUUID } from 'crypto';
 import { NotificationEvent } from '../event-bus/events/notification.event';
 import { host } from '../../utils/GlobalConstants';
 import { MagicLinkEvent, MagicLinkVerificationEvent } from '../event-bus/events';
+import moment from 'moment';
 
 @Injectable()
 export class PostService {
@@ -77,7 +78,7 @@ export class PostService {
         return post;
     }
 
-    async updatePost({ id, type, title, body, slug, url, categoryId, language, subCategoryId, status, tags, imageId }: { id: string, type: PostType, title: string, body: string, slug: string, url?: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[], imageId?: string }): Promise<Post> {
+    async updatePost({ id, type, title, body, slug, url, categoryId, language, subCategoryId, status, tags, imageId, editorId }: { id: string, type: PostType, title: string, body: string, slug: string, url?: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[], imageId?: string, editorId?: string }): Promise<Post> {
         const updatedPost = await this.prisma.post.update({
             where: {
                 id,
@@ -94,15 +95,35 @@ export class PostService {
                 status: status ? status : 'draft',
                 tags: tags.length ? { connect: tags.map(tag => ({ id: tag })) } : undefined,
                 image: imageId ? { connect: { id: imageId } } : undefined,
+                editor: editorId ? { connect: { id: editorId } } : undefined,
+                publishedAt: status === PostStatus.published ? moment().toISOString() : undefined,
             },
         });
 
         //this.eventBus.publish(new UpdatePostEvent(updatedPost));
-        this.eventBus.publish(new NotificationEvent('Your Article has been submitted for verification purpose. Click to see the preview',
-            updatedPost.userId,
-            updatedPost.slug,
-            updatedPost.id
-        ));
+        switch (status) {
+            case PostStatus.unverified:
+                this.eventBus.publish(new NotificationEvent('Your Article has been submitted for verification purpose. Click to see the preview',
+                    updatedPost.userId,
+                    updatedPost.slug,
+                    updatedPost.id
+                ));
+                break;
+            case PostStatus.published:
+                this.eventBus.publish(new NotificationEvent('Your Article has ' + updatedPost.title + ' been published',
+                    updatedPost.userId,
+                    updatedPost.slug,
+                    updatedPost.id
+                ));
+                break;
+            case PostStatus.blocked:
+                this.eventBus.publish(new NotificationEvent('Your Article has ' + updatedPost.title + ' been Blocked. You can see the reasons for blocking on your profile',
+                    updatedPost.userId,
+                    updatedPost.slug,
+                    updatedPost.id
+                ));
+                break;
+        }
         return updatedPost;
     }
 }

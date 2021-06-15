@@ -104,3 +104,17 @@ h1, h2, h3, h4, h5, h6 {
 .post-body div {
   display: block ruby;
 }
+
+.ant-comment-content-author-name {
+  color:inherit;
+  opacity: 0.85;
+}
+
+.ant-comment-actions > li {
+  color:inherit;
+  opacity: 0.85;
+}
+.ant-comment-actions > li > span {
+  color:inherit;
+  opacity: 0.85;
+}

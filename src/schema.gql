@@ -545,6 +545,7 @@ type Mutation {
   updateMeNotification(notificationId: String!): Boolean!
   updateMePost(post: UpdatePostInput!): Post!
   updateMockSet(set: UpdateLoksewaMockSetInput!): LoksewaMockSet!
+  updatePost(post: UpdatePostInput!): Post!
   updateQuestion(question: UpdateLoksewaQuestionInput!): LoksewaQuestion!
   updateSetQuestion(question: UpdateSetQuestionInput!): MockQuestionEdge!
   updateSubCategory(subCategory: UpdateSubCategoryInput!): Category!
@@ -623,7 +624,7 @@ type Post {
   deleted: Boolean!
   editor: User
   editorId: String
-  flag: [Flag!]!
+  flag: [Flag]
   hotShot: Hotshot
 
   """Unique UUID string"""
@@ -688,7 +689,7 @@ type Query {
   getMockSet(setId: String!): LoksewaMockSet!
   getMockSets(categoryId: String!): [LoksewaMockSet!]!
   getPost(id: String!): Post!
-  getPosts(after: String, before: String, first: Int, last: Int, skip: Int): PostConnection!
+  getPosts(after: String, before: String, categoryId: String, contains: String, editorId: String, first: Int, last: Int, skip: Int, status: PostStatus, subCategoryId: String, type: PostType, userId: String): PostConnection!
   getQuestions(after: String, before: String, categoryId: String, first: Int, last: Int, skip: Int): LoksewaQuestionConnection!
   getTag(id: String!): Category!
   getTags(after: String, before: String, contains: String, first: Int, last: Int, skip: Int): TagConnection!
@@ -834,11 +835,11 @@ input UpdateCategoryInput {
 }
 
 input UpdateCommentInput {
-  body: String!
+  body: String
   id: String!
   parentId: String
-  postId: String!
-  userId: String!
+  postId: String
+  userId: String
 }
 
 input UpdateLoksewaMockCategoryInput {
