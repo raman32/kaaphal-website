@@ -3,6 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "description": "kaaphal is a website for information and articles",
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "dev": "nodemon src/main.ts",
     "build:clean": "rimraf .next",
