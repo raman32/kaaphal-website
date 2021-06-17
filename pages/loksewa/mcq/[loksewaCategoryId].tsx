@@ -1,24 +1,22 @@
 import { Pagination, Spin } from 'antd';
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { GetLoksewaCategoriesDocument, GetLoksewaCategoriesQueryResult, LoksewaQuestion } from '../../../gql';
-import { clientForStaticRendering } from '../../../lib/apollo';
+import { LoksewaQuestion } from '../../../gql';
 import LoksewaCategoryPicker from '../../../lib/components/atomic/LoksewaCategoryPicker';
 import { Question } from '../../../lib/components/Question/Index';
 import { useScrollQuestion } from '../../../lib/hooks/useScroll';
 import { defualtLayout } from '../../layouts/default';
 
-const LoksewaMCQQuestions = ({ params }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element => {
+const LoksewaMCQQuestions = (): JSX.Element => {
     const router = useRouter();
     if (router.isFallback) return <div className="flex flex-col w-full justify-center items-center"> <Spin /> Loading </div>
-    const [next, prev, gotoPage, page, { data, error, loading }] = useScrollQuestion({ limit: 10, categoryId: params.loksewaCategoryId })
+    const [next, prev, gotoPage, page, { data, error, loading }] = useScrollQuestion({ limit: 10, categoryId: router.query.loksewaCategoryId as string })
     //TODO use Store to determine the logged in state
     if (error && error.message === 'Forbidden resource') return <div className="flex flex-col w-full justify-center items-center"> <Spin /> Please Login to practice question </div>
     return (
         <div className="w-full px-4 sm:px-8" role="application">
             <h1 className="text-xl my-4 text-center">Loksewa Multiple Choice Question</h1>
-            <h4>Category: <LoksewaCategoryPicker value={params.loksewaCategoryId} className="w-56 mx-4" onChange={(value) => { router.push('/loksewa/mcq/' + value) }} /></h4>
+            <h4>Category: <LoksewaCategoryPicker value={router.query.loksewaCategoryId} className="w-56 mx-4" onChange={(value) => { router.push('/loksewa/mcq/' + value) }} /></h4>
             <div className="text-right my-4">
                 {data && <Pagination defaultCurrent={1} total={data.getQuestions.totalCount} pageSize={10} showSizeChanger={false} current={page + 1} onChange={(page_) => {
                     gotoPage(page_ - 1);
@@ -37,20 +35,20 @@ const LoksewaMCQQuestions = ({ params }: InferGetStaticPropsType<typeof getStati
 LoksewaMCQQuestions.getLayout = defualtLayout
 
 
-export const getStaticPaths: GetStaticPaths = async () => {
-    const data = await clientForStaticRendering.query({ query: GetLoksewaCategoriesDocument }) as GetLoksewaCategoriesQueryResult
-    const paths = data.data.getLoksewaCategories.map((categories) => ({
-        params: { loksewaCategoryId: categories.id },
-    }))
-    return { paths, fallback: false }
-}
+// export const getStaticPaths: GetStaticPaths = async () => {
+//     const data = await clientForStaticRendering.query({ query: GetLoksewaCategoriesDocument }) as GetLoksewaCategoriesQueryResult
+//     const paths = data.data.getLoksewaCategories.map((categories) => ({
+//         params: { loksewaCategoryId: categories.id },
+//     }))
+//     return { paths, fallback: false }
+// }
 export default LoksewaMCQQuestions;
 
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-    return {
-        props: {
-            params: params
-        },
-    }
-}
+// export const getStaticProps: GetStaticProps = async ({ params }) => {
+//     return {
+//         props: {
+//             params: params
+//         },
+//     }
+// }

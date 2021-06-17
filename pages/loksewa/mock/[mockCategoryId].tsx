@@ -1,18 +1,16 @@
 import { Divider, Spin } from 'antd';
 import { observer } from 'mobx-react';
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { GetLoksewaMockCategoriesDocument, GetLoksewaMockCategoriesQueryResult, MockSetType, useGetLoksewaMockCategoriesQuery, useGetMockCategoryQuery, useGetMockSetsQuery } from '../../../gql';
-import { clientForStaticRendering } from '../../../lib/apollo';
+import { MockSetType, useGetMockCategoryQuery, useGetMockSetsQuery } from '../../../gql';
 import { DollorIcon } from '../../../lib/components/Icons/Index';
 import { defualtLayout } from '../../layouts/default';
 
-const LoksewaMCQQuestions = ({ params }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element => {
+const LoksewaMCQQuestions = (): JSX.Element => {
     const router = useRouter();
-    const { data: mockCategory } = useGetMockCategoryQuery({ variables: { categoryId: params.mockCategoryId } })
-    const { data, error, loading } = useGetMockSetsQuery({ variables: { categoryId: params.mockCategoryId } })
+    const { data: mockCategory } = useGetMockCategoryQuery({ variables: { categoryId: router.query.mockCategoryId as string } })
+    const { data, error, loading } = useGetMockSetsQuery({ variables: { categoryId: router.query.mockCategoryId as string } })
     if (router.isFallback) return <div className="flex flex-col h-full justify-center items-center"> <Spin /> Loading </div>
     return (
         <div className="w-full px-4 sm:px-8 text-center" role="application">
@@ -39,20 +37,20 @@ const LoksewaMCQQuestions = ({ params }: InferGetStaticPropsType<typeof getStati
 LoksewaMCQQuestions.getLayout = LoksewaMCQQuestions.getLayout = defualtLayout
 
 
-export const getStaticPaths: GetStaticPaths = async () => {
-    const data = await clientForStaticRendering.query({ query: GetLoksewaMockCategoriesDocument }) as GetLoksewaMockCategoriesQueryResult
-    const paths = data.data.getLoksewaMockCategories.map((categories) => ({
-        params: { mockCategoryId: categories.id },
-    }))
-    return { paths, fallback: false }
-}
+// export const getStaticPaths: GetStaticPaths = async () => {
+//     const data = await clientForStaticRendering.query({ query: GetLoksewaMockCategoriesDocument }) as GetLoksewaMockCategoriesQueryResult
+//     const paths = data.data.getLoksewaMockCategories.map((categories) => ({
+//         params: { mockCategoryId: categories.id },
+//     }))
+//     return { paths, fallback: false }
+// }
 export default observer(LoksewaMCQQuestions);
 
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-    return {
-        props: {
-            params: params
-        },
-    }
-}
+// export const getStaticProps: GetStaticProps = async ({ params }) => {
+//     return {
+//         props: {
+//             params: params
+//         },
+//     }
+// }

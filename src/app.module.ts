@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { RenderModule } from 'nest-next'
 import Next from 'next'
 import { join } from 'path/posix'
+import { host } from '../utils/GlobalConstants'
 import { ApiModule } from './api/api.module'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -20,11 +21,11 @@ import config from './config/config'
     RenderModule.forRootAsync(Next({ dev: process.env.NODE_ENV !== 'production' }), { viewsDir: '' }),
     GraphQLModule.forRoot({
       debug: false,
-      playground: true,
+      playground: false,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       cors: {
-        origin: 'http://localhost:3000',
+        origin: host,
         credentials: true
       },
       buildSchemaOptions: {

@@ -1,11 +1,8 @@
 import { Divider, Modal, Spin } from 'antd';
 import Countdown from 'antd/lib/statistic/Countdown';
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { LoksewaQuestion, useGetMockSetQuery } from '../../../../gql';
-import { clientForStaticRendering } from '../../../../lib/apollo';
-import { DollorIcon } from '../../../../lib/components/Icons/Index';
 import { Question } from '../../../../lib/components/Question/Index';
 import { defualtLayout } from '../../../layouts/default';
 
