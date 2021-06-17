@@ -66,6 +66,7 @@ model Post {
   body          String?
   url           String?        @unique
   title         String
+  excerpt       String?
   language      Language       @default(value: en)
   user          User?          @relation(name: "UserOnPost", fields: [userId], references: [id])
   userId        String?

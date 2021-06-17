@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { Language, PostStatus, PostType } from '../post.model';
+import { ScholarshipLevel } from '../scholarship.model';
 @InputType()
 export class CreatePostInput {
     @Field()
@@ -8,6 +9,8 @@ export class CreatePostInput {
     body: string;
     @Field({ nullable: true })
     url: string;
+    @Field({ nullable: true })
+    excerpt: string;
     @Field({ nullable: true })
     slug: string;
     @Field({ nullable: true })
@@ -34,4 +37,16 @@ export class CreatePostInput {
 export class UpdatePostInput extends CreatePostInput {
     @Field()
     id: string;
+}
+
+@InputType()
+export class CreateScholarshipInput {
+    @Field({ nullable: true })
+    country: string
+    @Field(type => ScholarshipLevel)
+    level: ScholarshipLevel
+    @Field({ nullable: true })
+    startsAt: Date
+    @Field({ nullable: true })
+    deadlineAt: Date
 }

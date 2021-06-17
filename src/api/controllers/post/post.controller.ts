@@ -24,6 +24,7 @@ export class PostController {
         const post = await this.prisma.post.findUnique({
             where: { slug: slug }, include: {
                 user: { include: { image: true } }, comments: {
+                    where: { parentId: null },
                     include: { user: true }
                 },
                 tags: true,

@@ -20,7 +20,6 @@ interface Props {
 function DefaultLayout({ children }: Props): JSX.Element {
     const [collapsed, setCollapased] = useState(true);
     const store = useStore();
-
     const { data, loading, error } = useGetMeQuery({ skip: skipper() },
     );
     useEffect(() => {
@@ -29,11 +28,11 @@ function DefaultLayout({ children }: Props): JSX.Element {
         }
     }, [data]);
     const onTriggerLogout = () => {
+        store.stopStore();
         localStorage.clear();
         logout();
         Router.push('/');
     };
-    console.log(store.isDark)
     return (
         <Layout className={clsx(store.isDark ? 'bg-gray-900 text-gray-100' : 'bg-white text-black')}>
             <Header className={clsx(store.isDark ? 'bg-gray-900 text-gray-100' : 'bg-white text-black border-solid border-gray-100 border-b-2', 'flex flex-row px-4')}  >
@@ -45,7 +44,7 @@ function DefaultLayout({ children }: Props): JSX.Element {
                     <img src='https://kaaphal.com/wp-content/uploads/2020/09/cropped-Wide-Kp.png' className="h-9 mx-2" />
                 </div>
                 <Menu mode="horizontal" selectable={false} className={clsx(store.isDark ? 'bg-gray-900 text-gray-100' : 'bg-white text-black', 'hidden lg:block min-w-max flex-1 border-none')}>
-                    <SubMenu level={1} icon={<ArticleIcon className="w-6 h-6" />} title="Article" className="px-2"  >
+                    <SubMenu level={1} icon={<ArticleIcon className="w-6 h-6" />} title="Article" className="px-2" onTitleClick={() => Router.push('/Article')} >
                         <SubMenu level={2} title="Literature"  >
                             <Menu.Item >Peom</Menu.Item>
                             <Menu.Item >Story</Menu.Item>
@@ -57,16 +56,16 @@ function DefaultLayout({ children }: Props): JSX.Element {
                         <Menu.Item >Other</Menu.Item>
                     </SubMenu>
 
-                    <Menu.Item icon={<ScholarshipIcon />} className="mx-2">
+                    <Menu.Item icon={<ScholarshipIcon />} className="mx-2" onClick={() => Router.push('/Scholarship')}>
                         Scholarship
                     </Menu.Item>
                     <SubMenu icon={<LoksewaIcon />} title="Loksewa" className="mx-2" onTitleClick={() => Router.push('/loksewa')}>
                         <Menu.Item ><Link href="/loksewa/mcq">MCQ</Link></Menu.Item>
                         <Menu.Item ><Link href="/loksewa/mock">Mock Test</Link></Menu.Item>
-                        <Menu.Item >Notices and Reading Materials</Menu.Item>
-                        <Menu.Item >Syllabus and Other</Menu.Item>
+                        <Menu.Item ><Link href="/loksewa/post">Notices and Reading Materials</Link></Menu.Item>
+                        <Menu.Item ><Link href="/loksewa/other">Syllabus and Other</Link></Menu.Item>
                     </SubMenu>
-                    <SubMenu icon={<InformationIcon />} title="Information" className="mx-2">
+                    <SubMenu icon={<InformationIcon />} title="Information" className="mx-2" onTitleClick={() => Router.push('/Information')}>
                         <Menu.Item >Special Info</Menu.Item>
                         <Menu.Item >Exams and Standarized Test</Menu.Item>
                         <Menu.Item >How to ?</Menu.Item>
@@ -78,7 +77,7 @@ function DefaultLayout({ children }: Props): JSX.Element {
                         <>
                             <Notification />
                             <SubMenu icon={<UserAvatar user={data.me as User} />} style={{ marginLeft: 4, marginRight: 2 }} >
-                                <Menu.Item > Dark mode &nbsp;<Switch onChange={(checked) => checked ? store.toggleDark() : store.toggleLight()} /></Menu.Item>
+                                <Menu.Item > Dark mode &nbsp;<Switch checked={store.isDark} onChange={(checked) => checked ? store.toggleDark() : store.toggleLight()} /></Menu.Item>
                                 <Menu.Item ><Link href="/user/profile">Profile</Link></Menu.Item>
                                 <Menu.Item >Settings</Menu.Item>
                                 <Menu.Item onClick={onTriggerLogout}>Logout</Menu.Item>

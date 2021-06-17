@@ -29,7 +29,32 @@ function CreateArticle(): JSX.Element {
     }, [data, error])
 
     const [form] = Form.useForm();
-    return (<Form form={form} layout="vertical" name="createArticle" onFinish={() => { createPost({ variables: { post: { ...form.getFieldsValue(), status: PostStatus.Unverified, } } }) }} >
+    return (<Form form={form} layout="vertical" name="createArticle" onFinish={() => {
+        createPost({
+            variables: {
+                post: {
+                    title: form.getFieldValue('title'),
+                    body: form.getFieldValue('body'),
+                    excerpt: form.getFieldValue('excerpt'),
+                    slug: form.getFieldValue('slug'),
+                    categoryId: form.getFieldValue('categoryId'),
+                    subCategoryId: form.getFieldValue('subCategoryId'),
+                    language: form.getFieldValue('language'),
+                    tags: form.getFieldValue('tags'),
+                    type: form.getFieldValue('type'),
+                    url: form.getFieldValue('url'),
+                    userId: form.getFieldValue('userId'),
+                    status: PostStatus.Unverified,
+                }, scholarship: form.getFieldValue('type') === PostType.Scholarships ?
+                    {
+                        level: form.getFieldValue('level'),
+                        country: form.getFieldValue('country'),
+                        deadlineAt: form.getFieldValue('deadlineAt'),
+                        startsAt: form.getFieldValue('startsAt')
+                    } : undefined
+            }
+        })
+    }} >
         <div className="flex flex-row flex-wrap">
             <Form.Item name="title" label="Title" rules={[{ required: true }]} className="w-80 mx-4" >
                 <Input />

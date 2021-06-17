@@ -1,5 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap');
+body {
+  line-height: 1.6rem;
+  font-family: 'Open Sans', sans-serif;
+}
 h1, h2, h3, h4, h5, h6 {
-    color: inherit;
+  font-family: 'Lato', sans-serif;  
+  color: inherit;
 }
 .abcdef {
     color: lightgreen;
@@ -15,6 +21,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 .box-shadow-light-on-hover :hover {
     box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12), 0 5px 12px 4px rgba(0, 0, 0, 0.09);
+}
+
+
+.post-body p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .post-body table { 
@@ -117,4 +129,111 @@ h1, h2, h3, h4, h5, h6 {
 .ant-comment-actions > li > span {
   color:inherit;
   opacity: 0.85;
+}
+.ant-radio-button-wrapper {
+  color:inherit;
+  background-color: inherit;
+}
+.ant-radio-group{
+  color: inherit;
+}
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  background-color: inherit;
+}
+.ant-pagination-item-active {
+  background-color: inherit;
+}
+.ant-pagination-item {
+  background-color: inherit;
+}
+.ant-pagination{
+  color:inherit;
+}
+.ant-pagination-prev, .ant-pagination-next, .ant-pagination-jump-prev, .ant-pagination-jump-next {
+  color:inherit;
+}
+.ant-pagination-prev .ant-pagination-item-link, .ant-pagination-next .ant-pagination-item-link{
+  background-color:inherit;
+}
+.ant-pagination-prev button, .ant-pagination-next button{
+  color:inherit;
+}
+.ant-pagination-disabled .ant-pagination-item-link, .ant-pagination-disabled:hover .ant-pagination-item-link, .ant-pagination-disabled:focus-visible .ant-pagination-item-link {
+  color: inherit;
+  opacity: 0.50;
+}
+.ant-pagination-item a{
+  color:inherit;
+}
+.ant-select{
+  color:inherit;
+}
+.ant-select-arrow{
+  color:inherit;
+}
+.ant-select:not(.ant-select-customize-input) .ant-select-selector{
+  background-color:inherit;
+}
+.ant-form-item-has-error .ant-select:not(.ant-select-disabled):not(.ant-select-customize-input) .ant-select-selector{
+  background-color: inherit;
+}
+.ant-select-clear{
+  background-color: inherit;
+  color: inherit;
+  opacity: 1;
+}
+.ant-select-multiple .ant-select-selection-item{
+  color:#000;
+}
+.ant-form{
+  color:inherit;
+}
+.ant-form-item{
+  color:inherit
+}
+.ant-input{
+  color: inherit;
+  opacity: 0.85;
+  background-color: inherit;
+}
+.ant-input::placeholder{
+  color: inherit;
+  opacity: 0.85;
+}
+.ant-form-item-label > label {
+  color:inherit
+}
+.ant-form-item-has-error .ant-input, .ant-form-item-has-error .ant-input-affix-wrapper, .ant-form-item-has-error .ant-input:hover, .ant-form-item-has-error .ant-input-affix-wrapper:hover {
+  background-color: inherit;
+}
+.ant-result-title {
+  color:inherit;
+}
+.ant-result-subtitle{
+  color:inherit;
+}
+.ant-picker{
+  color:inherit;
+  background-color: inherit;
+}
+.ant-picker-input > input{
+  color:inherit;
+  background:inherit ;
+}
+.ant-picker-suffix{
+  color: inherit;
+  background: inherit;
+  opacity: .75;
+}
+.ant-picker-clear{
+  color: inherit;
+  background: inherit;
+  opacity: 1;
+}
+.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab, .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab{
+  background-color: inherit;
+
+}
+.ant-tabs {
+  color:inherit
 }

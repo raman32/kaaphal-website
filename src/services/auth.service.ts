@@ -62,22 +62,20 @@ export class AuthService {
                 invalid: true,
             };
         }
-        const user = await this.prisma.user.findUnique({
+        let user = await this.prisma.user.findUnique({
             where: { email: extractedToken.email },
         });
 
-        // eslint-disable-next-line
-        const currentUser = user ? user
-            : await this.prisma.user.create({
-                data: {
-                    email: extractedToken.email.toLowerCase(),
-                    firstName: '',
-                },
-            });
+        if (!user) user = await this.prisma.user.create({
+            data: {
+                email: extractedToken.email.toLowerCase(),
+                firstName: '',
+            },
+        });
         const session = await this.sessionService.authenticate(user);
         const deliveryData = {
             auth: {
-                user: currentUser,
+                user: user,
                 accessToken: session.authToken,
                 refreshToken: session.refreshToken,
             },
@@ -123,25 +121,23 @@ export class AuthService {
         image: string,
         accessToken: string
     }): Promise<{ auth?: Auth; isRegistered?: boolean; invalid: boolean }> {
-        const user = await this.prisma.user.findUnique({
+        let user = await this.prisma.user.findUnique({
             where: { email: email },
         });
 
-        // eslint-disable-next-line
-        const currentUser = user ? user
-            : await this.prisma.user.create({
-                data: {
-                    email: email,
-                    firstName: firstName,
-                    lastName: lastName,
-                    image: { connect: { id: (await this.getPictureFromUrl(image)).id } },
-                    displayName: parseFullName(firstName, '', lastName)
-                },
-            });
+        if (!user) user = await this.prisma.user.create({
+            data: {
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                image: { connect: { id: (await this.getPictureFromUrl(image)).id } },
+                displayName: parseFullName(firstName, '', lastName)
+            },
+        });
         const session = await this.sessionService.authenticate(user, null, accessToken);
         const deliveryData = {
             auth: {
-                user: currentUser,
+                user: user,
                 accessToken: session.authToken,
                 refreshToken: session.refreshToken,
             },
@@ -161,25 +157,23 @@ export class AuthService {
         image: string,
         accessToken: string
     }): Promise<{ auth?: Auth; isRegistered?: boolean; invalid: boolean }> {
-        const user = await this.prisma.user.findUnique({
+        let user = await this.prisma.user.findUnique({
             where: { email: email },
         });
 
-        // eslint-disable-next-line
-        const currentUser = user ? user
-            : await this.prisma.user.create({
-                data: {
-                    email: email,
-                    firstName: firstName,
-                    lastName: lastName,
-                    image: { connect: { id: (await this.getPictureFromUrl(image)).id } },
-                    displayName: parseFullName(firstName, '', lastName)
-                },
-            });
+        if (!user) user = await this.prisma.user.create({
+            data: {
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                image: { connect: { id: (await this.getPictureFromUrl(image)).id } },
+                displayName: parseFullName(firstName, '', lastName)
+            },
+        });
         const session = await this.sessionService.authenticate(user, accessToken, null);
         const deliveryData = {
             auth: {
-                user: currentUser,
+                user: user,
                 accessToken: session.authToken,
                 refreshToken: session.refreshToken,
             },

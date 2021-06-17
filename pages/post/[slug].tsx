@@ -15,7 +15,7 @@ import { PostDto } from '../../src/api/common/dto/post.dto';
 const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const postParsed = JSON.parse(post) as PostDto
     return (<div className="mx-4 sm:mx-8 w-full">
-        <div className="w-full shadow h-80 sm:h-96 text-center flex flex-col justify-center items-center bg-indigo-500 bg-gradient-to-br text-white"><UserAvatar user={postParsed.user} size={96} className="border-gray-500 border-solid border-2" />
+        <div className="w-full shadow h-80 sm:h-96 text-center flex flex-col justify-center items-center bg-indigo-500 bg-gradient-to-br text-white"><UserAvatar user={postParsed.user as User} size={96} className="border-gray-500 border-solid border-2" />
             <h1 className="text-xl font-bold">
                 {postParsed.title}
             </h1>
@@ -25,7 +25,7 @@ const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProp
             </h5>
 
         </div>
-        <span className="italic"> {postParsed.status === 'published' ? 'Published On: ' + moment(postParsed.publishedAt).format("MMM-DD-YYYY") :
+        <span className="italic"> {postParsed.status === 'published' ? 'Published On: ' + moment(postParsed.publishedAt).format('MMM-DD-YYYY') :
             <Tooltip title="Kaaphal take articles from the user and verify that the article is not fake, plagarized, misleading, or inappropriate for our users. As a bonus we also optimized our users articles for Search Engines." >
                 {'This article is still in ' + postParsed.status + ' status. If you have recently submitted the post then please be patience while we are working to review the article.'}</Tooltip>}</span>
         <div className="my-4 text-justify ">

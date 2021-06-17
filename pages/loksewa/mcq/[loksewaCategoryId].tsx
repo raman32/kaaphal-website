@@ -1,19 +1,20 @@
-import { Button, Pagination, Radio, Space, Spin } from 'antd';
+import { Pagination, Spin } from 'antd';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { GetLoksewaCategoriesDocument, GetLoksewaCategoriesQueryResult, LoksewaQuestion, useGetQuestionsQuery } from '../../../gql';
+import { GetLoksewaCategoriesDocument, GetLoksewaCategoriesQueryResult, LoksewaQuestion } from '../../../gql';
 import { clientForStaticRendering } from '../../../lib/apollo';
 import LoksewaCategoryPicker from '../../../lib/components/atomic/LoksewaCategoryPicker';
-import { TickIcon } from '../../../lib/components/Icons/Index';
 import { Question } from '../../../lib/components/Question/Index';
 import { useScrollQuestion } from '../../../lib/hooks/useScroll';
-import DefaultLayout, { defualtLayout } from '../../layouts/default';
+import { defualtLayout } from '../../layouts/default';
 
 const LoksewaMCQQuestions = ({ params }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element => {
     const router = useRouter();
-    if (router.isFallback) return <div className="flex flex-col h-full justify-center items-center"> <Spin /> Loading </div>
+    if (router.isFallback) return <div className="flex flex-col w-full justify-center items-center"> <Spin /> Loading </div>
     const [next, prev, gotoPage, page, { data, error, loading }] = useScrollQuestion({ limit: 10, categoryId: params.loksewaCategoryId })
+    //TODO use Store to determine the logged in state
+    if (error && error.message === 'Forbidden resource') return <div className="flex flex-col w-full justify-center items-center"> <Spin /> Please Login to practice question </div>
     return (
         <div className="w-full px-4 sm:px-8" role="application">
             <h1 className="text-xl my-4 text-center">Loksewa Multiple Choice Question</h1>

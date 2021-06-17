@@ -25,7 +25,7 @@ export class CommentResolver {
         const questionConnection = findManyCursorConnection(
             (args) =>
                 this.prisma.comment.findMany({
-                    where: { postId: postId, parentId: undefined },
+                    where: { postId: postId, parentId: null },
                     ...args, skip: skip ? skip : 0,
                     include: {
                         user: { include: { image: { select: { preview: true } } } },

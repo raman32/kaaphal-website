@@ -3,10 +3,11 @@ import { UserOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link'
 import useStore from '../../store/storeProvider';
-import { useGetMeQuery, User } from '../../gql';
+import { useGetMeQuery, User, UserRole } from '../../gql';
 import { logout, skipper } from '../../lib/accessToken';
 import Router from 'next/router';
 import UserAvatar from '../../lib/components/atomic/UserAvatar';
+import Error from 'next/error';
 const { Header, Content, Footer, Sider } = Layout;
 interface Props {
     children: React.ReactNode
@@ -15,7 +16,7 @@ function AdminLayout({ children }: Props): JSX.Element {
     const [collapsed, setCollapased] = useState(true);
     const store = useStore();
 
-    const { data, loading, error } = useGetMeQuery({ skip: skipper() },
+    const { data, loading, error } = useGetMeQuery({ skip: skipper(), ssr: false },
     );
     useEffect(() => {
         if (data && !store.user) {
@@ -27,7 +28,8 @@ function AdminLayout({ children }: Props): JSX.Element {
         logout();
         Router.push('/');
     };
-    if (!data) return <div className="flex flex-col w-screen h-screen justify-center items-center"> <Spin /> Loading </div>
+    if (!data) return error ? <Error statusCode={404} /> : <div className="flex flex-col w-screen h-screen justify-center items-center"> <Spin /> Loading </div>
+    if (data && data.me.role === UserRole.User) return <Error statusCode={403} />
     return (
         <Layout >
             <Sider
@@ -49,7 +51,7 @@ function AdminLayout({ children }: Props): JSX.Element {
                     <Menu.SubMenu key="sub1" icon={<UserOutlined />} title="Article Management">
                         <Menu.Item key="1"><Link href='/admin/article/create'>Create Article</Link></Menu.Item>
                         <Menu.Item key="2"><Link href='/admin/article/manage'>Edit Article</Link></Menu.Item>
-                        <Menu.Item key="3"><Link href='/admin/article/VerifyArticle'>Verify Article</Link></Menu.Item>
+                        <Menu.Item key="3"><Link href='/admin/article/verify'>Verify Article</Link></Menu.Item>
                         <Menu.Item key="4"><Link href='/admin/article/category'>Create Category</Link></Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key="sub2" icon={<UserOutlined />} title="Loksewa">

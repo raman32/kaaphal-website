@@ -1537,6 +1537,18 @@
             "deprecationReason": null
           },
           {
+            "name": "excerpt",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "imageId",
             "description": null,
             "type": {
@@ -1697,6 +1709,69 @@
             "type": {
               "kind": "ENUM",
               "name": "ReactionType",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CreateScholarshipInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "country",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "deadlineAt",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Date",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "level",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "ScholarshipLevel",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "startsAt",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Date",
               "ofType": null
             },
             "defaultValue": null,
@@ -4803,6 +4878,18 @@
                 "defaultValue": null,
                 "isDeprecated": false,
                 "deprecationReason": null
+              },
+              {
+                "name": "scholarship",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "CreateScholarshipInput",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
               }
             ],
             "type": {
@@ -6297,6 +6384,18 @@
           },
           {
             "name": "editorId",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "excerpt",
             "description": null,
             "args": [],
             "type": {
@@ -9264,6 +9363,18 @@
           },
           {
             "name": "categoryId",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "excerpt",
             "description": null,
             "type": {
               "kind": "SCALAR",

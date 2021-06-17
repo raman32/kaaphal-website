@@ -3,10 +3,12 @@ import useStore from '../../../../store/storeProvider';
 import { Comment, Form, Button, message } from 'antd';
 import UserAvatar from '../../atomic/UserAvatar';
 import TextArea from 'antd/lib/input/TextArea';
+import Link from 'next/link';
 export function CommentInput({ postId, parentId, onSuccess, onError }: { postId: string, parentId?: string, onSuccess: () => void, onError: () => void }): JSX.Element {
     const store = useStore();
     const [createComment] = useCreateMeCommentMutation();
     const [form] = Form.useForm();
+    if (!store.user) return <div className="my-4"> <Link href="/login">Please Login to Comment</Link></div>
     return <Comment
         avatar={
             <UserAvatar user={store.user} />

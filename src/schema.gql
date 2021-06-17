@@ -175,6 +175,7 @@ input CreateLoksewaQuestionInput {
 input CreatePostInput {
   body: String
   categoryId: String
+  excerpt: String
   imageId: String
   language: Language = en
   slug: String
@@ -190,6 +191,13 @@ input CreatePostInput {
 input CreateReactionInput {
   postId: String!
   type: ReactionType
+}
+
+input CreateScholarshipInput {
+  country: String
+  deadlineAt: Date
+  level: ScholarshipLevel!
+  startsAt: Date
 }
 
 input CreateSetQuestionInput {
@@ -530,7 +538,7 @@ type Mutation {
   createMeComment(comment: CreateCommentInput!): Comment!
   createMePost(post: CreatePostInput!): Post!
   createMockSet(set: CreateLoksewaMockSetInput!): LoksewaMockSet!
-  createPost(post: CreatePostInput!): Post!
+  createPost(post: CreatePostInput!, scholarship: CreateScholarshipInput): Post!
   createQuestion(question: CreateLoksewaQuestionInput!): LoksewaQuestion!
   createSetQuestion(question: CreateSetQuestionInput!): MockQuestionEdge!
   createSubCategory(subCategory: CreateSubCategoryInput!): Category!
@@ -631,6 +639,7 @@ type Post {
   deleted: Boolean!
   editor: User
   editorId: String
+  excerpt: String
   flag: [Flag]
   hotShot: Hotshot
 
@@ -891,6 +900,7 @@ input UpdateLoksewaQuestionInput {
 input UpdatePostInput {
   body: String
   categoryId: String
+  excerpt: String
   id: String!
   imageId: String
   language: Language = en

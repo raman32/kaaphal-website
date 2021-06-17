@@ -3,7 +3,7 @@ import { User as User_ } from '.prisma/client';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { PaginationArgs } from '../../../common/pagination/pagination.args';
-import { CreatePostInput, UpdatePostInput } from '../../../models/inputs/post.input';
+import { CreatePostInput, CreateScholarshipInput, UpdatePostInput } from '../../../models/inputs/post.input';
 import { PostConnection } from '../../../models/pagination/post-connection';
 import { Post, PostStatus, PostType } from '../../../models/post.model';
 import { User, UserRole } from '../../../models/user.model';
@@ -17,6 +17,7 @@ import { GQLGuard } from '../auth/guards/gql.guard';
 import { RolesGuard } from '../auth/guards/role.guard';
 import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { Tag } from '../../../models/tag.model';
+import { Scholarship } from '../../../models/scholarship.model';
 
 @Resolver(of => Post)
 @UseGuards(GQLGuard)
@@ -31,7 +32,7 @@ export class PostResolver {
     }
 
     @Query(returns => PostConnection)
-    async getPosts(@Args() { after, before, first, last }: PaginationArgs,
+    async getPosts(@Args() { after, before, first, last, skip }: PaginationArgs,
         @Args({ name: 'contains', nullable: true, type: () => String, }) contains?: string,
         @Args({ name: 'type', nullable: true, type: () => PostType, }) type?: PostType,
         @Args({ name: 'status', nullable: true, type: () => PostStatus, }) status?: PostStatus,
@@ -71,6 +72,7 @@ export class PostResolver {
                         tags: true,
                         flags: true,
                         editor: true,
+                        reactions: true,
                         _count: {
                             select: {
                                 comments: true,
@@ -79,6 +81,7 @@ export class PostResolver {
 
 
                     },
+                    skip: skip,
                 }),
             () => this.prisma.post.count(),
             { first, last, before, after },
@@ -89,8 +92,14 @@ export class PostResolver {
     @Mutation(returns => Post)
     @Roles(UserRole.admin, UserRole.moderator)
     @UseGuards(RolesGuard)
-    async createPost(@Args('post') input: CreatePostInput): Promise<Post_> {
+    async createPost(@Args('post') input: CreatePostInput,
+        @Args({ name: 'scholarship', type: () => CreateScholarshipInput, nullable: true }) scholarship: CreateScholarshipInput): Promise<Post_> {
+        if (input.type == PostType.scholarships) {
+            const { id } = await this.prisma.scholarship.create({ data: scholarship })
+            return this.postService.createPost({ ...input, scholarshipId: id })
+        }
         return this.postService.createPost({ ...input })
+
 
     }
 

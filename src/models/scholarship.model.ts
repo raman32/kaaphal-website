@@ -3,14 +3,14 @@ import { BaseModel } from './base.model';
 import { Post } from './post.model';
 
 export enum ScholarshipLevel {
-    language,
-    training,
-    research,
-    k12,
-    bachelors,
-    masters,
-    phd,
-    postgrad
+    language = 'language',
+    training = 'training',
+    research = 'research',
+    k12 = 'k12',
+    bachelors = 'bachelors',
+    masters = 'masters',
+    phd = 'phd',
+    postgrad = 'postgrad'
 }
 
 registerEnumType(ScholarshipLevel, { name: 'ScholarshipLevel' })

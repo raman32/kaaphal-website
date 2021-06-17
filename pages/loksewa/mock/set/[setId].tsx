@@ -12,9 +12,11 @@ import { defualtLayout } from '../../../layouts/default';
 const MockSet = (): JSX.Element => {
     const router = useRouter();
     console.log(router.query);
-    const { data } = useGetMockSetQuery({ variables: { setId: router.query.setId as string } })
+    const { data, error, loading } = useGetMockSetQuery({ variables: { setId: router.query.setId as string } })
     const [visible, setVisible] = useState(true);
-    if (!data) return <div className="flex flex-col h-full justify-center items-center"> <Spin /> Loading </div>
+    if (loading) return <div className="flex flex-col w-full justify-center items-center"> <Spin /> Loading </div>
+    //TODO use Store to determine the logged in state
+    if (error && error.message === 'Forbidden resource') return <div className="flex flex-col w-full justify-center items-center"> <Spin /> Please Login to practice question </div>
     return (
         <div className="w-full px-4 sm:px-8 " role="application">
             <Modal

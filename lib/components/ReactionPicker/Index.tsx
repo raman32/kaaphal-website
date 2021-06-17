@@ -1,9 +1,12 @@
+import { message } from 'antd';
 import clsx from 'clsx';
+import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { ReactionType, useReactToPostMutation } from '../../../gql';
 import { ReactionDto } from '../../../src/api/common/dto/reaction.dto';
 import useStore from '../../../store/storeProvider';
+import { skipper } from '../../accessToken';
 import { DislikeFilledIcon, DislikeIcon, FireFilledIcon, FireIcon, HappyFilledIcon, HappyIcon, LikeFilledIcon, LikeIcon, SadFilledIcon, SadIcon } from '../Icons/Index';
 
 const reactionsComponents = [
@@ -14,7 +17,7 @@ const reactionsComponents = [
     { label: ReactionType.Sad, icon: <SadIcon className="align-text-top" />, filledIcon: <SadFilledIcon className="align-text-top" />, class: 'text-green-500' }
 ]
 
-function ReactionPicker({ reactions, postId }: { reactions: ReactionDto[], postId: string }): JSX.Element {
+function ReactionPicker({ reactions, postId, selectable = true }: { reactions: ReactionDto[], postId: string, selectable?: boolean }): JSX.Element {
     const store = useStore();
     const [createReaction] = useReactToPostMutation();
     const [selected, setSelected] = useState(-1);
@@ -26,9 +29,13 @@ function ReactionPicker({ reactions, postId }: { reactions: ReactionDto[], postI
         reactions.filter(reaction => reaction.type == ReactionType.Sad).length,
     ] : [0, 0, 0, 0, 0])
     const handleSelect = (index) => {
+        if (!store.user) {
+            message.error('Please Login to React')
+            return;
+        }
         setReaction(prev => prev.map((reaction, index_) => index_ === selected ? reaction - 1 : reaction))
         if (index === selected) {
-            setSelected('')
+            setSelected(-1)
         } else {
             setReaction(prev => prev.map((reaction, index_) => index_ === index ? reaction + 1 : reaction))
             setSelected(index);
@@ -36,15 +43,18 @@ function ReactionPicker({ reactions, postId }: { reactions: ReactionDto[], postI
         createReaction({ variables: { reaction: { type: reactionsComponents[index].label, postId: postId } } })
     }
     useEffect(() => {
-        if (store.user)
-            setSelected(reactionsComponents.findIndex(reaction => reaction.label === reactions.find(reaction => reaction.userId === store.user.id).type))
+        if (store.user && reactions && reactions.length) {
+            const userSelectedReaction = reactions.find(reaction => reaction.userId === store.user.id);
+            if (userSelectedReaction)
+                setSelected(reactionsComponents.findIndex(reaction => reaction.label === userSelectedReaction.type))
+        }
     }, [store.user])
 
     return <div className="align-text-top flex flex-row flex-shrink mt-4 justify-center">
         {
             reactionsComponents.map((reaction, index) => <div key={reaction.label} className={clsx('mx-2', reaction.class)}>
                 {reactions_[index]}
-                <span className="cursor-pointer hover:opacity-70" onClick={() => handleSelect(index)}>
+                <span className={clsx(selectable ? 'cursor-pointer hover:opacity-70' : '')} onClick={() => selectable ? handleSelect(index) : null}>
                     {selected === index ? reaction.filledIcon : reaction.icon}
                 </span>
             </div>)

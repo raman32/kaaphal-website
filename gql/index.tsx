@@ -186,6 +186,7 @@ export type CreateLoksewaQuestionInput = {
 export type CreatePostInput = {
   body?: Maybe<Scalars['String']>;
   categoryId?: Maybe<Scalars['String']>;
+  excerpt?: Maybe<Scalars['String']>;
   imageId?: Maybe<Scalars['String']>;
   language?: Maybe<Language>;
   slug?: Maybe<Scalars['String']>;
@@ -201,6 +202,13 @@ export type CreatePostInput = {
 export type CreateReactionInput = {
   postId: Scalars['String'];
   type?: Maybe<ReactionType>;
+};
+
+export type CreateScholarshipInput = {
+  country?: Maybe<Scalars['String']>;
+  deadlineAt?: Maybe<Scalars['Date']>;
+  level: ScholarshipLevel;
+  startsAt?: Maybe<Scalars['Date']>;
 };
 
 export type CreateSetQuestionInput = {
@@ -596,6 +604,7 @@ export type MutationCreateMockSetArgs = {
 
 export type MutationCreatePostArgs = {
   post: CreatePostInput;
+  scholarship?: Maybe<CreateScholarshipInput>;
 };
 
 
@@ -793,6 +802,7 @@ export type Post = {
   deleted: Scalars['Boolean'];
   editor?: Maybe<User>;
   editorId?: Maybe<Scalars['String']>;
+  excerpt?: Maybe<Scalars['String']>;
   flag?: Maybe<Array<Maybe<Flag>>>;
   hotShot?: Maybe<Hotshot>;
   /** Unique UUID string */
@@ -1140,6 +1150,7 @@ export type UpdateLoksewaQuestionInput = {
 export type UpdatePostInput = {
   body?: Maybe<Scalars['String']>;
   categoryId?: Maybe<Scalars['String']>;
+  excerpt?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   imageId?: Maybe<Scalars['String']>;
   language?: Maybe<Language>;
@@ -1267,6 +1278,7 @@ export type CreateUserMutation = (
 
 export type CreatePostMutationVariables = Exact<{
   post: CreatePostInput;
+  scholarship?: Maybe<CreateScholarshipInput>;
 }>;
 
 
@@ -1691,13 +1703,13 @@ export type GetPostsQuery = (
       { __typename?: 'PostEdge' }
       & { node: (
         { __typename?: 'Post' }
-        & Pick<Post, 'id' | 'views' | 'slug' | 'title' | 'body' | 'categoryId' | 'subCategoryId' | 'language' | 'status'>
+        & Pick<Post, 'id' | 'views' | 'slug' | 'title' | 'excerpt' | 'body' | 'categoryId' | 'subCategoryId' | 'language' | 'status'>
         & { user?: Maybe<(
           { __typename?: 'User' }
           & Pick<User, 'id' | 'displayName' | 'email' | 'firstName' | 'middleName' | 'lastName'>
           & { image?: Maybe<(
             { __typename?: 'File' }
-            & Pick<File, 'preview'>
+            & Pick<File, 'id' | 'preview'>
           )> }
         )>, flag?: Maybe<Array<Maybe<(
           { __typename?: 'Flag' }
@@ -1708,7 +1720,10 @@ export type GetPostsQuery = (
         )>, tags: Array<(
           { __typename?: 'Tag' }
           & Pick<Tag, 'id' | 'name'>
-        )> }
+        )>, reactions?: Maybe<Array<(
+          { __typename?: 'Reaction' }
+          & Pick<Reaction, 'type' | 'userId'>
+        )>> }
       ) }
     )>>, pageInfo: (
       { __typename?: 'PageInfo' }
@@ -1782,7 +1797,7 @@ export type GetUsersQuery = (
         & Pick<User, 'id' | 'firstName' | 'lastName' | 'displayName' | 'email' | 'deleted' | 'status'>
         & { image?: Maybe<(
           { __typename?: 'File' }
-          & Pick<File, 'source' | 'preview'>
+          & Pick<File, 'id' | 'source' | 'preview'>
         )> }
       ) }
     )>> }
@@ -1872,7 +1887,7 @@ export type GetMeQuery = (
     & Pick<User, 'id' | 'firstName' | 'lastName' | 'middleName' | 'displayName' | 'role' | 'email' | 'status'>
     & { image?: Maybe<(
       { __typename?: 'File' }
-      & Pick<File, 'source' | 'preview'>
+      & Pick<File, 'id' | 'source' | 'preview'>
     )> }
   )> }
 );
@@ -1961,7 +1976,7 @@ export type GetCommentsQuery = (
           & Pick<User, 'id' | 'displayName'>
           & { image?: Maybe<(
             { __typename?: 'File' }
-            & Pick<File, 'preview'>
+            & Pick<File, 'id' | 'preview'>
           )> }
         )> }
       ) }
@@ -2062,8 +2077,8 @@ export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutati
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const CreatePostDocument = gql`
-    mutation createPost($post: CreatePostInput!) {
-  createPost(post: $post) {
+    mutation createPost($post: CreatePostInput!, $scholarship: CreateScholarshipInput) {
+  createPost(post: $post, scholarship: $scholarship) {
     id
   }
 }
@@ -2084,6 +2099,7 @@ export type CreatePostMutationFn = Apollo.MutationFunction<CreatePostMutation, C
  * const [createPostMutation, { data, loading, error }] = useCreatePostMutation({
  *   variables: {
  *      post: // value for 'post'
+ *      scholarship: // value for 'scholarship'
  *   },
  * });
  */
@@ -3167,6 +3183,7 @@ export const GetPostsDocument = gql`
           middleName
           lastName
           image {
+            id
             preview
           }
         }
@@ -3180,6 +3197,7 @@ export const GetPostsDocument = gql`
           displayName
         }
         title
+        excerpt
         body
         categoryId
         subCategoryId
@@ -3188,6 +3206,10 @@ export const GetPostsDocument = gql`
         tags {
           id
           name
+        }
+        reactions {
+          type
+          userId
         }
       }
     }
@@ -3377,6 +3399,7 @@ export const GetUsersDocument = gql`
         deleted
         status
         image {
+          id
           source
           preview
         }
@@ -3617,6 +3640,7 @@ export const GetMeDocument = gql`
     middleName
     displayName
     image {
+      id
       source
       preview
     }
@@ -3810,6 +3834,7 @@ export const GetCommentsDocument = gql`
           id
           displayName
           image {
+            id
             preview
           }
         }

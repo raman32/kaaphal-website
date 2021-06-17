@@ -1,6 +1,6 @@
 import { makeObservable, observable, runInAction } from 'mobx';
 import { enableStaticRendering } from 'mobx-react';
-import { makePersistable } from 'mobx-persist-store';
+import { makePersistable, stopPersisting } from 'mobx-persist-store';
 enableStaticRendering(typeof window === 'undefined');
 
 export class Store {
@@ -15,6 +15,10 @@ export class Store {
         });
         typeof window !== 'undefined' &&
             makePersistable(this, { name: 'isDark', properties: ['isDark'], storage: window.localStorage });
+    }
+
+    stopStore = () => {
+        stopPersisting(this);
     }
 
     login = (user) => {

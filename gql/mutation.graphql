@@ -11,8 +11,8 @@ mutation createUser($user: CreateUserInput!) {
   }
 }
 
-mutation createPost($post: CreatePostInput!){
-  createPost(post: $post){
+mutation createPost($post: CreatePostInput!,$scholarship:CreateScholarshipInput){
+  createPost(post: $post,scholarship:$scholarship){
     id
   }
 }

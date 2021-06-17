@@ -13,7 +13,7 @@ function Notification(props: any): JSX.Element {
     const { data, loading, previousData } = useGetMeNotificationQuery({ pollInterval: defaultPollingInterval, ssr: false, skip: skipper() })
     const [updateNotification] = useUpdateMeNotificationMutation();
     useEffect(() => {
-        if (data && previousData && previousData.getMeNotification[0].id !== data.getMeNotification[0].id) {
+        if (data && previousData && (!previousData.getMeNotification[0] || previousData.getMeNotification[0].id !== data.getMeNotification[0].id)) {
             notification.destroy();
             notification.open({
                 message: 'Notification',

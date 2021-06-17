@@ -49,8 +49,8 @@ export class PostService {
         });
         return topPosts;
     }
-    async createPost({ type, title, body, slug, url, userId, categoryId, language, subCategoryId, status, tags, imageId }:
-        { type: PostType, title: string, body: string, slug: string, url: string, userId: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[], imageId?: string }):
+    async createPost({ type, title, body, excerpt, slug, url, userId, categoryId, language, subCategoryId, status, tags, imageId, scholarshipId }:
+        { type: PostType, title: string, body: string, excerpt?: string, slug: string, url: string, userId: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[], imageId?: string, scholarshipId?: string }):
         Promise<Post> {
 
         const post = await this.prisma.post.create({
@@ -58,15 +58,17 @@ export class PostService {
                 type: type ? type : 'articles',
                 title,
                 body,
+                excerpt: excerpt ? excerpt : undefined,
                 slug: slug ? slug : randomUUID(),
                 url: url ? url : undefined,
                 user: { connect: { id: userId } },
-                category: { connect: { id: categoryId } },
+                category: categoryId ? { connect: { id: categoryId } } : undefined,
                 language: language ? language : 'en',
                 subCategory: subCategoryId ? { connect: { id: subCategoryId } } : undefined,
                 status: status ? status : 'draft',
-                tags: tags.length ? { connect: tags.map(tag => ({ id: tag })) } : undefined,
+                tags: tags && tags.length ? { connect: tags.map(tag => ({ id: tag })) } : undefined,
                 image: imageId ? { connect: { id: imageId } } : undefined,
+                scholarship: scholarshipId ? { connect: { id: scholarshipId } } : undefined,
             }
         });
 
@@ -78,7 +80,7 @@ export class PostService {
         return post;
     }
 
-    async updatePost({ id, type, title, body, slug, url, categoryId, language, subCategoryId, status, tags, imageId, editorId }: { id: string, type: PostType, title: string, body: string, slug: string, url?: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[], imageId?: string, editorId?: string }): Promise<Post> {
+    async updatePost({ id, type, title, body, excerpt, slug, url, categoryId, language, subCategoryId, status, tags, imageId, editorId, scholarshipId }: { id: string, type: PostType, title: string, body: string, excerpt?: string, slug: string, url?: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[], imageId?: string, editorId?: string, scholarshipId?: string }): Promise<Post> {
         const updatedPost = await this.prisma.post.update({
             where: {
                 id,
@@ -87,16 +89,18 @@ export class PostService {
                 type: type ? type : 'articles',
                 title,
                 body,
+                excerpt: excerpt ? excerpt : status === PostStatus.published ? body.substring(0, 70) : undefined,
                 slug: slug ? slug : randomUUID(),
                 url: url ? url : undefined,
-                category: { connect: { id: categoryId } },
+                category: categoryId ? { connect: { id: categoryId } } : undefined,
                 language: language ? language : 'en',
                 subCategory: subCategoryId ? { connect: { id: subCategoryId } } : undefined,
                 status: status ? status : 'draft',
-                tags: tags.length ? { connect: tags.map(tag => ({ id: tag })) } : undefined,
+                tags: tags && tags.length ? { connect: tags.map(tag => ({ id: tag })) } : undefined,
                 image: imageId ? { connect: { id: imageId } } : undefined,
                 editor: editorId ? { connect: { id: editorId } } : undefined,
                 publishedAt: status === PostStatus.published ? moment().toISOString() : undefined,
+                scholarship: scholarshipId ? { connect: { id: scholarshipId } } : undefined,
             },
         });
 

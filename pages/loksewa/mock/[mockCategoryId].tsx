@@ -1,4 +1,5 @@
 import { Divider, Spin } from 'antd';
+import { observer } from 'mobx-react';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -13,7 +14,6 @@ const LoksewaMCQQuestions = ({ params }: InferGetStaticPropsType<typeof getStati
     const { data: mockCategory } = useGetMockCategoryQuery({ variables: { categoryId: params.mockCategoryId } })
     const { data, error, loading } = useGetMockSetsQuery({ variables: { categoryId: params.mockCategoryId } })
     if (router.isFallback) return <div className="flex flex-col h-full justify-center items-center"> <Spin /> Loading </div>
-    //const [next, prev, gotoPage, page, { data, error, loading }] = useScrollQuestion({ limit: 10, categoryId: params.loksewaCategoryId })
     return (
         <div className="w-full px-4 sm:px-8 text-center" role="application">
             <h1 className="text-xl my-4 text-center">Kaaphal™ Mock Test (Public Service Commision Examination, Loksewa of Nepal)</h1>
@@ -46,7 +46,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     }))
     return { paths, fallback: false }
 }
-export default LoksewaMCQQuestions;
+export default observer(LoksewaMCQQuestions);
 
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {

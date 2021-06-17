@@ -149,7 +149,7 @@ export class SessionService {
             },
             include: {
                 user: {
-                    include: { image: { select: { preview: true, source: true } } }
+                    include: { image: { select: { id: true, preview: true, source: true } } }
                 },
             },
         });

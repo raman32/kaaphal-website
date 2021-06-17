@@ -1,15 +1,13 @@
-import { Button, Card, Typography } from 'antd'
+import { Card } from 'antd'
 import Meta from 'antd/lib/card/Meta';
-import clsx from 'clsx';
 import { observer } from 'mobx-react';
-import { NextPage, NextPageContext } from 'next'
-import { useState } from 'react'
-import { useGetPostQuery } from '../gql'
-import UserAvatar from '../lib/components/atomic/UserAvatar';
-import { CommentIcon, DislikeIcon, FeedIcon, FireIcon, FlagIcon, HappyIcon, HotShotIcon, LikeIcon, SadIcon } from '../lib/components/Icons/Index';
+import { NextPageContext } from 'next'
+import { useEffect } from 'react'
+import { User } from '../gql'
+import { FeedIcon, HotShotIcon } from '../lib/components/Icons/Index';
 import PostCard from '../lib/components/PostCard/Index';
-import useStore from '../store/storeProvider';
-import DefaultLayout, { defualtLayout } from './layouts/default';
+import { useInfinitePostScroll } from '../lib/hooks/useInfiniteScroll';
+import { defualtLayout } from './layouts/default';
 // The component's props type
 type PageProps = {
     title: string
@@ -22,10 +20,26 @@ type PageContext = NextPageContext & {
 
 // react component
 const Page = ({ title }: PageProps): JSX.Element => {
-    const store = useStore();
-    const [id, setId] = useState('')
-    const { data, loading, error } = useGetPostQuery({ variables: { id: id } })
-    console.log(data, loading, error)
+    const [next, prev, data, loading] = useInfinitePostScroll({ limit: 5, })
+    useEffect(() => {
+        let observer
+        if (data && data.length && !loading) {
+            const options = {
+                root: null,
+                threshold: 1
+            }
+            observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    next();
+                }
+
+            }, options);
+            observer.observe(document.getElementById(data[data.length - 1].node.id))
+        }
+        return () => {
+            observer && observer.disconnect(document.getElementById(data[data.length - 1].node.id)); // *** Use the same element
+        }
+    }, [data, loading, next])
     return (
         <div className="w-full">
             <div className="my-10 ">
@@ -70,92 +84,20 @@ const Page = ({ title }: PageProps): JSX.Element => {
             </div>
             <div className="my-10 max-w-4xl">
                 <div className="mx-4 text-lg my-2 "> <FeedIcon className="align-text-top" /> PESONALISED FEED </div>
-                <div className="">
-                    <PostCard
-                        title="This is a very long Title for a general post of this type"
-                        author={store.user}
-                        excerpt=" Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    felis in pharetra vehicula, lorem erat tincidunt arcu,
-                    ac semper lorem nunc id ipsum. Nam eu pellentesque libero.
-                    Etiam blandit porta mauris, vitae consectetur nibh.
-                    Vestibulum porta convallis tortor, in tempus risus auctor non.
-                    Donec nibh nunc, auctor semper lacinia sed, dignissim sed velit.
-                    Phasellus posuere euismod lorem. Integer nulla magna, euismod sed blandit in,
-                    dignissim eget leo. Mauris nec neque nisl. Praesent eget porttitor mauris.asdasssssssssssssss
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ultricies, felis in pharetra vehicula,
-                    lorem erat tincidunt arcu, ac semper lorem nunc id ipsum. Nam eu pellentesque libero. Etiam blandit porta mauris,
-                    vitae consectetur nibh. Vestibulum porta convallis tortor, in tempus risus auctor non. Donec nibh nunc,
-                    auctor semper lacinia sed, dignissim sed velit. Phasellus posuere euismod lorem. Integer nulla magna,
-                    euismod sed blandit in, dignissim eget leo. Mauris nec neque nisl."
-                        reactions={{ dislike: 10, fire: 12, happy: 10, like: 10, sad: 2 }}
-                        comments={10}
+                <div id="post-scroll-area">
+                    {data && data.map(edge => <div key={edge.node.id} id={edge.node.id}><PostCard
+                        loading={loading}
+                        id={edge.node.id}
+                        slug={edge.node.slug}
+                        title={edge.node.title}
+                        author={edge.node.user as User}
+                        excerpt={edge.node.excerpt ? edge.node.excerpt : edge.node.body}
+                        reactions={edge.node.reactions}
+                        tags={edge.node.tags}
+                        comments={0}
                         flags={0}
                         image="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                    />
-                    <PostCard
-                        title="This is a very long Title for a general post of this type"
-                        author={store.user}
-                        excerpt=" Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    felis in pharetra vehicula, lorem erat tincidunt arcu,
-                    ac semper lorem nunc id ipsum. Nam eu pellentesque libero.
-                    Etiam blandit porta mauris, vitae consectetur nibh.
-                    Vestibulum porta convallis tortor, in tempus risus auctor non.
-                    Donec nibh nunc, auctor semper lacinia sed, dignissim sed velit.
-                    Phasellus posuere euismod lorem. Integer nulla magna, euismod sed blandit in,
-                    dignissim eget leo. Mauris nec neque nisl. Praesent eget porttitor mauris.asdasssssssssssssss
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ultricies, felis in pharetra vehicula,
-                    lorem erat tincidunt arcu, ac semper lorem nunc id ipsum. Nam eu pellentesque libero. Etiam blandit porta mauris,
-                    vitae consectetur nibh. Vestibulum porta convallis tortor, in tempus risus auctor non. Donec nibh nunc,
-                    auctor semper lacinia sed, dignissim sed velit. Phasellus posuere euismod lorem. Integer nulla magna,
-                    euismod sed blandit in, dignissim eget leo. Mauris nec neque nisl."
-                        reactions={{ dislike: 10, fire: 12, happy: 10, like: 10, sad: 2 }}
-                        comments={10}
-                        flags={0}
-                        image="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                    />
-                    <PostCard
-                        title="This is a very long Title for a general post of this type"
-                        author={store.user}
-                        excerpt=" Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    felis in pharetra vehicula, lorem erat tincidunt arcu,
-                    ac semper lorem nunc id ipsum. Nam eu pellentesque libero.
-                    Etiam blandit porta mauris, vitae consectetur nibh.
-                    Vestibulum porta convallis tortor, in tempus risus auctor non.
-                    Donec nibh nunc, auctor semper lacinia sed, dignissim sed velit.
-                    Phasellus posuere euismod lorem. Integer nulla magna, euismod sed blandit in,
-                    dignissim eget leo. Mauris nec neque nisl. Praesent eget porttitor mauris.asdasssssssssssssss
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ultricies, felis in pharetra vehicula,
-                    lorem erat tincidunt arcu, ac semper lorem nunc id ipsum. Nam eu pellentesque libero. Etiam blandit porta mauris,
-                    vitae consectetur nibh. Vestibulum porta convallis tortor, in tempus risus auctor non. Donec nibh nunc,
-                    auctor semper lacinia sed, dignissim sed velit. Phasellus posuere euismod lorem. Integer nulla magna,
-                    euismod sed blandit in, dignissim eget leo. Mauris nec neque nisl."
-                        reactions={{ dislike: 10, fire: 12, happy: 10, like: 10, sad: 2 }}
-                        comments={10}
-                        flags={0}
-                        image="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                    />
-                    <PostCard
-                        title="This is a very long Title for a general post of this type"
-                        author={store.user}
-                        excerpt=" Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    felis in pharetra vehicula, lorem erat tincidunt arcu,
-                    ac semper lorem nunc id ipsum. Nam eu pellentesque libero.
-                    Etiam blandit porta mauris, vitae consectetur nibh.
-                    Vestibulum porta convallis tortor, in tempus risus auctor non.
-                    Donec nibh nunc, auctor semper lacinia sed, dignissim sed velit.
-                    Phasellus posuere euismod lorem. Integer nulla magna, euismod sed blandit in,
-                    dignissim eget leo. Mauris nec neque nisl. Praesent eget porttitor mauris.asdasssssssssssssss
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ultricies, felis in pharetra vehicula,
-                    lorem erat tincidunt arcu, ac semper lorem nunc id ipsum. Nam eu pellentesque libero. Etiam blandit porta mauris,
-                    vitae consectetur nibh. Vestibulum porta convallis tortor, in tempus risus auctor non. Donec nibh nunc,
-                    auctor semper lacinia sed, dignissim sed velit. Phasellus posuere euismod lorem. Integer nulla magna,
-                    euismod sed blandit in, dignissim eget leo. Mauris nec neque nisl."
-                        reactions={{ dislike: 10, fire: 12, happy: 10, like: 10, sad: 2 }}
-                        comments={10}
-                        flags={0}
-                        image="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                    />
-
+                    /></div>)}
                 </div>
             </div>
         </div >
@@ -163,11 +105,5 @@ const Page = ({ title }: PageProps): JSX.Element => {
 }
 
 Page.getLayout = defualtLayout;
-// assigning the initial props to the component's props
-Page.getInitialProps = (ctx: PageContext) => {
-    return {
-        title: ctx.query.title,
-    }
-}
 
 export default observer(Page)

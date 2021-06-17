@@ -4,7 +4,6 @@ import { useCreateUserMutation, UserRole, UserStatus } from '../../../gql';
 import AdminLayout from '../../layouts/admin';
 import UploadAvatarImage from '../../../lib/components/atomic/UploadAvatarImage';
 
-
 function CreateUser(): JSX.Element {
     const [createUser, { data, error, loading }] = useCreateUserMutation();
 

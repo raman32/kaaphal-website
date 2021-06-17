@@ -50,6 +50,8 @@ export class Post extends BaseModel {
     body?: string
     @Field({ nullable: true })
     url?: string
+    @Field({ nullable: true })
+    excerpt?: string
     @Field()
     title: string
     @Field(type => Language)

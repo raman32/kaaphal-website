@@ -32,6 +32,7 @@ query getPosts ( $after: String, $before: String, $first: Int, $last: Int ,$skip
          lastName
       
          image {
+           id
            preview
          }
        }
@@ -40,21 +41,28 @@ query getPosts ( $after: String, $before: String, $first: Int, $last: Int ,$skip
          id
        }
        slug
+
        editor {
          id
          displayName
        }
        title
+       excerpt
         body
        categoryId
        subCategoryId
        language
       status
       tags {
-         id
-       name
+          id
+          name
          }
+          reactions{
+        type
+        userId
       }
+      }
+     
     }
 
      totalCount
@@ -111,6 +119,7 @@ query getUsers ( $after: String, $before: String, $first: Int, $last: Int ,$skip
         deleted
         status
         image {
+          id
           source
           preview
         }
@@ -181,6 +190,7 @@ query getMe {
     middleName
     displayName
     image {
+      id
       source
       preview
     }
@@ -253,6 +263,7 @@ query	getComments ($after: String, $before: String, $first: Int, $last: Int ,$sk
           id
           displayName
           image {
+            id
             preview
           }
         }

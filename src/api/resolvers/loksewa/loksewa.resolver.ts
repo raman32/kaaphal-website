@@ -187,6 +187,7 @@ export class LoksewaResolver {
 
 
     @Query(() => LoksewaMockSet)
+    @UseGuards(AuthenticatedSessionGuard)
     async getMockSet(@Args('setId') setId: string): Promise<LoksewaMockSet_> {
         return this.prisma.loksewaMockSet.findUnique({
             where: { id: setId }, include: {
