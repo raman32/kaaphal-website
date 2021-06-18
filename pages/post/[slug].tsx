@@ -7,10 +7,12 @@ import ReactionPicker from '../../lib/components/ReactionPicker/Index';
 import AuthorCard from '../../lib/components/AuthorCard/Index';
 import { defualtLayout } from '../layouts/default';
 import Comments from '../../lib/components/Comments/Index';
-import { User } from 'gql/index'
+import { GetPostFromSlugDocument, GetPostFromSlugQueryResult, User } from 'gql/index'
 import moment from 'moment';
 import { tagColors } from '../../lib/common/constants';
 import { PostDto } from '../../src/api/common/dto/post.dto';
+import { clientForStaticRendering } from '../../lib/apollo';
+import Error from 'next/error';
 
 const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const postParsed = JSON.parse(post) as PostDto
@@ -21,7 +23,7 @@ const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProp
             </h1>
 
             <h5 className="">
-                <PenIcon className="align-text-bottom " />&nbsp; {postParsed.user && postParsed.user.displayName}
+                <PenIcon className="align-text-bottom " />&nbsp; {postParsed.user && postParsed.user.displayName ? postParsed.user.displayName : 'Anonymous'}
             </h5>
 
         </div>
@@ -31,7 +33,7 @@ const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProp
         <div className="my-4 text-justify ">
 
             <div className="my-4">
-                {postParsed.tags.map((tag, index) => <Tag key={index} color={tagColors[index % 11]} >{tag.name}</Tag>)}
+                {postParsed.tags && postParsed.tags.map((tag, index) => <Tag key={index} color={tagColors[index % 11]} >{tag.name}</Tag>)}
             </div>
 
             {
@@ -52,15 +54,24 @@ const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProp
                 <AuthorCard user={postParsed.user as User} />
             </div>
             <div className="my-4">
-                <Comments postId={postParsed.id} comments={postParsed.comments} />
+                <Comments postId={postParsed.id} comments={postParsed.comments ? postParsed.comments : []} />
             </div>
         </div>
     </div>)
 }
 
 export async function getServerSideProps(context) {
+    let post
+    if (context && context.query && context.query.post) {
+        post = context.query.post
+    }
+    else {
+        const { data } = await clientForStaticRendering.query({ query: GetPostFromSlugDocument, variables: { slug: context.param.slug } }) as GetPostFromSlugQueryResult;
+        if (!data) return { notFound: true }
+        post = data.getPostFromSlug
+    }
     return {
-        props: { post: JSON.stringify(context.query.post) }, // will be passed to the page component as props
+        props: { post: JSON.stringify(post) }, // will be passed to the page component as props
     }
 }
 

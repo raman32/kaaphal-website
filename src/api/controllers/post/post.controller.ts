@@ -1,10 +1,12 @@
 import { Controller, Get, NotFoundException, Param, Render } from '@nestjs/common';
+import { PostService } from '../../../services/post.service';
 import { PrismaService } from '../../../services/prisma.service';
 
 @Controller('post')
 export class PostController {
     constructor(
-        private readonly prisma: PrismaService
+        private readonly prisma: PrismaService,
+        private readonly postService: PostService
     ) { }
 
 
@@ -21,21 +23,11 @@ export class PostController {
     @Get(':slug')
     @Render('post/[slug]')
     async post(@Param('slug') slug: string) {
-        const post = await this.prisma.post.findUnique({
-            where: { slug: slug }, include: {
-                user: { include: { image: true } }, comments: {
-                    where: { parentId: null },
-                    include: { user: true }
-                },
-                tags: true,
-                reactions: true
-            }
-        })
+        const post = await this.postService.getSinglePostFromSlug(slug);
         if (post)
             return {
                 post: post
             }
-        //TODO implement a interceptor here
         else {
             throw new NotFoundException();
         }

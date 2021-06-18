@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { EventBus } from '../event-bus/event-bus';
 import { Flag, Post, PostType, Tag, User } from '.prisma/client';
@@ -31,6 +31,24 @@ export class PostService {
                 },
             },
         });
+    }
+
+    async getSinglePostFromSlug(slug: string): Promise<Post> {
+        return this.prisma.post.findUnique({
+            where: { slug: slug }, include: {
+                user: { include: { image: true } }, comments: {
+                    where: { parentId: null },
+                    include: { user: true }
+                },
+                tags: true,
+                reactions: true,
+                _count: {
+                    select: {
+                        comments: true,
+                    },
+                },
+            }
+        })
     }
 
     async getTopPost(

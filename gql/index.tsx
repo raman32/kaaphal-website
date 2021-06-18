@@ -870,6 +870,7 @@ export type Query = {
   getMockSet: LoksewaMockSet;
   getMockSets: Array<LoksewaMockSet>;
   getPost?: Maybe<Post>;
+  getPostFromSlug?: Maybe<Post>;
   getPosts: PostConnection;
   getQuestions: LoksewaQuestionConnection;
   getTag: Category;
@@ -916,6 +917,11 @@ export type QueryGetMockSetsArgs = {
 
 export type QueryGetPostArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryGetPostFromSlugArgs = {
+  slug: Scalars['String'];
 };
 
 
@@ -1674,6 +1680,47 @@ export type GetPostQuery = (
     & { tags: Array<(
       { __typename?: 'Tag' }
       & Pick<Tag, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+export type GetPostFromSlugQueryVariables = Exact<{
+  slug: Scalars['String'];
+}>;
+
+
+export type GetPostFromSlugQuery = (
+  { __typename?: 'Query' }
+  & { getPostFromSlug?: Maybe<(
+    { __typename?: 'Post' }
+    & Pick<Post, 'id' | 'publishedAt' | 'body' | 'title' | 'language' | 'userId' | 'deleted' | 'status'>
+    & { comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'createdAt' | 'body'>
+      & { children?: Maybe<Array<(
+        { __typename?: 'Comment' }
+        & Pick<Comment, 'id' | 'createdAt' | 'body'>
+      )>>, user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'email' | 'firstName' | 'middleName' | 'lastName' | 'displayName' | 'bio' | 'status' | 'role' | 'deleted'>
+        & { image?: Maybe<(
+          { __typename?: 'File' }
+          & Pick<File, 'preview'>
+        )> }
+      )> }
+    )>, reactions?: Maybe<Array<(
+      { __typename?: 'Reaction' }
+      & Pick<Reaction, 'type' | 'userId'>
+    )>>, tags: Array<(
+      { __typename?: 'Tag' }
+      & Pick<Tag, 'id' | 'name'>
+    )>, user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'email' | 'firstName' | 'middleName' | 'lastName' | 'displayName' | 'bio' | 'status' | 'role' | 'deleted'>
+      & { image?: Maybe<(
+        { __typename?: 'File' }
+        & Pick<File, 'preview'>
+      )> }
     )> }
   )> }
 );
@@ -3156,6 +3203,96 @@ export function useGetPostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetPostQueryHookResult = ReturnType<typeof useGetPostQuery>;
 export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>;
 export type GetPostQueryResult = Apollo.QueryResult<GetPostQuery, GetPostQueryVariables>;
+export const GetPostFromSlugDocument = gql`
+    query getPostFromSlug($slug: String!) {
+  getPostFromSlug(slug: $slug) {
+    id
+    publishedAt
+    body
+    title
+    language
+    userId
+    deleted
+    status
+    comments {
+      id
+      createdAt
+      body
+      children {
+        id
+        createdAt
+        body
+      }
+      user {
+        id
+        email
+        firstName
+        middleName
+        lastName
+        displayName
+        bio
+        status
+        role
+        deleted
+        image {
+          preview
+        }
+      }
+    }
+    reactions {
+      type
+      userId
+    }
+    tags {
+      id
+      name
+    }
+    user {
+      id
+      email
+      firstName
+      middleName
+      lastName
+      displayName
+      bio
+      status
+      role
+      deleted
+      image {
+        preview
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPostFromSlugQuery__
+ *
+ * To run a query within a React component, call `useGetPostFromSlugQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostFromSlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostFromSlugQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetPostFromSlugQuery(baseOptions: Apollo.QueryHookOptions<GetPostFromSlugQuery, GetPostFromSlugQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPostFromSlugQuery, GetPostFromSlugQueryVariables>(GetPostFromSlugDocument, options);
+      }
+export function useGetPostFromSlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostFromSlugQuery, GetPostFromSlugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPostFromSlugQuery, GetPostFromSlugQueryVariables>(GetPostFromSlugDocument, options);
+        }
+export type GetPostFromSlugQueryHookResult = ReturnType<typeof useGetPostFromSlugQuery>;
+export type GetPostFromSlugLazyQueryHookResult = ReturnType<typeof useGetPostFromSlugLazyQuery>;
+export type GetPostFromSlugQueryResult = Apollo.QueryResult<GetPostFromSlugQuery, GetPostFromSlugQueryVariables>;
 export const GetPostsDocument = gql`
     query getPosts($after: String, $before: String, $first: Int, $last: Int, $skip: Int, $contains: String, $status: PostStatus, $type: PostType, $categoryId: String, $subCategoryId: String, $userId: String, $editorId: String) {
   getPosts(

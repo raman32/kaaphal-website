@@ -45,6 +45,7 @@ function EditArticle(): JSX.Element {
     }, [data])
 
     if (!data) return <div className="self-center text-center w-full" ><Spin /> <Typography className="my-4">Loading</Typography></div>
+    if (data && !data.getPost) return <Error statusCode={404} />
     if (data && data.getPost.userId !== store.user.id) return <Error statusCode={403} />
 
     return (<Form form={form} layout="vertical" name="createArticle" onFinish={() => { updatePost({ variables: { post: { ...form.getFieldsValue(), id: router.query.postId as string, status: PostStatus.Unverified, } } }) }} >

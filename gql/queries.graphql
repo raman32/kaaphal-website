@@ -11,9 +11,73 @@ query getPost ($id: String!) {
       id
       name
     }
-
   }
 }
+
+query getPostFromSlug ($slug: String!) {
+    getPostFromSlug(slug:$slug) {
+    id
+    publishedAt
+    body
+    title
+    language
+    userId
+    deleted
+    status
+    comments {
+            id
+          createdAt
+          body
+          children {
+              id
+              createdAt
+              body
+          }
+          user{
+                    id
+                  email
+                  firstName
+                  middleName
+                  lastName
+                  displayName
+                  bio
+                  status
+                  role
+                  deleted
+                  image
+                  {
+                      preview
+                  }
+          }
+     
+    }
+    reactions {
+      type
+      userId
+    }
+    tags {
+      id
+      name
+    }
+    user{
+            id
+          email
+          firstName
+          middleName
+          lastName
+          displayName
+          bio
+          status
+          role
+          deleted
+          image
+          {
+              preview
+          }
+    }
+  }
+}
+
 
 
 
