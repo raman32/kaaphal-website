@@ -1,13 +1,13 @@
-import { Form, Table, Space, Button, Popconfirm, Popover, Input, Select } from 'antd';
+import { Table, Button, Popconfirm, Input } from 'antd';
 import Link from 'next/link';
 import { useState } from 'react';
-import { PostStatus, PostType, useGetPostsQuery, User, UserRole, UserStatus } from '../../../gql';
+import { PostType, useGetPostsQuery, User } from '../../../gql';
 import CategoryPicker from '../../../lib/components/atomic/CategoryPicker';
-import MembershipPicker from '../../../lib/components/atomic/MembershipPicker';
 import { PostStatusPicker } from '../../../lib/components/atomic/PostStatusPicker';
 import PostTypePicker from '../../../lib/components/atomic/PostTypePicker';
 import SubCategoryPicker from '../../../lib/components/atomic/SubCategoryPicker';
 import { UserPopover } from '../../../lib/components/atomic/UserPopover';
+import ReactionPicker from '../../../lib/components/ReactionPicker/Index';
 import AdminLayout from '../../layouts/admin';
 
 const columns = [
@@ -44,6 +44,7 @@ const columns = [
         title: 'Reactions',
         key: 'reactions',
         dataIndex: 'reactions',
+        render: (value, record,): JSX.Element => <ReactionPicker reactions={value} selectable={false} />
 
     },
     {
