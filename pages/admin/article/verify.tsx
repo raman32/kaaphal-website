@@ -21,6 +21,7 @@ const columns = [
         title: 'Author',
         dataIndex: 'user',
         key: 'user',
+        // eslint-disable-next-line react/display-name
         render: (value, record,): JSX.Element => <UserPopover user={value as User}>{value.displayName}</UserPopover>
     },
     {
