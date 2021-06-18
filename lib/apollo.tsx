@@ -125,7 +125,7 @@ function createApolloClient(initialState = {}, accessToken?: string) {
     });
 }
 
-// export const clientForStaticRendering = new ApolloClient({
-//     uri: graphQLEndpoint,
-//     cache: new InMemoryCache()
-// });
+export const clientForStaticRendering = new ApolloClient({
+    uri: graphQLEndpoint,
+    cache: new InMemoryCache()
+});
