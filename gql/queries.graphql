@@ -263,7 +263,6 @@ query	getComments ($after: String, $before: String, $first: Int, $last: Int ,$sk
           id
           displayName
           image {
-            id
             preview
           }
         }

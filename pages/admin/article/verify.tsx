@@ -23,41 +23,6 @@ const columns = [
         key: 'user',
         render: (value, record,): JSX.Element => <UserPopover user={value as User}>{value.displayName}</UserPopover>
     },
-
-    {
-        title: 'Status',
-        dataIndex: 'status',
-        key: 'status',
-    },
-    {
-        title: 'Editor',
-        key: 'editor',
-        dataIndex: 'editor',
-
-    }, {
-        title: 'Views',
-        key: 'views',
-        dataIndex: 'views',
-
-    },
-    {
-        title: 'Reactions',
-        key: 'reactions',
-        dataIndex: 'reactions',
-
-    },
-    {
-        title: 'Comments',
-        key: 'comments',
-        dataIndex: 'comments',
-
-    },
-    {
-        title: 'Flags',
-        key: 'flags',
-        dataIndex: 'flags',
-
-    },
     {
         title: 'HotShot',
         key: 'hotShot',
@@ -74,10 +39,10 @@ const columns = [
                 <Button type="primary" danger className="mx-2 my-2">Delete</Button>
             </Popconfirm>
             <Popconfirm title="Sure to Flag?" >
-                <Button type="primary" danger className="mx-2 my-2">Flag</Button>
+                <Button type="primary" danger className="mx-2 my-2">Flag User</Button>
             </Popconfirm>
-            <Button type="primary" className="mx-2 my-2"><Link href="/admin/article/edit/[postId]" as={'/admin/article/edit/' + record.id}>Edit</Link></Button>
-            <Button danger className="mx-2 my-2">Block</Button>
+            <Button type="primary" className="mx-2 my-2"><Link href="/admin/article/edit/[postId]" as={'/admin/article/edit/' + record.id}>Verify</Link></Button>
+            <Button danger className="mx-2 my-2">Block User</Button>
         </div >
         )
 

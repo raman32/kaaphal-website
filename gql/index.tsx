@@ -1976,7 +1976,7 @@ export type GetCommentsQuery = (
           & Pick<User, 'id' | 'displayName'>
           & { image?: Maybe<(
             { __typename?: 'File' }
-            & Pick<File, 'id' | 'preview'>
+            & Pick<File, 'preview'>
           )> }
         )> }
       ) }
@@ -3834,7 +3834,6 @@ export const GetCommentsDocument = gql`
           id
           displayName
           image {
-            id
             preview
           }
         }
