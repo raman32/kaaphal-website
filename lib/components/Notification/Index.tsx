@@ -27,7 +27,7 @@ function Notification(props: any): JSX.Element {
             <NotificationIcon ></NotificationIcon>
         </ Badge>} style={{ marginLeft: 2, marginRight: 4 }}  {...props}>
         {
-            data ? data.getMeNotification.map(notification => <Menu.Item key={notification.id} className="max-w-sm" onClick={() => updateNotification({ variables: { notificationId: notification.id } })}><Tooltip title={notification.body}><Link href={notification.url}>{notification.body}</Link></Tooltip></Menu.Item>)
+            data ? data.getMeNotification.map(notification => <Menu.Item key={notification.id} className="max-w-sm" onClick={() => updateNotification({ variables: { notificationId: notification.id } })}><Tooltip title={notification.body}><Link href={notification.url} >{notification.body}</Link></Tooltip></Menu.Item>)
                 :
                 <Menu.Item className="text-center" ><Spin /> </Menu.Item>
         }

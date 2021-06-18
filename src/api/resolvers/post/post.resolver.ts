@@ -31,6 +31,12 @@ export class PostResolver {
         return this.postService.getSinglePost(id)
     }
 
+    @Query(returns => Post, { nullable: true })
+    async getPostFromSlug(@Args('slug', { type: () => String }) id: string): Promise<Post_> {
+        return this.postService.getSinglePostFromSlug(id)
+    }
+
+
     @Query(returns => PostConnection)
     async getPosts(@Args() { after, before, first, last, skip }: PaginationArgs,
         @Args({ name: 'contains', nullable: true, type: () => String, }) contains?: string,

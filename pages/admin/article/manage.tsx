@@ -1,7 +1,7 @@
 import { Table, Button, Popconfirm, Input } from 'antd';
 import Link from 'next/link';
 import { useState } from 'react';
-import { PostType, useGetPostsQuery, User } from '../../../gql';
+import { PostType, Reaction, useGetPostsQuery, User } from '../../../gql';
 import CategoryPicker from '../../../lib/components/atomic/CategoryPicker';
 import { PostStatusPicker } from '../../../lib/components/atomic/PostStatusPicker';
 import PostTypePicker from '../../../lib/components/atomic/PostTypePicker';
@@ -44,7 +44,8 @@ const columns = [
         title: 'Reactions',
         key: 'reactions',
         dataIndex: 'reactions',
-        render: (value, record,): JSX.Element => <ReactionPicker reactions={value} selectable={false} />
+        // eslint-disable-next-line react/display-name
+        render: (value, record,): JSX.Element => <ReactionPicker postId={record.id} reactions={value as Reaction[]} selectable={false} />
 
     },
     {

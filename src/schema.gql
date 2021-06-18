@@ -706,6 +706,7 @@ type Query {
   getMockSet(setId: String!): LoksewaMockSet!
   getMockSets(categoryId: String!): [LoksewaMockSet!]!
   getPost(id: String!): Post
+  getPostFromSlug(slug: String!): Post
   getPosts(after: String, before: String, categoryId: String, contains: String, editorId: String, first: Int, last: Int, skip: Int, status: PostStatus, subCategoryId: String, type: PostType, userId: String): PostConnection!
   getQuestions(after: String, before: String, categoryId: String, first: Int, last: Int, skip: Int): LoksewaQuestionConnection!
   getTag(id: String!): Category!
