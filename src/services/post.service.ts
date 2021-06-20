@@ -9,6 +9,7 @@ import { NotificationEvent } from '../event-bus/events/notification.event';
 import { host } from '../../utils/GlobalConstants';
 import { MagicLinkEvent, MagicLinkVerificationEvent } from '../event-bus/events';
 import moment from 'moment';
+import { Meta } from '../models/meta.model';
 
 @Injectable()
 export class PostService {
@@ -24,6 +25,7 @@ export class PostService {
                 user: true,
                 tags: true,
                 flags: true,
+                metas: true,
                 _count: {
                     select: {
                         comments: true,
@@ -42,6 +44,7 @@ export class PostService {
                 },
                 tags: true,
                 reactions: true,
+                metas: true,
                 _count: {
                     select: {
                         comments: true,
@@ -67,8 +70,8 @@ export class PostService {
         });
         return topPosts;
     }
-    async createPost({ type, title, body, excerpt, slug, url, userId, categoryId, language, subCategoryId, status, tags, imageId, scholarshipId }:
-        { type: PostType, title: string, body: string, excerpt?: string, slug: string, url: string, userId: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[], imageId?: string, scholarshipId?: string }):
+    async createPost({ type, title, body, excerpt, slug, url, userId, categoryId, language, subCategoryId, status, tags, editorId, imageId, scholarshipId, HTMLTitle }:
+        { type: PostType, title: string, body: string, excerpt?: string, slug: string, url: string, userId: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[], editorId?: string, imageId?: string, scholarshipId?: string, HTMLTitle?: string }):
         Promise<Post> {
 
         const post = await this.prisma.post.create({
@@ -87,6 +90,8 @@ export class PostService {
                 tags: tags && tags.length ? { connect: tags.map(tag => ({ id: tag })) } : undefined,
                 image: imageId ? { connect: { id: imageId } } : undefined,
                 scholarship: scholarshipId ? { connect: { id: scholarshipId } } : undefined,
+                editor: editorId ? { connect: { id: editorId } } : undefined,
+                HTMLTitle: HTMLTitle ? HTMLTitle : 'Kaaphal Articles | ' + title,
             }
         });
 
@@ -98,7 +103,8 @@ export class PostService {
         return post;
     }
 
-    async updatePost({ id, type, title, body, excerpt, slug, url, categoryId, language, subCategoryId, status, tags, imageId, editorId, scholarshipId }: { id: string, type: PostType, title: string, body: string, excerpt?: string, slug: string, url?: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[], imageId?: string, editorId?: string, scholarshipId?: string }): Promise<Post> {
+    async updatePost({ id, type, title, body, excerpt, slug, url, categoryId, language, subCategoryId, status, tags, imageId, editorId, scholarshipId, HTMLTitle }: { id: string, type: PostType, title: string, body: string, excerpt?: string, slug: string, url?: string, categoryId: string, language: Language, subCategoryId: string, status: PostStatus, tags?: string[], imageId?: string, editorId?: string, scholarshipId?: string, HTMLTitle?: string }): Promise<Post> {
+        //TODO move excerpt validation to client side
         const updatedPost = await this.prisma.post.update({
             where: {
                 id,
@@ -107,7 +113,7 @@ export class PostService {
                 type: type ? type : 'articles',
                 title,
                 body,
-                excerpt: excerpt ? excerpt : status === PostStatus.published ? body.substring(0, 70) : undefined,
+                excerpt: excerpt ? excerpt : status === PostStatus.published && body ? body.substring(0, 200).replace(/(<([^>]+)>)/ig, '') : undefined,
                 slug: slug ? slug : randomUUID(),
                 url: url ? url : undefined,
                 category: categoryId ? { connect: { id: categoryId } } : undefined,
@@ -119,6 +125,7 @@ export class PostService {
                 editor: editorId ? { connect: { id: editorId } } : undefined,
                 publishedAt: status === PostStatus.published ? moment().toISOString() : undefined,
                 scholarship: scholarshipId ? { connect: { id: scholarshipId } } : undefined,
+                HTMLTitle: HTMLTitle ? HTMLTitle : 'Kaaphal Articles | ' + title,
             },
         });
 

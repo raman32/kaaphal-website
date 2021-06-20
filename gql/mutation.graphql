@@ -10,9 +10,8 @@ mutation createUser($user: CreateUserInput!) {
     id
   }
 }
-
-mutation createPost($post: CreatePostInput!,$scholarship:CreateScholarshipInput){
-  createPost(post: $post,scholarship:$scholarship){
+mutation createPost($post: CreatePostInput!,$scholarship:CreateScholarshipInput,$metas:[CreateMetaInput]){
+  createPost(post: $post,scholarship:$scholarship,metas:$metas){
     id
   }
 }
@@ -26,8 +25,18 @@ mutation updateMePost($post: UpdatePostInput!){
     id
   }
 }
-mutation updatePost($post: UpdatePostInput!){
-  updatePost(post: $post){
+mutation updatePost($post: UpdatePostInput!,$scholarship:CreateScholarshipInput,$metas:[UpdateMetaInput]){
+  updatePost(post: $post,scholarship:$scholarship,metas:$metas){
+    id
+  }
+}
+mutation deleteMePost($post: DeletePostInput!){
+  deleteMePost(post: $post){
+    id
+  }
+}
+mutation deletePost($post: DeletePostInput!){
+  deletePost(post: $post){
     id
   }
 }

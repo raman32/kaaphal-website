@@ -6,6 +6,7 @@ import { Comment } from './comment.model';
 import { File } from './file.model';
 import { Flag } from './flag.model';
 import { Hotshot } from './hotshot.model';
+import { Meta } from './meta.model';
 import { Reaction } from './reaction.model';
 import { Scholarship } from './scholarship.model';
 import { SubCategory } from './subCategory.model';
@@ -54,46 +55,50 @@ export class Post extends BaseModel {
     excerpt?: string
     @Field()
     title: string
-    @Field(type => Language)
+    @Field(() => Language)
     language: Language
-    @Field(type => User, { nullable: true })
+    @Field(() => User, { nullable: true })
     user?: User
     @Field({ nullable: true })
     userId?: string
     @Field()
     deleted: boolean
-    @Field(type => PostStatus)
+    @Field(() => PostStatus)
     status: PostStatus
-    @Field(type => [Comment])
+    @Field(() => [Comment])
     comments: Comment[]
-    @Field(type => File, { nullable: true })
+    @Field(() => File, { nullable: true })
     image?: File
-    @Field(type => [Tag])
+    @Field(() => [Tag])
     tags: Tag[]
-    @Field(type => [Reaction], { nullable: true })
+    @Field(() => [Reaction], { nullable: true })
     reactions: Reaction[]
-    @Field(type => PostType)
+    @Field(() => PostType)
     type: PostType
-    @Field(type => [Flag], { nullable: 'itemsAndList' })
+    @Field(() => [Flag], { nullable: 'itemsAndList' })
     flag: Flag[]
     @Field()
     views: number
-    @Field(type => User, { nullable: true })
+    @Field(() => User, { nullable: true })
     editor?: User
     @Field({ nullable: true })
     editorId?: string
-    @Field(type => Category, { nullable: true })
+    @Field(() => Category, { nullable: true })
     category?: Category
     @Field({ nullable: true })
     categoryId?: string
-    @Field(type => SubCategory, { nullable: true })
+    @Field(() => SubCategory, { nullable: true })
     subCategory?: SubCategory
     @Field({ nullable: true })
     subCategoryId?: string
-    @Field(type => Advertisement, { nullable: true })
+    @Field(() => Advertisement, { nullable: true })
     advertisement?: Advertisement
-    @Field(type => Hotshot, { nullable: true })
+    @Field(() => Hotshot, { nullable: true })
     hotShot?: Hotshot
-    @Field(type => Scholarship, { nullable: true })
+    @Field(() => Scholarship, { nullable: true })
     scholarship?: Scholarship
+    @Field(() => [Meta], { nullable: 'itemsAndList' })
+    metas: Meta[]
+    @Field({ nullable: true })
+    HTMLTitle?: string
 }

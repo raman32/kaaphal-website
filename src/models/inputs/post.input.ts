@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { Meta } from '../meta.model';
 import { Language, PostStatus, PostType } from '../post.model';
 import { ScholarshipLevel } from '../scholarship.model';
 @InputType()
@@ -29,7 +30,8 @@ export class CreatePostInput {
     subCategoryId: string;
     @Field(() => [String], { nullable: 'itemsAndList' })
     tags: string[];
-
+    @Field({ nullable: true })
+    HTMLTitle?: string
 
 }
 
@@ -38,6 +40,13 @@ export class UpdatePostInput extends CreatePostInput {
     @Field()
     id: string;
 }
+
+@InputType()
+export class DeletePostInput {
+    @Field()
+    id: string;
+}
+
 
 @InputType()
 export class CreateScholarshipInput {
@@ -50,3 +59,27 @@ export class CreateScholarshipInput {
     @Field({ nullable: true })
     deadlineAt: Date
 }
+
+@InputType()
+export class CreateMetaInput {
+    @Field({ nullable: true })
+    postId: string
+    @Field()
+    name: string
+    @Field()
+    content: string
+}
+
+
+@InputType()
+export class UpdateMetaInput {
+    @Field()
+    id: string
+    @Field({ nullable: true })
+    postId: string
+    @Field()
+    name: string
+    @Field()
+    content: string
+}
+
