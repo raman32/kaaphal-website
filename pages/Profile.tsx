@@ -4,7 +4,7 @@ import React from 'react';
 import { parseFullName } from '../lib/common/helpers/parse';
 import UserAvatar from '../lib/components/atomic/UserAvatar';
 import useStore from '../store/storeProvider';
-import DefaultLayout, { defualtLayout } from './layouts/default';
+import { defualtLayout } from './layouts/default';
 
 const Profile = () => {
     const store = useStore();

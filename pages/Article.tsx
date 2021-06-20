@@ -1,14 +1,8 @@
-import { Button, DatePicker, Form, Pagination, Tabs } from 'antd';
-import clsx from 'clsx';
+import { Pagination, Tabs } from 'antd';
 import { observer } from 'mobx-react';
 import { NextPageContext } from 'next'
-import { useEffect } from 'react'
 import { PostType, Tag, useGetCategoriesQuery, User } from '../gql'
-import CountryPicker from '../lib/components/atomic/CountryPicker';
-import ScholarshipLevelPicker from '../lib/components/atomic/ScholarshipLevelPicker';
-import { FeedIcon, SearchIcon } from '../lib/components/Icons/Index';
 import PostCard from '../lib/components/PostCard/Index';
-import { useInfinitePostScroll } from '../lib/hooks/useInfiniteScroll';
 import { useScrollPost } from '../lib/hooks/useScroll';
 import useStore from '../store/storeProvider';
 import { defualtLayout } from './layouts/default';

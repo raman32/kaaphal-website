@@ -89,6 +89,19 @@ model Post {
   hotShot       HotShot?       @relation(name: "PostOnHotShot")
   scholarship   Scholarship?   @relation(name: "PostOnScholarship")
   notifications Notification[] @relation(name: "PostOnNotification")
+  metas         Meta[]         @relation(name:"PostOnMeta")
+  HTMLTitle     String?
+}
+
+
+model Meta {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  post        Post?     @relation(name:"PostOnMeta",fields:[postId],references:[id])
+  postId      String?
+  name         String
+  content       String
 }
 
 model Flag {

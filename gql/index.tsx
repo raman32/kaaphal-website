@@ -183,7 +183,14 @@ export type CreateLoksewaQuestionInput = {
   title: Scalars['String'];
 };
 
+export type CreateMetaInput = {
+  content: Scalars['String'];
+  name: Scalars['String'];
+  postId?: Maybe<Scalars['String']>;
+};
+
 export type CreatePostInput = {
+  HTMLTitle?: Maybe<Scalars['String']>;
   body?: Maybe<Scalars['String']>;
   categoryId?: Maybe<Scalars['String']>;
   excerpt?: Maybe<Scalars['String']>;
@@ -248,6 +255,10 @@ export type CreateUserInput = {
   status?: Maybe<Scalars['String']>;
 };
 
+
+export type DeletePostInput = {
+  id: Scalars['String'];
+};
 
 export enum Difficulty {
   Easy = 'easy',
@@ -494,6 +505,20 @@ export enum MembershipType {
   Silver = 'silver'
 }
 
+export type Meta = {
+  __typename?: 'Meta';
+  content: Scalars['String'];
+  /** Identifies the date and time when the object was created. */
+  createdAt: Scalars['Date'];
+  /** Unique UUID string */
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  post?: Maybe<Post>;
+  postId: Scalars['String'];
+  /** Identifies the date and time when the object was last updated. */
+  updatedAt: Scalars['Date'];
+};
+
 export type MockQuestionEdge = {
   __typename?: 'MockQuestionEdge';
   LoksewaMockSet: LoksewaMockSet;
@@ -543,7 +568,9 @@ export type Mutation = {
   deleteLoksewaCategory: Scalars['Boolean'];
   deleteLoksewaMockCategory: Scalars['Boolean'];
   deleteMeComment: Scalars['Boolean'];
+  deleteMePost: Post;
   deleteMockSet: Scalars['Boolean'];
+  deletePost: Post;
   deleteSubCategory: Scalars['Boolean'];
   increaseView: Scalars['Boolean'];
   reactToPost: Scalars['Boolean'];
@@ -603,6 +630,7 @@ export type MutationCreateMockSetArgs = {
 
 
 export type MutationCreatePostArgs = {
+  metas?: Maybe<Array<Maybe<CreateMetaInput>>>;
   post: CreatePostInput;
   scholarship?: Maybe<CreateScholarshipInput>;
 };
@@ -653,8 +681,18 @@ export type MutationDeleteMeCommentArgs = {
 };
 
 
+export type MutationDeleteMePostArgs = {
+  post: DeletePostInput;
+};
+
+
 export type MutationDeleteMockSetArgs = {
   set: UpdateLoksewaMockSetInput;
+};
+
+
+export type MutationDeletePostArgs = {
+  post: DeletePostInput;
 };
 
 
@@ -714,7 +752,9 @@ export type MutationUpdateMockSetArgs = {
 
 
 export type MutationUpdatePostArgs = {
+  metas?: Maybe<Array<Maybe<UpdateMetaInput>>>;
   post: UpdatePostInput;
+  scholarship?: Maybe<CreateScholarshipInput>;
 };
 
 
@@ -792,6 +832,7 @@ export enum PaymentMethod {
 /** Post model */
 export type Post = {
   __typename?: 'Post';
+  HTMLTitle?: Maybe<Scalars['String']>;
   advertisement?: Maybe<Advertisement>;
   body?: Maybe<Scalars['String']>;
   category?: Maybe<Category>;
@@ -809,6 +850,7 @@ export type Post = {
   id: Scalars['ID'];
   image?: Maybe<File>;
   language: Language;
+  metas?: Maybe<Array<Maybe<Meta>>>;
   publishedAt?: Maybe<Scalars['Date']>;
   reactions?: Maybe<Array<Reaction>>;
   scholarship?: Maybe<Scholarship>;
@@ -1153,7 +1195,15 @@ export type UpdateLoksewaQuestionInput = {
   title: Scalars['String'];
 };
 
+export type UpdateMetaInput = {
+  content: Scalars['String'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+  postId?: Maybe<Scalars['String']>;
+};
+
 export type UpdatePostInput = {
+  HTMLTitle?: Maybe<Scalars['String']>;
   body?: Maybe<Scalars['String']>;
   categoryId?: Maybe<Scalars['String']>;
   excerpt?: Maybe<Scalars['String']>;
@@ -1285,6 +1335,7 @@ export type CreateUserMutation = (
 export type CreatePostMutationVariables = Exact<{
   post: CreatePostInput;
   scholarship?: Maybe<CreateScholarshipInput>;
+  metas?: Maybe<Array<Maybe<CreateMetaInput>> | Maybe<CreateMetaInput>>;
 }>;
 
 
@@ -1324,12 +1375,40 @@ export type UpdateMePostMutation = (
 
 export type UpdatePostMutationVariables = Exact<{
   post: UpdatePostInput;
+  scholarship?: Maybe<CreateScholarshipInput>;
+  metas?: Maybe<Array<Maybe<UpdateMetaInput>> | Maybe<UpdateMetaInput>>;
 }>;
 
 
 export type UpdatePostMutation = (
   { __typename?: 'Mutation' }
   & { updatePost: (
+    { __typename?: 'Post' }
+    & Pick<Post, 'id'>
+  ) }
+);
+
+export type DeleteMePostMutationVariables = Exact<{
+  post: DeletePostInput;
+}>;
+
+
+export type DeleteMePostMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteMePost: (
+    { __typename?: 'Post' }
+    & Pick<Post, 'id'>
+  ) }
+);
+
+export type DeletePostMutationVariables = Exact<{
+  post: DeletePostInput;
+}>;
+
+
+export type DeletePostMutation = (
+  { __typename?: 'Mutation' }
+  & { deletePost: (
     { __typename?: 'Post' }
     & Pick<Post, 'id'>
   ) }
@@ -1676,11 +1755,14 @@ export type GetPostQuery = (
   { __typename?: 'Query' }
   & { getPost?: Maybe<(
     { __typename?: 'Post' }
-    & Pick<Post, 'userId' | 'title' | 'body' | 'categoryId' | 'subCategoryId' | 'language' | 'status'>
+    & Pick<Post, 'userId' | 'title' | 'HTMLTitle' | 'slug' | 'url' | 'body' | 'type' | 'categoryId' | 'subCategoryId' | 'language' | 'status'>
     & { tags: Array<(
       { __typename?: 'Tag' }
       & Pick<Tag, 'id' | 'name'>
-    )> }
+    )>, metas?: Maybe<Array<Maybe<(
+      { __typename?: 'Meta' }
+      & Pick<Meta, 'id' | 'name' | 'content'>
+    )>>> }
   )> }
 );
 
@@ -2124,8 +2206,8 @@ export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutati
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const CreatePostDocument = gql`
-    mutation createPost($post: CreatePostInput!, $scholarship: CreateScholarshipInput) {
-  createPost(post: $post, scholarship: $scholarship) {
+    mutation createPost($post: CreatePostInput!, $scholarship: CreateScholarshipInput, $metas: [CreateMetaInput]) {
+  createPost(post: $post, scholarship: $scholarship, metas: $metas) {
     id
   }
 }
@@ -2147,6 +2229,7 @@ export type CreatePostMutationFn = Apollo.MutationFunction<CreatePostMutation, C
  *   variables: {
  *      post: // value for 'post'
  *      scholarship: // value for 'scholarship'
+ *      metas: // value for 'metas'
  *   },
  * });
  */
@@ -2224,8 +2307,8 @@ export type UpdateMePostMutationHookResult = ReturnType<typeof useUpdateMePostMu
 export type UpdateMePostMutationResult = Apollo.MutationResult<UpdateMePostMutation>;
 export type UpdateMePostMutationOptions = Apollo.BaseMutationOptions<UpdateMePostMutation, UpdateMePostMutationVariables>;
 export const UpdatePostDocument = gql`
-    mutation updatePost($post: UpdatePostInput!) {
-  updatePost(post: $post) {
+    mutation updatePost($post: UpdatePostInput!, $scholarship: CreateScholarshipInput, $metas: [UpdateMetaInput]) {
+  updatePost(post: $post, scholarship: $scholarship, metas: $metas) {
     id
   }
 }
@@ -2246,6 +2329,8 @@ export type UpdatePostMutationFn = Apollo.MutationFunction<UpdatePostMutation, U
  * const [updatePostMutation, { data, loading, error }] = useUpdatePostMutation({
  *   variables: {
  *      post: // value for 'post'
+ *      scholarship: // value for 'scholarship'
+ *      metas: // value for 'metas'
  *   },
  * });
  */
@@ -2256,6 +2341,72 @@ export function useUpdatePostMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdatePostMutationHookResult = ReturnType<typeof useUpdatePostMutation>;
 export type UpdatePostMutationResult = Apollo.MutationResult<UpdatePostMutation>;
 export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<UpdatePostMutation, UpdatePostMutationVariables>;
+export const DeleteMePostDocument = gql`
+    mutation deleteMePost($post: DeletePostInput!) {
+  deleteMePost(post: $post) {
+    id
+  }
+}
+    `;
+export type DeleteMePostMutationFn = Apollo.MutationFunction<DeleteMePostMutation, DeleteMePostMutationVariables>;
+
+/**
+ * __useDeleteMePostMutation__
+ *
+ * To run a mutation, you first call `useDeleteMePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMePostMutation, { data, loading, error }] = useDeleteMePostMutation({
+ *   variables: {
+ *      post: // value for 'post'
+ *   },
+ * });
+ */
+export function useDeleteMePostMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMePostMutation, DeleteMePostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteMePostMutation, DeleteMePostMutationVariables>(DeleteMePostDocument, options);
+      }
+export type DeleteMePostMutationHookResult = ReturnType<typeof useDeleteMePostMutation>;
+export type DeleteMePostMutationResult = Apollo.MutationResult<DeleteMePostMutation>;
+export type DeleteMePostMutationOptions = Apollo.BaseMutationOptions<DeleteMePostMutation, DeleteMePostMutationVariables>;
+export const DeletePostDocument = gql`
+    mutation deletePost($post: DeletePostInput!) {
+  deletePost(post: $post) {
+    id
+  }
+}
+    `;
+export type DeletePostMutationFn = Apollo.MutationFunction<DeletePostMutation, DeletePostMutationVariables>;
+
+/**
+ * __useDeletePostMutation__
+ *
+ * To run a mutation, you first call `useDeletePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePostMutation, { data, loading, error }] = useDeletePostMutation({
+ *   variables: {
+ *      post: // value for 'post'
+ *   },
+ * });
+ */
+export function useDeletePostMutation(baseOptions?: Apollo.MutationHookOptions<DeletePostMutation, DeletePostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePostMutation, DeletePostMutationVariables>(DeletePostDocument, options);
+      }
+export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>;
+export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
+export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
 export const CreateTagDocument = gql`
     mutation createTag($tag: CreateTagInput!) {
   createTag(tag: $tag) {
@@ -3163,7 +3314,11 @@ export const GetPostDocument = gql`
   getPost(id: $id) {
     userId
     title
+    HTMLTitle
+    slug
+    url
     body
+    type
     categoryId
     subCategoryId
     language
@@ -3171,6 +3326,11 @@ export const GetPostDocument = gql`
     tags {
       id
       name
+    }
+    metas {
+      id
+      name
+      content
     }
   }
 }

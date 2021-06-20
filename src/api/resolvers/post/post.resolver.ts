@@ -3,7 +3,7 @@ import { User as User_ } from '.prisma/client';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { PaginationArgs } from '../../../common/pagination/pagination.args';
-import { CreatePostInput, CreateScholarshipInput, UpdatePostInput } from '../../../models/inputs/post.input';
+import { CreateMetaInput, CreatePostInput, CreateScholarshipInput, DeletePostInput, UpdateMetaInput, UpdatePostInput } from '../../../models/inputs/post.input';
 import { PostConnection } from '../../../models/pagination/post-connection';
 import { Post, PostStatus, PostType } from '../../../models/post.model';
 import { User, UserRole } from '../../../models/user.model';
@@ -18,6 +18,8 @@ import { RolesGuard } from '../auth/guards/role.guard';
 import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { Tag } from '../../../models/tag.model';
 import { Scholarship } from '../../../models/scholarship.model';
+import post from '../../../../pages/loksewa/post';
+import { meta } from 'eslint/lib/rules/*';
 
 @Resolver(of => Post)
 @UseGuards(GQLGuard)
@@ -66,6 +68,7 @@ export class PostResolver {
                 this.prisma.post.findMany({
                     ...args,
                     where: {
+                        deleted: false,
                         ...ORFilter,
                         ...typeFilter,
                         ...categoryFilter,
@@ -99,13 +102,27 @@ export class PostResolver {
     @Roles(UserRole.admin, UserRole.moderator)
     @UseGuards(RolesGuard)
     async createPost(@Args('post') input: CreatePostInput,
-        @Args({ name: 'scholarship', type: () => CreateScholarshipInput, nullable: true }) scholarship: CreateScholarshipInput): Promise<Post_> {
+        @Args({ name: 'scholarship', type: () => CreateScholarshipInput, nullable: true }) scholarship: CreateScholarshipInput,
+        @Args({ name: 'metas', type: () => [CreateMetaInput], nullable: 'itemsAndList' }) metas: CreateMetaInput[],
+        @Ctx() context: RequestContext): Promise<Post_> {
+        //TODO move to scholarship and meta service
         if (input.type == PostType.scholarships) {
             const { id } = await this.prisma.scholarship.create({ data: scholarship })
-            return this.postService.createPost({ ...input, scholarshipId: id })
+            const post = await this.postService.createPost({ ...input, scholarshipId: id })
+            if (metas && metas.length)
+                await this.prisma.meta.createMany({
+                    data: metas.map(meta => ({ ...meta, postId: post.id })),
+                    skipDuplicates: true
+                })
+            return post;
         }
-        return this.postService.createPost({ ...input })
-
+        const post = await this.postService.createPost({ ...input, editorId: context.user.id })
+        if (metas && metas.length)
+            await this.prisma.meta.createMany({
+                data: metas.map(meta => ({ ...meta, postId: post.id })),
+                skipDuplicates: true
+            })
+        return post;
 
     }
 
@@ -121,8 +138,27 @@ export class PostResolver {
     @Mutation(returns => Post)
     @Roles(UserRole.admin, UserRole.moderator)
     @UseGuards(RolesGuard)
-    async updatePost(@Args('post') input: UpdatePostInput, @Ctx() context: RequestContext): Promise<Post_> {
+    async updatePost(@Args('post') input: UpdatePostInput,
+        @Args({ name: 'scholarship', type: () => CreateScholarshipInput, nullable: true }) scholarship: CreateScholarshipInput,
+        @Args({ name: 'metas', type: () => [UpdateMetaInput], nullable: 'itemsAndList' }) metas: UpdateMetaInput[],
+        @Ctx() context: RequestContext): Promise<Post_> {
+        if (input.type == PostType.scholarships) {
+            await this.prisma.scholarship.updateMany({ where: { postId: input.id }, data: scholarship })
+
+            if (metas && metas.length)
+                //TODO BUG!!! FIX WITH BATCH TRANSACTION
+                await this.prisma.meta.updateMany({
+                    data: metas.map(meta => ({ ...meta, postId: input.id })),
+                })
+        }
         return this.postService.updatePost({ ...input, editorId: context.user.id })
+    }
+
+    @Mutation(returns => Post)
+    @Roles(UserRole.admin, UserRole.moderator)
+    @UseGuards(RolesGuard)
+    async deletePost(@Args('post') input: DeletePostInput, @Ctx() context: RequestContext): Promise<Post_> {
+        return this.prisma.post.update({ where: { id: input.id }, data: { deleted: true, editorId: context.user.id } })
     }
 
 
@@ -149,6 +185,20 @@ export class PostResolver {
         return this.postService.updatePost({ ...input })
     }
 
+
+
+    @Mutation(returns => Post)
+    @UseGuards(AuthenticatedSessionGuard)
+    async deleteMePost(@Args('post') input: DeletePostInput, @Ctx() context: RequestContext): Promise<Post_> {
+        if (context.user === undefined) {
+            throw new UnauthorizedException();
+        }
+        const { userId } = await this.prisma.post.findUnique({ where: { id: input.id } })
+        if (context.user.id !== userId) {
+            throw new UnauthorizedException();
+        }
+        return this.prisma.post.update({ where: { id: input.id }, data: { deleted: true } })
+    }
 
 
     @ResolveField('user', returns => User)

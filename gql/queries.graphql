@@ -2,7 +2,11 @@ query getPost ($id: String!) {
     getPost(id:$id){
     userId
     title
+    HTMLTitle
+    slug
+    url
     body
+    type
     categoryId
     subCategoryId
     language
@@ -10,6 +14,11 @@ query getPost ($id: String!) {
     tags {
       id
       name
+    }
+    metas {
+      id
+      name
+      content
     }
   }
 }

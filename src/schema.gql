@@ -172,7 +172,14 @@ input CreateLoksewaQuestionInput {
   title: String!
 }
 
+input CreateMetaInput {
+  content: String!
+  name: String!
+  postId: String
+}
+
 input CreatePostInput {
+  HTMLTitle: String
   body: String
   categoryId: String
   excerpt: String
@@ -239,6 +246,10 @@ input CreateUserInput {
 
 """Date custom scalar type"""
 scalar Date
+
+input DeletePostInput {
+  id: String!
+}
 
 enum Difficulty {
   easy
@@ -498,6 +509,22 @@ enum MembershipType {
   silver
 }
 
+type Meta {
+  content: String!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: Date!
+
+  """Unique UUID string"""
+  id: ID!
+  name: String!
+  post: Post
+  postId: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: Date!
+}
+
 type MockQuestionEdge {
   LoksewaMockSet: LoksewaMockSet!
 
@@ -538,7 +565,7 @@ type Mutation {
   createMeComment(comment: CreateCommentInput!): Comment!
   createMePost(post: CreatePostInput!): Post!
   createMockSet(set: CreateLoksewaMockSetInput!): LoksewaMockSet!
-  createPost(post: CreatePostInput!, scholarship: CreateScholarshipInput): Post!
+  createPost(metas: [CreateMetaInput], post: CreatePostInput!, scholarship: CreateScholarshipInput): Post!
   createQuestion(question: CreateLoksewaQuestionInput!): LoksewaQuestion!
   createSetQuestion(question: CreateSetQuestionInput!): MockQuestionEdge!
   createSubCategory(subCategory: CreateSubCategoryInput!): Category!
@@ -548,7 +575,9 @@ type Mutation {
   deleteLoksewaCategory(category: UpdateLoksewaQuestionCategoryInput!): Boolean!
   deleteLoksewaMockCategory(category: UpdateLoksewaMockCategoryInput!): Boolean!
   deleteMeComment(comment: UpdateCommentInput!): Boolean!
+  deleteMePost(post: DeletePostInput!): Post!
   deleteMockSet(set: UpdateLoksewaMockSetInput!): Boolean!
+  deletePost(post: DeletePostInput!): Post!
   deleteSubCategory(subCategory: UpdateSubCategoryInput!): Boolean!
   increaseView(postId: String!): Boolean!
   reactToPost(reaction: CreateReactionInput!): Boolean!
@@ -560,7 +589,7 @@ type Mutation {
   updateMeNotification(notificationId: String!): Boolean!
   updateMePost(post: UpdatePostInput!): Post!
   updateMockSet(set: UpdateLoksewaMockSetInput!): LoksewaMockSet!
-  updatePost(post: UpdatePostInput!): Post!
+  updatePost(metas: [UpdateMetaInput], post: UpdatePostInput!, scholarship: CreateScholarshipInput): Post!
   updateQuestion(question: UpdateLoksewaQuestionInput!): LoksewaQuestion!
   updateSetQuestion(question: UpdateSetQuestionInput!): MockQuestionEdge!
   updateSubCategory(subCategory: UpdateSubCategoryInput!): Category!
@@ -628,6 +657,7 @@ enum PaymentMethod {
 
 """Post model"""
 type Post {
+  HTMLTitle: String
   advertisement: Advertisement
   body: String
   category: Category
@@ -647,6 +677,7 @@ type Post {
   id: ID!
   image: File
   language: Language!
+  metas: [Meta]
   publishedAt: Date
   reactions: [Reaction!]
   scholarship: Scholarship
@@ -898,7 +929,15 @@ input UpdateLoksewaQuestionInput {
   title: String!
 }
 
+input UpdateMetaInput {
+  content: String!
+  id: String!
+  name: String!
+  postId: String
+}
+
 input UpdatePostInput {
+  HTMLTitle: String
   body: String
   categoryId: String
   excerpt: String

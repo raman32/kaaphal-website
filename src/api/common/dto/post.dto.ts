@@ -1,4 +1,4 @@
-import { User, Language, PostStatus } from '.prisma/client';
+import { User, Language, PostStatus, Meta } from '.prisma/client';
 import { CommentDto } from './comment.dto';
 import { ReactionDto } from './reaction.dto';
 import { TagDto } from './tag.dto';
@@ -8,6 +8,7 @@ export interface PostDto {
     publishedAt: Date | null;
     body: string | null;
     title: string;
+    HTMLTitle: string;
     language: Language;
     userId: string | null;
     deleted: boolean;
@@ -16,4 +17,5 @@ export interface PostDto {
     reactions: ReactionDto[];
     tags: TagDto[];
     user: User & { image: { source: string, preview: string } }
+    metas: Meta[];
 }
