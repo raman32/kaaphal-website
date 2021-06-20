@@ -1,7 +1,5 @@
 import React from 'react';
 import DefaultLayout from './layouts/default';
-
-
 const TermsAndConditions = (): JSX.Element => {
     return (
         <div className="mx-4 sm:mx-8 my-4 text-justify tracking-wide">
