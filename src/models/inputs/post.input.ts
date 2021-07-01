@@ -73,7 +73,8 @@ export class CreateMetaInput {
 
 @InputType()
 export class UpdateMetaInput {
-    @Field()
+    //TODO FIX THIS 
+    @Field({ nullable: true })
     id: string
     @Field({ nullable: true })
     postId: string

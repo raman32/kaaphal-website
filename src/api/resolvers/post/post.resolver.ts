@@ -144,11 +144,11 @@ export class PostResolver {
         @Ctx() context: RequestContext): Promise<Post_> {
         if (input.type == PostType.scholarships) {
             await this.prisma.scholarship.updateMany({ where: { postId: input.id }, data: scholarship })
-
+            console.log(metas)
             if (metas && metas.length)
                 //TODO BUG!!! FIX WITH BATCH TRANSACTION
                 await this.prisma.meta.updateMany({
-                    data: metas.map(meta => ({ ...meta, postId: input.id })),
+                    data: metas.map(meta => ({ ...meta })),
                 })
         }
         return this.postService.updatePost({ ...input, editorId: context.user.id })

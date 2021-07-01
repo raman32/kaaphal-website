@@ -17,11 +17,11 @@ type Advertisement {
   image: File
   order: Order
   post: Post!
-  postId: String!
+  postId: String
   startsAt: Date!
   status: AdvertisementStatus
-  targetAgeLowerLimit: Int!
-  targetAgeUpperLimit: Int!
+  targetAgeLowerLimit: Int
+  targetAgeUpperLimit: Int
   targetSex: AdvertisementTargetSex
   targetTags: [Tag!]
   title: String
@@ -260,22 +260,36 @@ enum Difficulty {
 }
 
 type File {
+  alt: String
+
   """Identifies the date and time when the object was created."""
   createdAt: Date!
-  height: Int!
+  height: Int
 
   """Unique UUID string"""
   id: ID!
   name: String!
   post: Post
   preview: String!
-  size: Int!
+  size: Int
   source: String!
+  title: String
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: Date!
   user: User
-  width: Int!
+  width: Int
+}
+
+type FileConnection {
+  edges: [FileEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type FileEdge {
+  cursor: String!
+  node: File!
 }
 
 type Flag {
@@ -572,6 +586,7 @@ type Mutation {
   createTag(tag: CreateTagInput!): Category!
   createUser(user: CreateUserInput!): User!
   deleteCategory(category: UpdateCategoryInput!): Boolean!
+  deleteFile(fileId: String!): Boolean!
   deleteLoksewaCategory(category: UpdateLoksewaQuestionCategoryInput!): Boolean!
   deleteLoksewaMockCategory(category: UpdateLoksewaMockCategoryInput!): Boolean!
   deleteMeComment(comment: UpdateCommentInput!): Boolean!
@@ -729,6 +744,7 @@ type Query {
   getCategories: [Category!]!
   getCategory(id: String!): Category!
   getComments(after: String, before: String, first: Int, last: Int, postId: String!, skip: Int): CommentConnection!
+  getFiles(after: String, before: String, first: Int, last: Int, postId: String, skip: Int, userId: String): FileConnection!
   getLoksewaCategories: [LoksewaQuestionCategory!]!
   getLoksewaMockCategories: [LoksewaMockCategory!]!
   getMeNotification: [Notification!]!
@@ -931,7 +947,7 @@ input UpdateLoksewaQuestionInput {
 
 input UpdateMetaInput {
   content: String!
-  id: String!
+  id: String
   name: String!
   postId: String
 }

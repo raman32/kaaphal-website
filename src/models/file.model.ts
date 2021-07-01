@@ -11,11 +11,15 @@ export class File extends BaseModel {
     preview: string;
     @Field()
     source: string;
-    @Field()
+    @Field({ nullable: true })
+    alt: string;
+    @Field({ nullable: true })
+    title: string;
+    @Field({ nullable: true })
     size: number;
-    @Field()
+    @Field({ nullable: true })
     width: number;
-    @Field()
+    @Field({ nullable: true })
     height: number;
     @Field(() => User, { nullable: true })
     user?: User;

@@ -43,13 +43,13 @@ export class Advertisement extends BaseModel {
     targetTags: Tag[]
     @Field(type => AdvertisementTargetSex, { nullable: true })
     targetSex?: AdvertisementTargetSex
-    @Field()
+    @Field({ nullable: true })
     targetAgeLowerLimit?: number
-    @Field()
+    @Field({ nullable: true })
     targetAgeUpperLimit?: number
     @Field(type => Post)
     post?: Post
-    @Field()
+    @Field({ nullable: true })
     postId?: string
     @Field(type => File, { nullable: true })
     image?: File

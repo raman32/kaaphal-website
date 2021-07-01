@@ -187,11 +187,17 @@ updateSetQuestion(question:$question){
 mutation createAsset($file: Upload!){
   createAsset(file: $file) {
     id
+    source
+    preview
+    name
   }
 }
 
 mutation createAssetOnServer($file: Upload!){
   createAssetOnServer(file: $file) 
+}
+mutation deleteFile($fileId:String!) {
+  deleteFile(fileId:$fileId)
 }
 
 mutation createMeComment ($comment: CreateCommentInput!){

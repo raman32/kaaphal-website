@@ -64,9 +64,9 @@ function EditArticle(): JSX.Element {
                         startsAt: form.getFieldValue('startsAt')
                     } : undefined,
                 metas: form.getFieldValue('metas') && form.getFieldValue('metas').length ?
-                    form.getFieldValue('metas').map((value, index) => index < data.getPost.metas.length ?
-                        ({ name: value.name, content: value.content, postId: router.query.postId as string, id: data.getPost.metas[index].id })
-                        : null) : undefined
+                    form.getFieldValue('metas').map((value, index) =>
+                        ({ name: value.name, content: value.content, postId: router.query.postId as string, id: data.getPost.metas[index]?.id })
+                    ) : undefined
 
             }
         })
@@ -99,9 +99,9 @@ function EditArticle(): JSX.Element {
                         startsAt: form.getFieldValue('startsAt')
                     } : undefined,
                 metas: form.getFieldValue('metas') && form.getFieldValue('metas').length ?
-                    form.getFieldValue('metas').map((value, index) => index < data.getPost.metas.length ?
-                        ({ name: value.name, content: value.content, postId: router.query.postId as string, id: data.getPost.metas[index].id })
-                        : null) : undefined
+                    form.getFieldValue('metas').map((value, index) =>
+                        ({ name: value.name, content: value.content, postId: router.query.postId as string, id: data.getPost.metas[index]?.id })
+                    ) : undefined
 
             }
         })

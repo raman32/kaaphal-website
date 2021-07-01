@@ -1,11 +1,12 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { File } from '../../../models/file.model';
 import { GraphQLUpload } from 'graphql-upload';
 import { AssetsService } from '../../../services/asset.service';
 import { FileUpload } from 'graphql-upload';
 import * as fs from 'fs';
 import { Stream } from 'stream';
 import { GraphQLBoolean } from 'graphql';
+import { File as File_ } from '.prisma/client';
+import { File } from '../../../models/file.model';
 @Resolver(() => File)
 export class AssetsResolver {
     constructor(private readonly assetService: AssetsService) { }
@@ -13,7 +14,7 @@ export class AssetsResolver {
     @Mutation(() => File)
     async createAsset(
         @Args('file', { type: () => GraphQLUpload }) args: FileUpload,
-    ): Promise<File> {
+    ): Promise<File_> {
         const asset = await this.assetService.create(args);
         return asset;
     }
@@ -26,7 +27,7 @@ export class AssetsResolver {
         const stream = createReadStream() as Stream;
         const writer = fs.createWriteStream('image.png')
         stream.pipe(writer);
-        writer.on("finish", () => console.log("findish"))
+        writer.on('finish', () => console.log('findish'))
         return true;
     }
 }

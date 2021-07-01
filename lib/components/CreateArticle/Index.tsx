@@ -150,10 +150,13 @@ const ArticleForm: React.FC<ArticleFormProps> = ({ form, loading, state = 'Creat
             <Form.Item name="targetWord" label="Targeted Word" className=" mx-4" >
                 <Input className="w-80" />
             </Form.Item>
-            <Button type="text" className="mx-4 bg-blue-600 hover:bg-blue-400 text-white" onClick={() => checkOptimization()}>
-                Check Optimization
-    </Button>
-            {seoProblems.map(value => value.hasError ? <Alert type="warning" message={value.errorText} className="max-w-sm my-4" showIcon></Alert> : null)}
+            <Form.Item className=" mx-4" >
+                <Button type="text" className="mx-4 bg-blue-600 hover:bg-blue-400 text-white" onClick={() => checkOptimization()}>
+                    Check Optimization
+                </Button>
+
+                {seoProblems.map(value => value.hasError ? <Alert type="warning" message={value.errorText} className="max-w-sm my-4" showIcon></Alert> : null)}
+            </Form.Item>
         </div>
         <Form.Item className="max-w-sm">
             <Button type="text" htmlType="submit" className="mx-4 bg-blue-600 hover:bg-blue-400 text-white" loading={loading}>

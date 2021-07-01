@@ -191,6 +191,8 @@ model File {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   name            String?
+  alt             String?
+  title           String?
   preview         String?
   source          String?
   width           Int?
