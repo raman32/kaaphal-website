@@ -41,7 +41,7 @@ function DefaultLayout({ children }: Props): JSX.Element {
                     onClick: () => setCollapased(prev => !prev),
                 })}
                 <div className="my-auto lg:h-13 text-center min-w-max flex-1" >
-                    <img src='https://kaaphal.com/wp-content/uploads/2020/09/cropped-Wide-Kp.png' className="h-9 mx-2" />
+                    <Link href="/" ><img src='https://kaaphal.com/wp-content/uploads/2020/09/cropped-Wide-Kp.png' className="h-9 mx-2" /></Link>
                 </div>
                 <Menu mode="horizontal" selectable={false} className={clsx(store.isDark ? 'bg-gray-900 text-gray-100' : 'bg-white text-black', 'hidden lg:block min-w-max flex-1 border-none')}>
                     <SubMenu level={1} icon={<ArticleIcon className="w-6 h-6" />} title="Article" className="px-2" onTitleClick={() => Router.push('/Article')} >

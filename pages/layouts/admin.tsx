@@ -67,8 +67,27 @@ function AdminLayout({ children }: Props): JSX.Element {
                         <Menu.Item key="9"><Link href='/admin/user/create'>Create New User</Link></Menu.Item>
                         <Menu.Item key="10"><Link href='/admin/user/EditUser'>Edit User</Link></Menu.Item>
                     </Menu.SubMenu>
+                    <Menu.SubMenu key="sub4" icon={<UserOutlined />} title="Advertisement Management">
+                        <Menu.Item key="14"><Link href='/admin/user/manage'>Show Advertisement Statistics</Link></Menu.Item>
+                        <Menu.Item key="15"><Link href='/admin/user/create'>Create New Advertisement</Link></Menu.Item>
+                    </Menu.SubMenu>
+                    <Menu.SubMenu key="sub5" icon={<UserOutlined />} title="Order Management">
+                        <Menu.Item key="16"><Link href='/admin/user/manage'>Show All Orders</Link></Menu.Item>
+                        <Menu.Item key="17"><Link href='/admin/user/create'>Create a new order</Link></Menu.Item>
+                        <Menu.Item key="18"><Link href='/admin/user/create'>Backup and Restore</Link></Menu.Item>
+                    </Menu.SubMenu>
+                    <Menu.SubMenu key="sub6" icon={<UserOutlined />} title="File Manager">
+                        <Menu.Item key="19"><Link href='/admin/file/gallery'>Gallery</Link></Menu.Item>
+                        <Menu.Item key="20"><Link href='/admin/file/add'>Add new File/Blob</Link></Menu.Item>
+                    </Menu.SubMenu>
                     <Menu.Item key="11" icon={<UserOutlined />}>
                         <Link href='/admin/'>Admin Profile</Link>
+                    </Menu.Item>
+                    <Menu.Item key="21" icon={<UserOutlined />} onClick={() => {
+                        logout()
+                        Router.push('/')
+                    }}>
+                        Logout
                     </Menu.Item>
                 </Menu>
             </Sider>

@@ -28,6 +28,20 @@ export class AssetsService {
         return this.s3storageService.readFileToBuffer(key);
     }
 
+
+    async delete(input: File): Promise<boolean> {
+        try {
+            await this.s3storageService.deleteFile(input.preview);
+            await this.s3storageService.deleteFile(input.source);
+            return true;
+        }
+        catch {
+            return false;
+        }
+    }
+
+
+
     async create(input: FileUpload): Promise<File> {
         const { createReadStream, filename, mimetype, encoding } = input;
         const stream = createReadStream() as Stream;

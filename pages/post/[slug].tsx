@@ -17,7 +17,7 @@ import Head from 'next/head';
 
 const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const postParsed = JSON.parse(post) as PostDto
-    console.log(postParsed )
+    console.log(postParsed)
     return (<>
         <Head>
             <title>{postParsed.HTMLTitle}</title>
@@ -53,7 +53,7 @@ const PostPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProp
                             null
                 }
                 <div className="block post-body">
-                    <span dangerouslySetInnerHTML={{ __html: postParsed.body }} className="text-base antialiased" />
+                    <div dangerouslySetInnerHTML={{ __html: postParsed.body }} className="text-base antialiased" />
                 </div>
                 <Divider />
                 <div className="text-center block text-lg ">

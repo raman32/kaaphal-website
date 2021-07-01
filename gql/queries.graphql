@@ -201,6 +201,30 @@ query getUsers ( $after: String, $before: String, $first: Int, $last: Int ,$skip
   }
 }
 
+query getFiles ( $after: String, $before: String, $first: Int, $last: Int ,$skip: Int,  $postId:String, $userId: String){
+    getFiles ( after: $after, before :$before, first:$first, last:$last,skip:$skip, postId:$postId, userId: $userId){
+    edges {
+      node {
+        id
+        source
+        preview
+        width
+        height
+        name
+       post {
+         id
+         title
+       }
+        user {
+          id
+          displayName
+        }
+      }
+    }
+  }
+}
+
+
 query getQuestions ( $after: String, $before: String, $first: Int, $last: Int, $skip: Int,  $categoryId: String ){
     getQuestions ( after: $after, before :$before, first:$first, last:$last, skip:$skip , categoryId: $categoryId){
     edges {

@@ -32,11 +32,11 @@ export type Advertisement = {
   image?: Maybe<File>;
   order?: Maybe<Order>;
   post: Post;
-  postId: Scalars['String'];
+  postId?: Maybe<Scalars['String']>;
   startsAt: Scalars['Date'];
   status?: Maybe<AdvertisementStatus>;
-  targetAgeLowerLimit: Scalars['Int'];
-  targetAgeUpperLimit: Scalars['Int'];
+  targetAgeLowerLimit?: Maybe<Scalars['Int']>;
+  targetAgeUpperLimit?: Maybe<Scalars['Int']>;
   targetSex?: Maybe<AdvertisementTargetSex>;
   targetTags?: Maybe<Array<Tag>>;
   title?: Maybe<Scalars['String']>;
@@ -270,20 +270,35 @@ export enum Difficulty {
 
 export type File = {
   __typename?: 'File';
+  alt?: Maybe<Scalars['String']>;
   /** Identifies the date and time when the object was created. */
   createdAt: Scalars['Date'];
-  height: Scalars['Int'];
+  height?: Maybe<Scalars['Int']>;
   /** Unique UUID string */
   id: Scalars['ID'];
   name: Scalars['String'];
   post?: Maybe<Post>;
   preview: Scalars['String'];
-  size: Scalars['Int'];
+  size?: Maybe<Scalars['Int']>;
   source: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
   /** Identifies the date and time when the object was last updated. */
   updatedAt: Scalars['Date'];
   user?: Maybe<User>;
-  width: Scalars['Int'];
+  width?: Maybe<Scalars['Int']>;
+};
+
+export type FileConnection = {
+  __typename?: 'FileConnection';
+  edges?: Maybe<Array<FileEdge>>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type FileEdge = {
+  __typename?: 'FileEdge';
+  cursor: Scalars['String'];
+  node: File;
 };
 
 export type Flag = {
@@ -565,6 +580,7 @@ export type Mutation = {
   createTag: Category;
   createUser: User;
   deleteCategory: Scalars['Boolean'];
+  deleteFile: Scalars['Boolean'];
   deleteLoksewaCategory: Scalars['Boolean'];
   deleteLoksewaMockCategory: Scalars['Boolean'];
   deleteMeComment: Scalars['Boolean'];
@@ -663,6 +679,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationDeleteCategoryArgs = {
   category: UpdateCategoryInput;
+};
+
+
+export type MutationDeleteFileArgs = {
+  fileId: Scalars['String'];
 };
 
 
@@ -904,6 +925,7 @@ export type Query = {
   getCategories: Array<Category>;
   getCategory: Category;
   getComments: CommentConnection;
+  getFiles: FileConnection;
   getLoksewaCategories: Array<LoksewaQuestionCategory>;
   getLoksewaMockCategories: Array<LoksewaMockCategory>;
   getMeNotification: Array<Notification>;
@@ -934,6 +956,17 @@ export type QueryGetCommentsArgs = {
   last?: Maybe<Scalars['Int']>;
   postId: Scalars['String'];
   skip?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryGetFilesArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  postId?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['String']>;
 };
 
 
@@ -1197,7 +1230,7 @@ export type UpdateLoksewaQuestionInput = {
 
 export type UpdateMetaInput = {
   content: Scalars['String'];
-  id: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   postId?: Maybe<Scalars['String']>;
 };
@@ -1676,7 +1709,7 @@ export type CreateAssetMutation = (
   { __typename?: 'Mutation' }
   & { createAsset: (
     { __typename?: 'File' }
-    & Pick<File, 'id'>
+    & Pick<File, 'id' | 'source' | 'preview' | 'name'>
   ) }
 );
 
@@ -1688,6 +1721,16 @@ export type CreateAssetOnServerMutationVariables = Exact<{
 export type CreateAssetOnServerMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'createAssetOnServer'>
+);
+
+export type DeleteFileMutationVariables = Exact<{
+  fileId: Scalars['String'];
+}>;
+
+
+export type DeleteFileMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteFile'>
 );
 
 export type CreateMeCommentMutationVariables = Exact<{
@@ -1927,6 +1970,38 @@ export type GetUsersQuery = (
         & { image?: Maybe<(
           { __typename?: 'File' }
           & Pick<File, 'id' | 'source' | 'preview'>
+        )> }
+      ) }
+    )>> }
+  ) }
+);
+
+export type GetFilesQueryVariables = Exact<{
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  postId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetFilesQuery = (
+  { __typename?: 'Query' }
+  & { getFiles: (
+    { __typename?: 'FileConnection' }
+    & { edges?: Maybe<Array<(
+      { __typename?: 'FileEdge' }
+      & { node: (
+        { __typename?: 'File' }
+        & Pick<File, 'id' | 'source' | 'preview' | 'width' | 'height' | 'name'>
+        & { post?: Maybe<(
+          { __typename?: 'Post' }
+          & Pick<Post, 'id' | 'title'>
+        )>, user?: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'id' | 'displayName'>
         )> }
       ) }
     )>> }
@@ -3088,6 +3163,9 @@ export const CreateAssetDocument = gql`
     mutation createAsset($file: Upload!) {
   createAsset(file: $file) {
     id
+    source
+    preview
+    name
   }
 }
     `;
@@ -3148,6 +3226,37 @@ export function useCreateAssetOnServerMutation(baseOptions?: Apollo.MutationHook
 export type CreateAssetOnServerMutationHookResult = ReturnType<typeof useCreateAssetOnServerMutation>;
 export type CreateAssetOnServerMutationResult = Apollo.MutationResult<CreateAssetOnServerMutation>;
 export type CreateAssetOnServerMutationOptions = Apollo.BaseMutationOptions<CreateAssetOnServerMutation, CreateAssetOnServerMutationVariables>;
+export const DeleteFileDocument = gql`
+    mutation deleteFile($fileId: String!) {
+  deleteFile(fileId: $fileId)
+}
+    `;
+export type DeleteFileMutationFn = Apollo.MutationFunction<DeleteFileMutation, DeleteFileMutationVariables>;
+
+/**
+ * __useDeleteFileMutation__
+ *
+ * To run a mutation, you first call `useDeleteFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteFileMutation, { data, loading, error }] = useDeleteFileMutation({
+ *   variables: {
+ *      fileId: // value for 'fileId'
+ *   },
+ * });
+ */
+export function useDeleteFileMutation(baseOptions?: Apollo.MutationHookOptions<DeleteFileMutation, DeleteFileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteFileMutation, DeleteFileMutationVariables>(DeleteFileDocument, options);
+      }
+export type DeleteFileMutationHookResult = ReturnType<typeof useDeleteFileMutation>;
+export type DeleteFileMutationResult = Apollo.MutationResult<DeleteFileMutation>;
+export type DeleteFileMutationOptions = Apollo.BaseMutationOptions<DeleteFileMutation, DeleteFileMutationVariables>;
 export const CreateMeCommentDocument = gql`
     mutation createMeComment($comment: CreateCommentInput!) {
   createMeComment(comment: $comment) {
@@ -3739,6 +3848,72 @@ export function useGetUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
 export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
 export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
+export const GetFilesDocument = gql`
+    query getFiles($after: String, $before: String, $first: Int, $last: Int, $skip: Int, $postId: String, $userId: String) {
+  getFiles(
+    after: $after
+    before: $before
+    first: $first
+    last: $last
+    skip: $skip
+    postId: $postId
+    userId: $userId
+  ) {
+    edges {
+      node {
+        id
+        source
+        preview
+        width
+        height
+        name
+        post {
+          id
+          title
+        }
+        user {
+          id
+          displayName
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetFilesQuery__
+ *
+ * To run a query within a React component, call `useGetFilesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFilesQuery({
+ *   variables: {
+ *      after: // value for 'after'
+ *      before: // value for 'before'
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *      skip: // value for 'skip'
+ *      postId: // value for 'postId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetFilesQuery(baseOptions?: Apollo.QueryHookOptions<GetFilesQuery, GetFilesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetFilesQuery, GetFilesQueryVariables>(GetFilesDocument, options);
+      }
+export function useGetFilesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFilesQuery, GetFilesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetFilesQuery, GetFilesQueryVariables>(GetFilesDocument, options);
+        }
+export type GetFilesQueryHookResult = ReturnType<typeof useGetFilesQuery>;
+export type GetFilesLazyQueryHookResult = ReturnType<typeof useGetFilesLazyQuery>;
+export type GetFilesQueryResult = Apollo.QueryResult<GetFilesQuery, GetFilesQueryVariables>;
 export const GetQuestionsDocument = gql`
     query getQuestions($after: String, $before: String, $first: Int, $last: Int, $skip: Int, $categoryId: String) {
   getQuestions(
